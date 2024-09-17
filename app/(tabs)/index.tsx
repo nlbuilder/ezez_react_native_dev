@@ -8,8 +8,12 @@ import {
     withDecay,
     withClamp,
 } from "react-native-reanimated";
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
-import AppointmentCard from "@/components/appointment/AppointmentCard";
+import AppointmentCard from "@/components/appointment/appointmentView/AppointmentCard";
 
 const AppointmentCardList = () => {
     const [listHeight, setListHeight] = useState(0);
@@ -18,7 +22,10 @@ const AppointmentCardList = () => {
     const activeCardIndex = useSharedValue(null);
 
     const scrollY = useSharedValue(0);
-    const maxScrollY = listHeight - screenHeight + 160;
+    // use maxScrollY to define the maximum amount of scrollY
+    // (i.e., the largest distance the card can be scrolled up or down)
+    // (e.g., const maxScrollY = listHeight - screenHeight + 160)
+    const maxScrollY = 2 * listHeight - screenHeight; // I found this is the optimal value for my case
 
     const pan = Gesture.Pan()
         .onBegin(() => {
@@ -64,6 +71,6 @@ export default AppointmentCardList;
 
 const styles = StyleSheet.create({
     container: {
-        top: 80,
+        top: hp("10%"),
     },
 });

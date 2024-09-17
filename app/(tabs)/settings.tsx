@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const BusinessProfile = () => {
+const settings = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>business Profile</Text>
@@ -9,7 +9,7 @@ const BusinessProfile = () => {
     );
 };
 
-export default BusinessProfile;
+export default settings;
 
 const styles = StyleSheet.create({
     container: {
