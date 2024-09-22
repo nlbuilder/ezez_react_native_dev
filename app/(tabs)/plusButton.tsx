@@ -1,10 +1,4 @@
-import {
-    Pressable,
-    StyleSheet,
-    useColorScheme,
-    View,
-    Text,
-} from "react-native";
+import { Pressable, StyleSheet, useColorScheme, View } from "react-native";
 import React from "react";
 
 import Colors from "@/constants/styles/Colors";
@@ -13,8 +7,6 @@ import {
     heightPercentageToDP,
     widthPercentageToDP,
 } from "react-native-responsive-screen";
-
-import { useThemeColor } from "@/components/utils/Themed";
 
 const PlusButton = ({ onPress }: { onPress: () => void }) => {
     const colorScheme = useColorScheme();

@@ -1,0 +1,92 @@
+[
+    {
+        "id": "1",
+        "date": "2022-12-31",
+        "time": "10:00",
+        "numberOfCustomers": 10,
+        "serviceTitle": "Service123456",
+        "customerPhoneNumber": "1234567890",
+        "note": ""
+    },
+    {
+        "id": "2",
+        "date": "2022-12-31",
+        "time": "11:00",
+        "numberOfCustomers": 1,
+        "serviceTitle": "Service2",
+        "customerPhoneNumber": "1234567890",
+        "note": "Note"
+    },
+    {
+        "id": "3",
+        "date": "2022-12-31",
+        "time": "12:00",
+        "numberOfCustomers": 1,
+        "serviceTitle": "Service3",
+        "customerPhoneNumber": "1234567890",
+        "note": "Note"
+    },
+    {
+        "id": "4",
+        "date": "2022-12-31",
+        "time": "14:00",
+        "numberOfCustomers": 1,
+        "serviceTitle": "Service4",
+        "customerPhoneNumber": "1234567890",
+        "note": "Note"
+    },
+    {
+        "id": "5",
+        "date": "2022-12-31",
+        "time": "11:00",
+        "numberOfCustomers": 1,
+        "serviceTitle": "Service2",
+        "customerPhoneNumber": "1234567890",
+        "note": "Note"
+    },
+    {
+        "id": "6",
+        "date": "2022-12-31",
+        "time": "12:00",
+        "numberOfCustomers": 1,
+        "serviceTitle": "Service3",
+        "customerPhoneNumber": "1234567890",
+        "note": "Note"
+    },
+    {
+        "id": "7",
+        "date": "2022-12-31",
+        "time": "14:00",
+        "numberOfCustomers": 1,
+        "serviceTitle": "Service4",
+        "customerPhoneNumber": "1234567890",
+        "note": "Note"
+    },
+    {
+        "id": "8",
+        "date": "2022-12-31",
+        "time": "11:00",
+        "numberOfCustomers": 1,
+        "serviceTitle": "Service2",
+        "customerPhoneNumber": "1234567890",
+        "note": "Note"
+    },
+    {
+        "id": "9",
+        "date": "2022-12-31",
+        "time": "12:00",
+        "numberOfCustomers": 1,
+        "serviceTitle": "Service3",
+        "customerPhoneNumber": "1234567890",
+        "note": "Note"
+    },
+    {
+        "id": "10",
+        "date": "2022-12-31",
+        "time": "14:00",
+        "numberOfCustomers": 1,
+        "serviceTitle": "Service4",
+        "customerPhoneNumber": "1234567890",
+        "note": "Note"
+    }
+]

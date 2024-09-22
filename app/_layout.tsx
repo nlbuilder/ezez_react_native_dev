@@ -5,13 +5,23 @@ import {
     ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import DateTimePicker, {
+    DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
-import { useColorScheme } from "@/components/utils/useColorScheme";
+import { useColorScheme } from "@/constants/styles/useColorScheme";
+import { Pressable, View } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import Colors from "@/constants/styles/Colors";
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -53,6 +63,13 @@ export default function RootLayout() {
 function RootLayoutNav() {
     const colorScheme = useColorScheme();
 
+    const [date, setDate] = useState(new Date());
+    const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
+        if (selectedDate) {
+            setDate(selectedDate);
+        }
+    };
+
     return (
         <ThemeProvider
             value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
@@ -63,9 +80,74 @@ function RootLayoutNav() {
                         name="(tabs)"
                         options={{ headerShown: false }}
                     />
+
+                    {/* create a new appointment modal screen */}
                     <Stack.Screen
-                        name="modal"
-                        options={{ presentation: "modal" }}
+                        name="CreateAppointmentModal"
+                        options={{
+                            presentation: "modal",
+                            title: "",
+
+                            headerLeft: () => (
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        justifyContent: "center",
+                                        left: wp("2%"),
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <DateTimePicker
+                                            value={date}
+                                            mode={"date"}
+                                            onChange={onChangeDate}
+                                        />
+
+                                        <DateTimePicker
+                                            value={date}
+                                            mode={"time"}
+                                            onChange={onChangeDate}
+                                            minuteInterval={15}
+                                        />
+                                    </View>
+                                </View>
+                            ),
+
+                            headerRight: () => (
+                                <View>
+                                    <Pressable
+                                        onPress={() => {
+                                            console.log(
+                                                "Search button pressed"
+                                            );
+                                            router.dismiss();
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                marginLeft: wp("22%"),
+                                            }}
+                                        >
+                                            <AntDesign
+                                                name="close"
+                                                size={28}
+                                                color={
+                                                    Colors[
+                                                        colorScheme ?? "light"
+                                                    ].text
+                                                }
+                                                style={{ marginRight: 10 }}
+                                            />
+                                        </View>
+                                    </Pressable>
+                                </View>
+                            ),
+                        }}
                     />
                 </Stack>
             </GestureHandlerRootView>

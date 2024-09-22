@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { Link, Tabs } from "expo-router";
-import { Pressable, View, Text } from "react-native";
+import { router, Tabs } from "expo-router";
+import { Pressable, View } from "react-native";
+import DateTimePicker, {
+    DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 import Colors from "@/constants/styles/Colors";
-import { useColorScheme } from "@/components/utils/useColorScheme";
-import { useClientOnlyValue } from "@/components/utils/useClientOnlyValue";
-import { heightPercentageToDP } from "react-native-responsive-screen";
+import { useColorScheme } from "@/constants/styles/useColorScheme";
+import { useClientOnlyValue } from "@/app/utils/useClientOnlyValue";
 import PlusButton from "./plusButton";
+import SearchModal from "@/app/components/search/SearchModal";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -19,6 +26,15 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
+
+    const [date, setDate] = useState(new Date());
+    const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
+        if (selectedDate) {
+            setDate(selectedDate);
+        }
+    };
+
+    const [showSearch, setShowSearch] = useState(false);
 
     return (
         <>
@@ -43,6 +59,23 @@ export default function TabLayout() {
                         headerTitle: "", // hide the header title
                         headerTransparent: true, // make the header transparent
 
+                        headerLeft: () => (
+                            <View
+                                style={{
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                    paddingHorizontal: 10,
+                                }}
+                            >
+                                <DateTimePicker
+                                    value={date}
+                                    mode={"date"}
+                                    onChange={onChangeDate}
+                                    style={{ left: -wp("2%") }}
+                                />
+                            </View>
+                        ),
+
                         headerRight: () => (
                             <View
                                 style={{
@@ -51,29 +84,10 @@ export default function TabLayout() {
                                     paddingHorizontal: 10,
                                 }}
                             >
-                                <View style={{ paddingRight: 5 }}>
-                                    {/* search button */}
-                                    <Pressable
-                                        onPress={() => {
-                                            console.log("button 1 pressed");
-                                        }}
-                                    >
-                                        <AntDesign
-                                            name="calendar"
-                                            size={28}
-                                            color={
-                                                Colors[colorScheme ?? "light"]
-                                                    .tint
-                                            }
-                                            style={{ marginRight: 10 }}
-                                        />
-                                    </Pressable>
-                                </View>
-
-                                {/* calendar button */}
+                                {/* search button */}
                                 <Pressable
                                     onPress={() => {
-                                        console.log("button 2 pressed");
+                                        setShowSearch(!showSearch);
                                     }}
                                 >
                                     <AntDesign
@@ -85,6 +99,11 @@ export default function TabLayout() {
                                         style={{ marginRight: 10 }}
                                     />
                                 </Pressable>
+
+                                <SearchModal
+                                    visible={showSearch}
+                                    onClose={() => setShowSearch(false)}
+                                />
                             </View>
                         ),
                     }}
@@ -98,13 +117,14 @@ export default function TabLayout() {
                         tabBarButton: () => (
                             <PlusButton
                                 onPress={() => {
-                                    console.log("Center button A pressed");
+                                    router.push("/CreateAppointmentModal");
                                 }}
                             />
                         ),
                     }}
                 />
 
+                {/* menu tab */}
                 <Tabs.Screen
                     name="settings"
                     options={{

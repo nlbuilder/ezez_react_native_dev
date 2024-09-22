@@ -1,0 +1,9 @@
+[
+    { "label": "Java", "value": "java" },
+    { "label": "Python", "value": "python" },
+    { "label": "JavaScript", "value": "javascript" },
+    { "label": "C++", "value": "cpp" },
+    { "label": "C#", "value": "csharp" },
+    { "label": "Ruby", "value": "ruby" },
+    { "label": "Swift", "value": "swift" }
+]

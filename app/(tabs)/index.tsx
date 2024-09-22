@@ -13,13 +13,11 @@ import {
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
-import AppointmentCard from "@/components/appointment/appointmentView/AppointmentCard";
+import AppointmentCard from "@/app/components/appointment/components/AppointmentCard";
 
 const AppointmentCardList = () => {
     const [listHeight, setListHeight] = useState(0);
     const { height: screenHeight } = useWindowDimensions();
-
-    const activeCardIndex = useSharedValue(null);
 
     const scrollY = useSharedValue(0);
     // use maxScrollY to define the maximum amount of scrollY
@@ -59,7 +57,6 @@ const AppointmentCardList = () => {
                         key={index}
                         index={index}
                         scrollY={scrollY}
-                        activeCardIndex={activeCardIndex}
                     />
                 ))}
             </View>
