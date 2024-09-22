@@ -206,7 +206,7 @@ const AppointmentDetails = ({
             >
                 <GestureDetector gesture={pan}>
                     <View>
-                        {/* Delete button */}
+                        {/* Edit and Delete buttons */}
                         <Animated.View
                             style={[
                                 {
@@ -224,16 +224,27 @@ const AppointmentDetails = ({
                                     borderTopRightRadius: hp("2.5%"),
                                     borderBottomRightRadius: hp("2.5%"),
                                 },
-                                deleteButtonStyle, // Apply the animated style for opacity
+                                deleteButtonStyle, // apply the animated style for opacity
                             ]}
                         >
                             {/* Edit Button */}
                             <Pressable
                                 onPress={() => {
                                     console.log("edit pressed");
-                                    router.push(
-                                        "/components/appointment/screens/EditAppointmentScreen"
-                                    );
+                                    router.push({
+                                        pathname:
+                                            "/components/appointment/screens/EditAppointmentScreen",
+                                        params: {
+                                            data: JSON.stringify(
+                                                appointmentDetails
+                                            ),
+                                        },
+                                    });
+                                    translateX.value = withTiming(0, {
+                                        duration: 500,
+                                        easing: Easing.bezier(0.45, 0, 0.55, 1), // refer to easeInOutQuad in https://easings.net/#
+                                        reduceMotion: ReduceMotion.System,
+                                    });
                                 }}
                                 style={{
                                     backgroundColor: !modalVisible

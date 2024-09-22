@@ -4,6 +4,8 @@ import {
     DefaultTheme,
     ThemeProvider,
 } from "@react-navigation/native";
+import { Pressable } from "react-native";
+import { Text, View } from "@/constants/styles/Themed";
 import { useFonts } from "expo-font";
 import { router, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -17,9 +19,7 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-
 import { useColorScheme } from "@/constants/styles/useColorScheme";
-import { Pressable, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import Colors from "@/constants/styles/Colors";
 
@@ -67,6 +67,7 @@ function RootLayoutNav() {
     const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
         if (selectedDate) {
             setDate(selectedDate);
+            console.log("Date changed to: ", selectedDate);
         }
     };
 
@@ -102,18 +103,18 @@ function RootLayoutNav() {
                                             alignItems: "center",
                                         }}
                                     >
-                                        <DateTimePicker
-                                            value={date}
-                                            mode={"date"}
-                                            onChange={onChangeDate}
-                                        />
-
-                                        <DateTimePicker
-                                            value={date}
-                                            mode={"time"}
-                                            onChange={onChangeDate}
-                                            minuteInterval={15}
-                                        />
+                                        <Text
+                                            style={{
+                                                fontSize: 18,
+                                                fontWeight: "500",
+                                                color: Colors[
+                                                    colorScheme ?? "light"
+                                                ].text,
+                                                left: wp("22%"),
+                                            }}
+                                        >
+                                            Create Appointment
+                                        </Text>
                                     </View>
                                 </View>
                             ),
@@ -122,15 +123,13 @@ function RootLayoutNav() {
                                 <View>
                                     <Pressable
                                         onPress={() => {
-                                            console.log(
-                                                "Search button pressed"
-                                            );
+                                            console.log("close button pressed");
                                             router.dismiss();
                                         }}
                                     >
                                         <View
                                             style={{
-                                                marginLeft: wp("22%"),
+                                                alignSelf: "flex-end",
                                             }}
                                         >
                                             <AntDesign
@@ -141,7 +140,6 @@ function RootLayoutNav() {
                                                         colorScheme ?? "light"
                                                     ].text
                                                 }
-                                                style={{ marginRight: 10 }}
                                             />
                                         </View>
                                     </Pressable>

@@ -1,14 +1,7 @@
 // AppointmentModal.tsx
 import React from "react";
-import {
-    Modal,
-    Pressable,
-    StyleSheet,
-    Text,
-    useColorScheme,
-    View,
-} from "react-native";
-
+import { Modal, Pressable, StyleSheet, useColorScheme } from "react-native";
+import { View, Text } from "@/constants/styles/Themed";
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -17,7 +10,7 @@ import { AntDesign } from "@expo/vector-icons";
 
 import Colors from "@/constants/styles/Colors";
 import { TextInput } from "react-native-gesture-handler";
-import { ModalProps } from "./types";
+import { ModalProps } from "../types";
 
 const SearchModal = ({ visible, onClose }: ModalProps) => {
     const colorScheme = useColorScheme();

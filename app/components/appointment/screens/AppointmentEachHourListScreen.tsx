@@ -1,13 +1,7 @@
 // AppointmentModal.tsx
 import React, { useLayoutEffect, useState } from "react";
-import {
-    FlatList,
-    Pressable,
-    StyleSheet,
-    Text,
-    useColorScheme,
-    View,
-} from "react-native";
+import { FlatList, Pressable, StyleSheet, useColorScheme } from "react-native";
+import { Text, View } from "@/constants/styles/Themed";
 import AppointmentDetails from "@/app/components/appointment/components/AppointmentDetails";
 import {
     widthPercentageToDP as wp,
@@ -18,7 +12,7 @@ import { AntDesign } from "@expo/vector-icons";
 import Colors from "@/constants/styles/Colors";
 import { ModalProps } from "../types";
 import dummyAppointmentData from "@/dummy/dummyAppointmentData.json";
-import { useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
 
 const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
     const navigation = useNavigation();
@@ -50,6 +44,7 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
                 },
             ]}
         >
+            {/* Title */}
             <View
                 style={[
                     styles.content,
@@ -59,36 +54,53 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
                     },
                 ]}
             >
-                <View>
-                    <Pressable
-                        // onPress={onClose}
-                        onPress={() => navigation.goBack()}
-                        style={{
-                            left: wp("42.5%"),
-                            top: hp("1%"),
-                            marginBottom: hp("1%"),
-                        }}
-                    >
-                        <AntDesign
-                            name="close"
-                            size={28}
-                            color={Colors[colorScheme ?? "light"].text}
-                            style={{ marginRight: 10 }}
-                        />
-                    </Pressable>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginTop: hp("2%"),
+                    }}
+                >
+                    <View style={{}}>
+                        <Text
+                            style={{
+                                fontSize: 18,
+                                fontWeight: "500",
+                                color: Colors[colorScheme ?? "light"].text,
+                                left: wp("4%"),
+                            }}
+                        >
+                            List of appointments
+                        </Text>
+                    </View>
+
+                    <View style={{ left: wp("20.5%") }}>
+                        <Pressable
+                            onPress={() => {
+                                router.back();
+                            }}
+                        >
+                            <AntDesign
+                                name="close"
+                                size={28}
+                                color={Colors[colorScheme ?? "light"].text}
+                            />
+                        </Pressable>
+                    </View>
                 </View>
 
-                <View style={{ marginBottom: hp("5%") }}>
-                    <Text
-                        style={{
-                            fontSize: 18,
-                            fontWeight: "500",
-                            color: Colors[colorScheme ?? "light"].text,
-                        }}
-                    >
-                        List of Appointments
-                    </Text>
-                </View>
+                {/* Separator */}
+                <View
+                    style={{
+                        borderColor:
+                            Colors[colorScheme ?? "light"].tabIconDefault,
+                        borderWidth: 0.5,
+                        width: wp("96%"),
+                        marginTop: hp("1.8%"),
+                        marginBottom: hp("5%"),
+                    }}
+                ></View>
 
                 <View style={{ paddingBottom: hp("15%") }}>
                     <FlatList

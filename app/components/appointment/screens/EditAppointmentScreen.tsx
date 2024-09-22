@@ -1,17 +1,15 @@
 import { StatusBar } from "expo-status-bar";
 import {
-    Platform,
     Pressable,
     SafeAreaView,
     StyleSheet,
     useColorScheme,
 } from "react-native";
+import { Text, View } from "@/constants/styles/Themed";
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-
-import { Text, View } from "@/constants/styles/Themed";
 import Colors from "@/constants/styles/Colors";
 import { AntDesign } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
@@ -20,11 +18,15 @@ import DropdownModal from "@/app/utils/modals/DropDownModal";
 import DateTimePicker, {
     DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
+import { AppointmentDetailsProps } from "../types";
 
 import dummyServiceData from "@/dummy/dummyServiceData.json";
-import { router, useNavigation } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 
 export default function EditAppointmentScreen() {
+    const { data } = useLocalSearchParams();
+    const appointmentDetails = data ? JSON.parse(data as string) : {};
+
     const navigation = useNavigation();
 
     const colorScheme = useColorScheme();
@@ -35,12 +37,28 @@ export default function EditAppointmentScreen() {
     // DropDownPicker for selecting a service
     const [serviceItems, setServiceItems] = useState(dummyServiceData);
 
-    const [date, setDate] = useState(new Date());
+    // editng date object
+    const [dateObject, setDateObject] = useState(
+        new Date(appointmentDetails.date)
+    );
     const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
         if (selectedDate) {
-            setDate(selectedDate);
+            setDateObject(selectedDate);
         }
     };
+
+    // editing time object
+    const [hours, minutes] = appointmentDetails.time.split(":").map(Number);
+    const timeObject0 = new Date();
+    timeObject0.setHours(hours, minutes, 0, 0);
+    const [timeObject, setTimeObject] = useState(timeObject0);
+    const onChangeTime = (event: DateTimePickerEvent, selectedTime?: Date) => {
+        if (selectedTime) {
+            setTimeObject(selectedTime);
+        }
+    };
+
+    console.log(appointmentDetails);
 
     useEffect(() => {
         navigation.setOptions({ headerShown: false });
@@ -56,7 +74,56 @@ export default function EditAppointmentScreen() {
                 },
             ]}
         >
+            {/* Title  */}
             <View style={styles.content}>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                >
+                    <View style={{}}>
+                        <Text
+                            style={{
+                                fontSize: 18,
+                                fontWeight: "500",
+                                color: Colors[colorScheme ?? "light"].text,
+                                left: wp("4%"),
+                            }}
+                        >
+                            Edit appointment
+                        </Text>
+                    </View>
+
+                    <View style={{ left: wp("24.5%") }}>
+                        <Pressable
+                            onPress={() => {
+                                router.back();
+                            }}
+                        >
+                            <AntDesign
+                                name="close"
+                                size={28}
+                                color={Colors[colorScheme ?? "light"].text}
+                            />
+                        </Pressable>
+                    </View>
+                </View>
+
+                {/* Separator */}
+                <View
+                    style={{
+                        borderColor:
+                            Colors[colorScheme ?? "light"].tabIconDefault,
+                        borderWidth: 0.5,
+                        width: wp("96%"),
+                        marginTop: hp("1.8%"),
+                        marginBottom: hp("2.5%"),
+                    }}
+                ></View>
+
+                {/* Date and time pickers */}
                 <View
                     style={{
                         flexDirection: "row",
@@ -72,31 +139,16 @@ export default function EditAppointmentScreen() {
                         }}
                     >
                         <DateTimePicker
-                            value={date}
+                            value={dateObject}
                             mode={"date"}
                             onChange={onChangeDate}
                         />
 
                         <DateTimePicker
-                            value={date}
+                            value={timeObject}
                             mode={"time"}
-                            onChange={onChangeDate}
-                            minuteInterval={15}
+                            onChange={onChangeTime}
                         />
-                    </View>
-
-                    <View style={{ marginLeft: wp("22%") }}>
-                        <Pressable
-                            onPress={() => {
-                                router.back();
-                            }}
-                        >
-                            <AntDesign
-                                name="close"
-                                size={28}
-                                color={Colors[colorScheme ?? "light"].text}
-                            />
-                        </Pressable>
                     </View>
                 </View>
 
@@ -133,7 +185,9 @@ export default function EditAppointmentScreen() {
                             }}
                         >
                             <TextInput
-                                placeholder="Phone number"
+                                placeholder={
+                                    appointmentDetails.customerPhoneNumber
+                                }
                                 placeholderTextColor={
                                     "rgba(189, 195, 199, 0.8)"
                                 }
@@ -166,7 +220,9 @@ export default function EditAppointmentScreen() {
                             }}
                         >
                             <TextInput
-                                placeholder="Full name"
+                                placeholder={
+                                    appointmentDetails.customerFullName
+                                }
                                 placeholderTextColor={
                                     "rgba(189, 195, 199, 0.8)"
                                 }
@@ -202,7 +258,7 @@ export default function EditAppointmentScreen() {
                                 onChange={(value) => {
                                     console.log(value);
                                 }}
-                                placeholder={serviceItems[0].label}
+                                placeholder={appointmentDetails.serviceTitle}
                             />
                         </View>
                     </View>
@@ -227,7 +283,7 @@ export default function EditAppointmentScreen() {
                             }}
                         >
                             <TextInput
-                                placeholder="Number of people"
+                                placeholder={appointmentDetails.numberOfCustomers.toString()}
                                 placeholderTextColor={
                                     "rgba(189, 195, 199, 0.8)"
                                 }
@@ -239,11 +295,11 @@ export default function EditAppointmentScreen() {
                     </View>
                 </View>
 
-                {/* confirm and candel buttons */}
+                {/* confirm button */}
                 <View
                     style={{
                         marginLeft: wp("50%"),
-                        marginTop: hp("8%"),
+                        marginTop: hp("5%"),
                     }}
                 >
                     <Pressable
@@ -259,7 +315,8 @@ export default function EditAppointmentScreen() {
                             style={{
                                 paddingHorizontal: wp("2.5%"),
                                 opacity: 0.5,
-                                color: Colors[colorScheme ?? "light"].text,
+                                color: Colors[colorScheme ?? "light"]
+                                    .tabIconSelected,
                             }}
                         >
                             Confirm
