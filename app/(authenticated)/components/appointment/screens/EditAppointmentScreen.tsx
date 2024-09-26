@@ -14,11 +14,10 @@ import Colors from "@/constants/styles/Colors";
 import { AntDesign } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { TextInput } from "react-native-gesture-handler";
-import DropdownModal from "@/app/utils/modals/DropDownModal";
+import DropdownModal from "@/app/(authenticated)/utils/modals/DropDownModal";
 import DateTimePicker, {
     DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import { AppointmentDetailsProps } from "../types";
 
 import dummyServiceData from "@/dummy/dummyServiceData.json";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";

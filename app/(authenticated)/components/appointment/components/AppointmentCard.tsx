@@ -14,7 +14,7 @@ import { AppointmentCardProps } from "../types";
 import AppointmentCardBody from "./AppointmentCardBody";
 import AppointmentEachHourListModal from "@/app/components/appointment/screens/AppointmentEachHourListModal";
 import { AntDesign } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 
 const AppointmentCard = ({ index, scrollY }: AppointmentCardProps) => {
     const [cardHeight, setCardHeight] = useState(0);
@@ -82,6 +82,7 @@ const AppointmentCard = ({ index, scrollY }: AppointmentCardProps) => {
                         </View>
 
                         {/* show appointment details */}
+
                         <Pressable
                             onPress={() => {
                                 // setModalVisible(!modalVisible);

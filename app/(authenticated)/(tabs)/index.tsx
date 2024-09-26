@@ -13,7 +13,7 @@ import {
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
-import AppointmentCard from "@/app/components/appointment/components/AppointmentCard";
+import AppointmentCard from "@/app/(authenticated)/components/appointment/components/AppointmentCard";
 
 const AppointmentCardList = () => {
     const [listHeight, setListHeight] = useState(0);

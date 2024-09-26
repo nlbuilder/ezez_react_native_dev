@@ -3,6 +3,11 @@
 # dependencies
 node_modules/
 ios/
+android/
+
+
+# note file
+*.txt
 
 # Expo
 .expo/

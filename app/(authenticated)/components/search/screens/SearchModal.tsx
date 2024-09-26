@@ -10,7 +10,7 @@ import { AntDesign } from "@expo/vector-icons";
 
 import Colors from "@/constants/styles/Colors";
 import { TextInput } from "react-native-gesture-handler";
-import { ModalProps } from "../types";
+import { ModalProps } from "../types/types";
 
 const SearchModal = ({ visible, onClose }: ModalProps) => {
     const colorScheme = useColorScheme();

@@ -9,7 +9,7 @@ import {
     useWindowDimensions,
 } from "react-native";
 import React, { useState } from "react";
-import { AppointmentDetailsProps } from "../types";
+import { AppointmentDetailsProps } from "../types/types";
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -17,7 +17,6 @@ import {
 import DateTimePicker, {
     DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import RNPickerSelect from "react-native-picker-select";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
 import Colors from "@/constants/styles/Colors";
@@ -32,7 +31,7 @@ import Animated, {
     useSharedValue,
     withTiming,
 } from "react-native-reanimated";
-import WarningModal from "@/app/utils/modals/WarningModal";
+import WarningModal from "@/app/(authenticated)/utils/modals/WarningModal";
 import { router } from "expo-router";
 
 const AppointmentDetails = ({
@@ -233,7 +232,7 @@ const AppointmentDetails = ({
                                     console.log("edit pressed");
                                     router.push({
                                         pathname:
-                                            "/components/appointment/screens/EditAppointmentScreen",
+                                            "/(authenticated)/components/appointment/screens/EditAppointmentScreen",
                                         params: {
                                             data: JSON.stringify(
                                                 appointmentDetails
@@ -386,7 +385,7 @@ const AppointmentDetails = ({
                                         </Text>
                                     ) : (
                                         <View style={{ left: wp(".5%") }}>
-                                            <RNPickerSelect
+                                            {/* <RNPickerSelect
                                                 onValueChange={(value) =>
                                                     console.log(value)
                                                 }
@@ -417,7 +416,7 @@ const AppointmentDetails = ({
                                                         ].text,
                                                     },
                                                 }}
-                                            />
+                                            /> */}
                                         </View>
                                     )}
                                 </View>

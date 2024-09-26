@@ -12,9 +12,9 @@ import {
 
 import Colors from "@/constants/styles/Colors";
 import { useColorScheme } from "@/constants/styles/useColorScheme";
-import { useClientOnlyValue } from "@/app/utils/useClientOnlyValue";
+import { useClientOnlyValue } from "@/app/(authenticated)/utils/useClientOnlyValue";
 import PlusButton from "./plusButton";
-import SearchModal from "@/app/components/search/screens/SearchModal";
+import SearchModal from "@/app/(authenticated)/components/search/screens/SearchModal";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -117,7 +117,9 @@ export default function TabLayout() {
                         tabBarButton: () => (
                             <PlusButton
                                 onPress={() => {
-                                    router.push("/CreateAppointmentModal");
+                                    router.push(
+                                        "/(authenticated)/CreateAppointmentModal"
+                                    );
                                 }}
                             />
                         ),

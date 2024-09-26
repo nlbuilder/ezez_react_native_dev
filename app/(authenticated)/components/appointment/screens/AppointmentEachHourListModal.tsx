@@ -9,7 +9,7 @@ import {
     useColorScheme,
     View,
 } from "react-native";
-import AppointmentDetails from "@/app/components/appointment/components/AppointmentDetails";
+import AppointmentDetails from "@/app/(authenticated)/components/appointment/components/AppointmentDetails";
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -17,7 +17,7 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 
 import Colors from "@/constants/styles/Colors";
-import { ModalProps } from "../types";
+import { ModalProps } from "../types/types";
 import dummyAppointmentData from "@/dummy/dummyAppointmentData.json";
 
 const AppointmentEachHourListModal = ({ visible, onClose }: ModalProps) => {

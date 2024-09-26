@@ -5,7 +5,7 @@
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./assets/images/icon.png",
-        "scheme": "myapp",
+        "scheme": ["ezez", "846103247647188"],
         "userInterfaceStyle": "automatic",
         "splash": {
             "image": "./assets/images/splash.png",
@@ -14,20 +14,24 @@
         },
         "ios": {
             "supportsTablet": true,
-            "bundleIdentifier": "com.leoutas.ezez"
+            "bundleIdentifier": "com.leoutas.ezez",
+            "ios": {
+                "googleServicesFile": "./GoogleService-Info.plist"
+            }
         },
         "android": {
             "adaptiveIcon": {
                 "foregroundImage": "./assets/images/adaptive-icon.png",
                 "backgroundColor": "#ffffff"
-            }
+            },
+            "package": "com.leoutas.ezez"
         },
         "web": {
             "bundler": "metro",
             "output": "static",
             "favicon": "./assets/images/favicon.png"
         },
-        "plugins": ["expo-router"],
+        "plugins": ["expo-router", "@react-native-google-signin/google-signin"],
         "experiments": {
             "typedRoutes": true
         }

@@ -2,7 +2,7 @@
 import React, { useLayoutEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, useColorScheme } from "react-native";
 import { Text, View } from "@/constants/styles/Themed";
-import AppointmentDetails from "@/app/components/appointment/components/AppointmentDetails";
+import AppointmentDetails from "@/app/(authenticated)/components/appointment/components/AppointmentDetails";
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -10,7 +10,7 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 
 import Colors from "@/constants/styles/Colors";
-import { ModalProps } from "../types";
+import { ModalProps } from "../types/types";
 import dummyAppointmentData from "@/dummy/dummyAppointmentData.json";
 import { router, useNavigation } from "expo-router";
 
