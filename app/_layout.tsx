@@ -6,9 +6,12 @@ import {
     ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Slot, SplashScreen, Stack } from "expo-router";
+import { Slot, SplashScreen } from "expo-router";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
+
+import { FontProvider } from "@/constants/styles/FontContext";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -25,7 +28,8 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
     const [loaded, error] = useFonts({
-        SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+        Calibri: require("../assets/fonts/calibri.ttf"),
+        FuzzyBubbles: require("../assets/fonts/Fuzzy Bubbles Regular.ttf"),
         ...FontAwesome.font,
     });
 
@@ -46,6 +50,15 @@ export default function RootLayout() {
     return <RootLayoutNav />;
 }
 
+// add queryClientProvider
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+        },
+    },
+});
+
 function RootLayoutNav() {
     const colorScheme = useColorScheme();
 
@@ -53,9 +66,13 @@ function RootLayoutNav() {
         <ThemeProvider
             value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
-            <AuthProvider>
-                <Slot />
-            </AuthProvider>
+            <FontProvider>
+                <QueryClientProvider client={queryClient}>
+                    <AuthProvider>
+                        <Slot />
+                    </AuthProvider>
+                </QueryClientProvider>
+            </FontProvider>
         </ThemeProvider>
     );
 }

@@ -10,9 +10,9 @@ import {
 } from "react-native-responsive-screen";
 import React, { useState } from "react";
 
-import { AppointmentCardProps } from "../types";
+import { AppointmentCardProps } from "../types/types";
 import AppointmentCardBody from "./AppointmentCardBody";
-import AppointmentEachHourListModal from "@/app/components/appointment/screens/AppointmentEachHourListModal";
+import AppointmentEachHourListModal from "@/app/(authenticated)/components/appointment/screens/AppointmentEachHourListModal";
 import { AntDesign } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 
@@ -87,7 +87,7 @@ const AppointmentCard = ({ index, scrollY }: AppointmentCardProps) => {
                             onPress={() => {
                                 // setModalVisible(!modalVisible);
                                 router.navigate(
-                                    "/components/appointment/screens/AppointmentEachHourListScreen"
+                                    "./components/appointment/screens/AppointmentEachHourListScreen"
                                 );
                             }}
                         >

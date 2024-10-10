@@ -200,7 +200,7 @@ const AppointmentDetails = ({
                     borderColor: Colors[colorScheme ?? "light"].tabIconDefault,
                     height: hp("15%"),
                     width: wp("96%"),
-                    marginBottom: isEditable ? hp("4.5%") : hp("4.5"),
+                    marginBottom: isEditable ? hp("5%") : hp("5%"),
                 }}
             >
                 <GestureDetector gesture={pan}>

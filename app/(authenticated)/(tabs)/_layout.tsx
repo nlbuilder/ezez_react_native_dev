@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { router, Tabs } from "expo-router";
+import { router, Stack, Tabs } from "expo-router";
 import { Pressable, View } from "react-native";
 import DateTimePicker, {
     DateTimePickerEvent,
@@ -24,7 +24,7 @@ function TabBarIcon(props: {
     return <AntDesign size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
-export default function TabLayout() {
+export default function _layout() {
     const colorScheme = useColorScheme();
 
     const [date, setDate] = useState(new Date());
@@ -126,17 +126,21 @@ export default function TabLayout() {
                     }}
                 />
 
-                {/* menu tab */}
+                {/* profile tab */}
                 <Tabs.Screen
-                    name="settings"
+                    name="profile"
                     options={{
-                        title: "Settings",
+                        title: "Profile",
+                        headerShown: false,
+
                         tabBarIcon: ({ color }) => (
-                            <TabBarIcon name="weibo-circle" color={color} />
+                            <TabBarIcon name="profile" color={color} />
                         ),
                     }}
                 />
             </Tabs>
+
+            <Stack.Screen name="" options={{}} />
         </>
     );
 }

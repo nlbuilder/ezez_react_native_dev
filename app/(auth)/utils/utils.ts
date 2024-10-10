@@ -8,9 +8,18 @@ import {
     signInWithCredential,
 } from "firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-
 import { auth } from "@/firebase/firebaseConfig";
-import * as WebBrowser from "expo-web-browser";
+import { REACT_APP_BASE_URL } from "@env";
+
+export const BASE_URL = REACT_APP_BASE_URL;
+
+// import {
+//     LoginManager,
+//     AccessToken,
+//     LoginButton,
+//     Settings,
+//     Profile,
+// } from "react-native-fbsdk-next";
 
 // Handle Auth State Changes
 export function onAuthStateChanged(callback: NextOrObserver<User>) {
@@ -39,8 +48,6 @@ export async function signInWithGoogle() {
         await GoogleSignin.hasPlayServices();
         const userInfo = await GoogleSignin.signIn();
 
-        console.log(userInfo.data?.idToken);
-
         // get the user's ID token
         const idToken = userInfo.data?.idToken;
 
@@ -58,6 +65,31 @@ export async function signInWithGoogle() {
         console.error("Error during Google Sign-In:", error);
     }
 }
+
+// const loginWithFacebook = () => {
+//     LoginManager.logInWithPermissions(["public_profile", "email"]).then(
+//         function (result) {
+//             if (result.isCancelled) {
+//                 console.log("==> Login cancelled");
+//             } else {
+//                 console.log(result);
+//                 AccessToken.getCurrentAccessToken().then((data) => {
+//                     console.log(data);
+//                     getUserFBData();
+//                 });
+//             }
+//         },
+//         function (error) {
+//             console.log("==> Login fail with error: " + error);
+//         }
+//     );
+// };
+
+// const getUserFBData = () => {
+//     Profile.getCurrentProfile().then((currentProfile) => {
+//         console.log(currentProfile);
+//     });
+// };
 
 // sign out function
 export async function signOut() {

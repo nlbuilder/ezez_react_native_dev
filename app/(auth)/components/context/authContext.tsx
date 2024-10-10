@@ -8,6 +8,7 @@ import { auth } from "@/firebase/firebaseConfig";
 
 // initial state
 const userInitialState = {
+    token: "",
     uid: "",
     createdAt: "",
     displayName: "",
@@ -37,8 +38,10 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
     React.useEffect(() => {
         const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
             if (user) {
-                console.log(JSON.stringify(user, null, 2));
+                const IdToken = await user.getIdToken();
+
                 const authenticatedUserData: User = {
+                    IdToken: IdToken,
                     uid: user.uid,
                     displayName: user.providerData[0].displayName ?? "",
                     photoURL: user.providerData[0].photoURL ?? "",
