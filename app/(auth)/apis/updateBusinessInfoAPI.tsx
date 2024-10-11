@@ -30,7 +30,9 @@ export const useUpdateBusinessInfoAPI = () => {
 
         // check if the request was successful
         if (!response.ok) {
-            throw new Error("Failed to update business info");
+            throw new Error(
+                "Failed to update business info [frontend error message]: "
+            );
         }
 
         return response.json();
@@ -38,7 +40,7 @@ export const useUpdateBusinessInfoAPI = () => {
 
     // use the useMutation hook to update the business info
     const {
-        data: updateBusinessInfo,
+        mutateAsync: updateBusinessInfo,
         isLoading,
         isError,
         isSuccess,

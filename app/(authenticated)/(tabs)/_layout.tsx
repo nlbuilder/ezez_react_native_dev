@@ -134,13 +134,11 @@ export default function _layout() {
                         headerShown: false,
 
                         tabBarIcon: ({ color }) => (
-                            <TabBarIcon name="profile" color={color} />
+                            <TabBarIcon name="idcard" color={color} />
                         ),
                     }}
                 />
             </Tabs>
-
-            <Stack.Screen name="" options={{}} />
         </>
     );
 }

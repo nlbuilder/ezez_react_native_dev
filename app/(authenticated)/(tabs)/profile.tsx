@@ -89,7 +89,7 @@ const Profile = () => {
                 <View style={{ marginTop: hp("12%") }}>
                     <Pressable
                         onPress={() =>
-                            router.replace(
+                            router.navigate(
                                 "/(authenticated)/components/profile/screens/BusinessInfo"
                             )
                         }
@@ -122,7 +122,7 @@ const Profile = () => {
                 <View style={{ marginTop: hp("2.5%") }}>
                     <Pressable
                         onPress={() =>
-                            router.replace(
+                            router.navigate(
                                 "/(authenticated)/components/profile/screens/StaffInfo"
                             )
                         }

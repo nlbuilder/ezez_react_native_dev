@@ -5,7 +5,7 @@ import { useAuth } from "@/app/(auth)/components/hooks/useAuth";
 import { BusinessStaffInfo } from "@/app/(auth)/types/types";
 
 // def a hook to get staff info
-export const useGetBusinessStaffInfoAPI = () => {
+export const useGetBusinessStaffInfoForBusinessAPI = () => {
     const auth = useAuth();
 
     // this method is meant to be used by an authenticated staff to get their own info
@@ -14,20 +14,22 @@ export const useGetBusinessStaffInfoAPI = () => {
     // there is a listOfStaff field that contains all the staff info in the business info
 
     // def a function to get staff info
-    const getBusinessStaffInfoRequest =
+    const getBusinessStaffInfoRequestForBusiness =
         async (): Promise<BusinessStaffInfo | null> => {
             // get the access token from auth
             const accessToken = auth?.user?.IdToken;
 
-            const businessStaffId = auth?.user?.uid;
+            const businessId = auth?.user?.uid;
+
+            console.log(businessId);
 
             // make a GET request to the backend
-            const response = await fetch(`${BASE_URL}/auth/staff`, {
+            const response = await fetch(`${BASE_URL}/auth/business/staffs`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${accessToken}`, // add the access token to the headers
                     "Content-Type": "application/json",
-                    "businessstaff-id": businessStaffId,
+                    "business-id": businessId,
                 } as HeadersInit,
 
                 credentials: "include",
@@ -49,18 +51,8 @@ export const useGetBusinessStaffInfoAPI = () => {
             return response.json();
         };
 
-    // use the useQuery hook to get the business info
-    // const {
-    //     data: currentBusinessStaffInfo,
-    //     isLoading,
-    //     isError,
-    //     isSuccess,
-    //     error,
-    //     refetch,
-    // } = useQuery("getBusinessStaffInfo", getBusinessStaffInfoRequest);
-
     const {
-        data: currentBusinessStaffInfo,
+        data: currentBusinessStaffInfoForBusiness,
         isLoading,
         isError,
         isSuccess,
@@ -68,13 +60,13 @@ export const useGetBusinessStaffInfoAPI = () => {
         refetch,
     } = useQuery(
         ["getBusinessInfo", auth?.user?.uid],
-        getBusinessStaffInfoRequest,
+        getBusinessStaffInfoRequestForBusiness,
         {
             enabled: !!auth?.user?.uid, // Only run query if auth.uid is available
         }
     );
     return {
-        currentBusinessStaffInfo,
+        currentBusinessStaffInfoForBusiness,
         isLoading,
         isError,
         isSuccess,

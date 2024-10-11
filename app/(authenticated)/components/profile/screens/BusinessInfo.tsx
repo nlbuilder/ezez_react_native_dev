@@ -1,12 +1,5 @@
-import {
-    Pressable,
-    StyleSheet,
-    TextInput,
-    useColorScheme,
-    View,
-    Text,
-} from "react-native";
-import React, { useEffect, useState } from "react";
+import { Pressable, useColorScheme, View, Text, FlatList } from "react-native";
+import React, { useEffect } from "react";
 import { router, useNavigation } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import {
@@ -16,36 +9,78 @@ import {
 
 import { useGetBusinessInfoAPI } from "@/app/(auth)/apis/getBusinessInfoAPI";
 import Colors from "@/constants/styles/Colors";
+import BusinessInfoCard from "../components/businessInfo/BusinessInfoCard";
 
 const BusinessInfo = () => {
     const navigation = useNavigation();
     const colorScheme = useColorScheme();
 
-    const { currentBusinessInfo, isLoading: isGetBusinessInfoLoading } =
-        useGetBusinessInfoAPI();
+    const {
+        currentBusinessInfo,
+        refetch,
+        isLoading: isGetBusinessInfoLoading,
+    } = useGetBusinessInfoAPI();
 
-    const [businessName, setBusinessName] = useState("");
-    const businessEmail = currentBusinessInfo?.email;
+    const businessInfoData = [
+        { title: "Email", value: currentBusinessInfo?.email || "" },
+        {
+            title: "Phone Number",
+            value: currentBusinessInfo?.phoneNumber || "",
+        },
+        {
+            title: "Manager Name",
+            value: Array.isArray(currentBusinessInfo?.managerName)
+                ? currentBusinessInfo.managerName.join(", ")
+                : "",
+        },
+        {
+            title: "Address Line 1",
+            value: currentBusinessInfo?.addressLine1 || "",
+        },
+        {
+            title: "Address Line 2",
+            value: currentBusinessInfo?.addressLine2 || "",
+        },
+        { title: "City", value: currentBusinessInfo?.city || "" },
+        { title: "State", value: currentBusinessInfo?.state || "" },
+        { title: "Zip Code", value: currentBusinessInfo?.zip || "" },
+        { title: "Country", value: currentBusinessInfo?.country || "" },
+        { title: "Description", value: currentBusinessInfo?.description || "" },
+    ];
 
     // handle the header when this screen is rendered
     useEffect(() => {
         navigation.setOptions({
+            headerBackTitle: "Back",
             headerTitle: "Business Information",
-            headerLeft: () => (
+            presentation: "card",
+
+            headerRight: () => (
+                // edit button
                 <Pressable
-                    onPress={() =>
-                        router.replace("/(authenticated)/(tabs)/profile")
-                    }
+                    onPress={() => {
+                        router.navigate(
+                            "/(authenticated)/components/profile/screens/EditBusinessInfo"
+                        ),
+                            refetch();
+                    }}
                 >
-                    <AntDesign
-                        name="leftcircleo"
-                        size={24}
-                        color={colorScheme === "dark" ? "white" : "black"}
-                    />
+                    <View
+                        style={{
+                            alignSelf: "flex-end",
+                            paddingHorizontal: 15,
+                        }}
+                    >
+                        <AntDesign
+                            name={"edit"}
+                            size={24}
+                            color={Colors[colorScheme ?? "light"].text}
+                        />
+                    </View>
                 </Pressable>
             ),
         });
-    }, [navigation]);
+    }, [navigation, colorScheme]);
 
     return (
         <>
@@ -58,33 +93,6 @@ const BusinessInfo = () => {
                 <View
                     style={{
                         backgroundColor:
-                            colorScheme === "dark" ? "white" : "white",
-                        height: hp("10%"),
-                        borderBottomColor:
-                            colorScheme === "dark"
-                                ? "white"
-                                : "rgba(189, 195, 199, 0.8)",
-                        borderBottomWidth: 1,
-                        alignSelf: "center",
-                        width: wp("90%"),
-                    }}
-                >
-                    <TextInput
-                        placeholder="Enter business name"
-                        placeholderTextColor={"grey"}
-                        style={{
-                            height: "100%",
-                            color: Colors[colorScheme ?? "light"].text,
-                            marginLeft: wp("10%"),
-                        }}
-                        value={businessName}
-                        onChangeText={(value) => setBusinessName(value)}
-                    />
-                </View>
-
-                <View
-                    style={{
-                        backgroundColor:
                             Colors[colorScheme ?? "light"].background,
                         height: hp("10%"),
                         borderBottomColor:
@@ -92,8 +100,8 @@ const BusinessInfo = () => {
                                 ? "white"
                                 : "rgba(189, 195, 199, 0.8)",
                         borderBottomWidth: 1,
-                        justifyContent: "center",
                         alignSelf: "center",
+                        justifyContent: "center",
                         width: wp("90%"),
                     }}
                 >
@@ -101,42 +109,31 @@ const BusinessInfo = () => {
                         style={{
                             color: Colors[colorScheme ?? "light"].text,
                             marginLeft: wp("10%"),
+                            fontSize: 18,
+                            fontWeight: "500",
                         }}
                     >
-                        Email
+                        {currentBusinessInfo?.name}
                     </Text>
-
-                    {/* separator between Email title and email address */}
-                    <View
-                        style={{
-                            borderBottomColor:
-                                colorScheme === "dark"
-                                    ? "white"
-                                    : "rgba(189, 195, 199, 0.5)",
-                            borderBottomWidth: 1,
-                            width: wp("50%"),
-                            marginLeft: wp("10%"),
-                            marginTop: hp("1%"),
-                        }}
-                    ></View>
-
-                    <TextInput
-                        placeholderTextColor={"grey"}
-                        style={{
-                            // height: "100%",
-                            color: Colors[colorScheme ?? "light"].text,
-                            marginLeft: wp("10%"),
-                            marginTop: hp("1%"),
-                        }}
-                        value={businessEmail}
-                        onChangeText={(value) => setBusinessName(value)}
-                    />
                 </View>
+
+                {/* handle the Flastlist */}
+                <FlatList
+                    data={businessInfoData}
+                    keyExtractor={(item, index) => index.toString()}
+                    showsVerticalScrollIndicator={false}
+                    scrollEnabled={true}
+                    renderItem={({ item }) => (
+                        <BusinessInfoCard
+                            infoTitle={item.title}
+                            infoDetails={item.value}
+                        />
+                    )}
+                    style={{ marginBottom: hp("10%") }}
+                />
             </View>
         </>
     );
 };
 
 export default BusinessInfo;
-
-const styles = StyleSheet.create({});

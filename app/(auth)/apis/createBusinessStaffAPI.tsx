@@ -17,6 +17,7 @@ export const useCreateBusinessStaffAPI = () => {
     ) => {
         // get the access token from auth
         const accessToken = auth?.user?.IdToken;
+        const businessId = auth?.user?.uid;
 
         // make a POST request to the backend to create a staff
         const response = await fetch(`${BASE_URL}/auth/staff`, {
@@ -24,14 +25,19 @@ export const useCreateBusinessStaffAPI = () => {
             headers: {
                 Authorization: `Bearer ${accessToken}`, // add the access token to the headers
                 "Content-Type": "application/json",
-            },
+                "business-id": businessId, // inject the businessId to send to backend
+            } as HeadersInit,
             body: JSON.stringify(businessStaffInfo),
         });
 
         // check if the request was successful
         if (!response.ok) {
-            throw new Error("Failed to create staff");
+            throw new Error(
+                "Failed to create staff [frontend error message]: "
+            );
         }
+
+        return response.json();
     };
 
     // use the useMutation hook to create a new staff

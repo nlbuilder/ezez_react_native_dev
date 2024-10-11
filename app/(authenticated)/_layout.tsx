@@ -73,6 +73,7 @@ function RootLayoutNav() {
                     name="(tabs)"
                     options={{
                         headerShown: false,
+                        // presentation:"fullScreenModal"
                     }}
                 />
 

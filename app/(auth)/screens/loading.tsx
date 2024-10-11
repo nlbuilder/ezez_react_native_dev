@@ -6,7 +6,7 @@ import { useLocalSearchParams } from "expo-router";
 import { Wander } from "react-native-animated-spinkit";
 
 const loading = () => {
-    const { authToken, businessId, name, email } = useLocalSearchParams();
+    const { businessId, name, email } = useLocalSearchParams();
     const { createBusinessInfo } = useCreateBusinessAPI();
 
     useEffect(() => {

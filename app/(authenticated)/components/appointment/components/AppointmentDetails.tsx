@@ -5,7 +5,6 @@ import {
     Text,
     useColorScheme,
     View,
-    TouchableOpacity,
     useWindowDimensions,
 } from "react-native";
 import React, { useState } from "react";

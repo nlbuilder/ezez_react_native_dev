@@ -28,14 +28,15 @@ export interface BusinessInfo {
     email: string;
     logoURL?: string;
     description?: string;
-    managerName?: string;
+    managerName?: string[];
     listOfStaff?: BusinessStaffInfo[];
 }
 
 export interface BusinessStaffInfo {
     businessStaffId?: string;
-    businessId: string;
-    name?: string;
+    // businessId: string;
+    firstName?: string;
+    lastName?: string;
     addressLine1?: string;
     addressLine2?: string;
     city?: string;
