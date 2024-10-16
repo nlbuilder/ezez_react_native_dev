@@ -15,6 +15,8 @@ import { useColorScheme } from "@/constants/styles/useColorScheme";
 import { useClientOnlyValue } from "@/app/(authenticated)/utils/useClientOnlyValue";
 import PlusButton from "./plusButton";
 import SearchModal from "@/app/(authenticated)/components/search/screens/SearchModal";
+import { useDate } from "../components/appointment/context/DateContext";
+import { getTimeZoneName } from "../utils/utils";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -26,8 +28,9 @@ function TabBarIcon(props: {
 
 export default function _layout() {
     const colorScheme = useColorScheme();
+    const { date, setDate } = useDate();
+    const timeZoneName = getTimeZoneName();
 
-    const [date, setDate] = useState(new Date());
     const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
         if (selectedDate) {
             setDate(selectedDate);
@@ -72,6 +75,7 @@ export default function _layout() {
                                     mode={"date"}
                                     onChange={onChangeDate}
                                     style={{ left: -wp("2%") }}
+                                    timeZoneName={timeZoneName}
                                 />
                             </View>
                         ),

@@ -13,8 +13,15 @@ import {
 } from "react-native-responsive-screen";
 
 import Colors from "@/constants/styles/Colors";
-import { CalibriText, FuzzyBubblesText } from "@/constants/styles/StyledText";
+import {
+    CalibriText,
+    FuzzyBubblesText,
+    TimesRegularText,
+} from "@/constants/styles/StyledText";
 import { router } from "expo-router";
+
+import { signOut } from "@/app/(auth)/utils/utils";
+import { AntDesign, Entypo, Feather, MaterialIcons } from "@expo/vector-icons";
 
 const Profile = () => {
     const colorScheme = useColorScheme();
@@ -50,15 +57,15 @@ const Profile = () => {
                         alignItems: "center",
                     }}
                 >
-                    <FuzzyBubblesText
+                    <CalibriText
                         style={{
                             fontWeight: 500,
-                            fontSize: 32,
+                            fontSize: 38,
                             marginBottom: 10,
                         }}
                     >
                         EzEz
-                    </FuzzyBubblesText>
+                    </CalibriText>
 
                     <CalibriText
                         style={{
@@ -90,7 +97,7 @@ const Profile = () => {
                     <Pressable
                         onPress={() =>
                             router.navigate(
-                                "/(authenticated)/components/profile/screens/BusinessInfo"
+                                "/(authenticated)/components/profile/screens/forBusiness/BusinessInfo"
                             )
                         }
                     >
@@ -104,26 +111,47 @@ const Profile = () => {
                                     Colors[colorScheme ?? "light"]
                                         .tabIconSelected,
                                 borderWidth: 1.25,
-                                width: wp("86%"),
-                                height: hp("8%"),
+                                width: wp("80%"),
+                                height: hp("6.9%"),
                                 borderRadius: 35,
                                 alignItems: "center",
-                                justifyContent: "center",
+                                justifyContent: "space-between",
+                                flexDirection: "row",
                             }}
                         >
+                            <MaterialIcons
+                                name="business-center"
+                                size={28}
+                                color={
+                                    colorScheme !== "dark"
+                                        ? "rgba(78,147,214,1)"
+                                        : "grey"
+                                }
+                                style={{ marginLeft: wp("5%") }}
+                            />
                             <Text style={{ fontWeight: 400, fontSize: 16 }}>
                                 Business Information
                             </Text>
+                            <AntDesign
+                                name="arrowright"
+                                size={28}
+                                color={
+                                    colorScheme !== "dark"
+                                        ? "rgba(78,147,214,1)"
+                                        : "grey"
+                                }
+                                style={{ marginRight: wp("2.5%") }}
+                            />
                         </View>
                     </Pressable>
                 </View>
 
                 {/* Staff Info */}
-                <View style={{ marginTop: hp("2.5%") }}>
+                <View style={{ marginTop: hp("2%") }}>
                     <Pressable
                         onPress={() =>
                             router.navigate(
-                                "/(authenticated)/components/profile/screens/StaffInfo"
+                                "/(authenticated)/components/profile/screens/forBusiness/StaffInfo"
                             )
                         }
                     >
@@ -137,26 +165,47 @@ const Profile = () => {
                                     Colors[colorScheme ?? "light"]
                                         .tabIconSelected,
                                 borderWidth: 1.25,
-                                width: wp("86%"),
-                                height: hp("8%"),
+                                width: wp("80%"),
+                                height: hp("6.9%"),
                                 borderRadius: 35,
                                 alignItems: "center",
-                                justifyContent: "center",
+                                justifyContent: "space-between",
+                                flexDirection: "row",
                             }}
                         >
+                            <AntDesign
+                                name="team"
+                                size={28}
+                                color={
+                                    colorScheme !== "dark"
+                                        ? "rgba(78,147,214,1)"
+                                        : "grey"
+                                }
+                                style={{ marginLeft: wp("5%") }}
+                            />
                             <Text style={{ fontWeight: 400, fontSize: 16 }}>
                                 Staff Information
                             </Text>
+                            <AntDesign
+                                name="arrowright"
+                                size={28}
+                                color={
+                                    colorScheme !== "dark"
+                                        ? "rgba(78,147,214,1)"
+                                        : "grey"
+                                }
+                                style={{ marginRight: wp("2.5%") }}
+                            />
                         </View>
                     </Pressable>
                 </View>
 
                 {/* Services */}
-                <View style={{ marginTop: hp("2.5%") }}>
+                <View style={{ marginTop: hp("2%") }}>
                     <Pressable
                         onPress={() =>
-                            router.replace(
-                                "/(authenticated)/components/profile/screens/Service"
+                            router.navigate(
+                                "/(authenticated)/components/profile/screens/forBusiness/Service"
                             )
                         }
                     >
@@ -170,26 +219,47 @@ const Profile = () => {
                                     Colors[colorScheme ?? "light"]
                                         .tabIconSelected,
                                 borderWidth: 1.25,
-                                width: wp("86%"),
-                                height: hp("8%"),
+                                width: wp("80%"),
+                                height: hp("6.9%"),
                                 borderRadius: 35,
                                 alignItems: "center",
-                                justifyContent: "center",
+                                justifyContent: "space-between",
+                                flexDirection: "row",
                             }}
                         >
+                            <AntDesign
+                                name="star"
+                                size={28}
+                                color={
+                                    colorScheme !== "dark"
+                                        ? "rgba(78,147,214,1)"
+                                        : "grey"
+                                }
+                                style={{ marginLeft: wp("5%") }}
+                            />
                             <Text style={{ fontWeight: 400, fontSize: 16 }}>
-                                Services
+                                Service Information
                             </Text>
+                            <AntDesign
+                                name="arrowright"
+                                size={28}
+                                color={
+                                    colorScheme !== "dark"
+                                        ? "rgba(78,147,214,1)"
+                                        : "grey"
+                                }
+                                style={{ marginRight: wp("2.5%") }}
+                            />
                         </View>
                     </Pressable>
                 </View>
 
                 {/* Settings */}
-                <View style={{ marginTop: hp("2.5%") }}>
+                <View style={{ marginTop: hp("2%") }}>
                     <Pressable
                         onPress={() =>
-                            router.replace(
-                                "/(authenticated)/components/profile/screens/Settings"
+                            router.navigate(
+                                "/(authenticated)/components/profile/screens/forBusiness/Settings"
                             )
                         }
                     >
@@ -203,18 +273,82 @@ const Profile = () => {
                                     Colors[colorScheme ?? "light"]
                                         .tabIconSelected,
                                 borderWidth: 1.25,
-                                width: wp("86%"),
-                                height: hp("8%"),
+                                width: wp("80%"),
+                                height: hp("6.9%"),
                                 borderRadius: 35,
                                 alignItems: "center",
-                                justifyContent: "center",
+                                justifyContent: "space-between",
+                                flexDirection: "row",
                             }}
                         >
+                            <AntDesign
+                                name="setting"
+                                size={28}
+                                color={
+                                    colorScheme !== "dark"
+                                        ? "rgba(78,147,214,1)"
+                                        : "grey"
+                                }
+                                style={{ marginLeft: wp("5%") }}
+                            />
                             <Text style={{ fontWeight: 400, fontSize: 16 }}>
                                 Settings
                             </Text>
+                            <AntDesign
+                                name="arrowright"
+                                size={28}
+                                color={
+                                    colorScheme !== "dark"
+                                        ? "rgba(78,147,214,1)"
+                                        : "grey"
+                                }
+                                style={{ marginRight: wp("2.5%") }}
+                            />
                         </View>
                     </Pressable>
+                </View>
+
+                {/* sign out */}
+                <View style={{ marginTop: hp("2%") }}>
+                    <View
+                        style={{
+                            backgroundColor:
+                                colorScheme !== "dark"
+                                    ? "white"
+                                    : "transparent",
+                            width: wp("80%"),
+                            marginTop: 15,
+                            alignItems: "center",
+                            flexDirection: "row",
+                        }}
+                    >
+                        <Feather
+                            name="log-out"
+                            size={28}
+                            color={Colors[colorScheme ?? "light"].text}
+                            style={{
+                                marginLeft: 10,
+                                opacity: 0.8,
+                            }}
+                        />
+                        <Pressable
+                            onPress={() =>
+                                signOut().then(() => {
+                                    router.replace("/(auth)/screens/welcome");
+                                })
+                            }
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    marginLeft: 10,
+                                    color: Colors[colorScheme ?? "light"].text,
+                                }}
+                            >
+                                Sign Out
+                            </Text>
+                        </Pressable>
+                    </View>
                 </View>
             </View>
         </>

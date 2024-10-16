@@ -38,7 +38,7 @@ const AppointmentDetails = ({
     onDelete,
 }: {
     appointmentDetails: AppointmentDetailsProps;
-    onDelete: (id: string) => void;
+    onDelete: (appointmentId: string) => void;
 }) => {
     const colorScheme = useColorScheme();
 
@@ -146,7 +146,7 @@ const AppointmentDetails = ({
 
     const confirmDelete = () => {
         console.log("delete confirmed");
-        onDelete(appointmentDetails.id);
+        onDelete(appointmentDetails.appointmentId);
         setModalVisible(false);
     };
 
@@ -306,6 +306,9 @@ const AppointmentDetails = ({
 
                         {/* Warning Modal Show */}
                         <WarningModal
+                            title={
+                                "The selected appointment will be deleted. Are you sure?"
+                            }
                             visible={modalVisible}
                             onConfirm={confirmDelete}
                             onCancel={cancelDelete}
@@ -380,7 +383,7 @@ const AppointmentDetails = ({
                                                 ].text,
                                             }}
                                         >
-                                            {appointmentDetails.serviceTitle}
+                                            {appointmentDetails.serviceName}
                                         </Text>
                                     ) : (
                                         <View style={{ left: wp(".5%") }}>

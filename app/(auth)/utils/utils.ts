@@ -6,12 +6,15 @@ import {
     User,
     GoogleAuthProvider,
     signInWithCredential,
+    createUserWithEmailAndPassword,
+    sendEmailVerification,
+    updateProfile,
 } from "firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { auth } from "@/firebase/firebaseConfig";
-import { REACT_APP_BASE_URL } from "@env";
+// import { REACT_APP_BASE_URL } from "@env";
 
-export const BASE_URL = REACT_APP_BASE_URL;
+// export const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
 // import {
 //     LoginManager,
@@ -26,6 +29,39 @@ export function onAuthStateChanged(callback: NextOrObserver<User>) {
     return _onAuthStateChanged(auth, callback);
 }
 
+// def a function to sign up with email and password
+export const signUpWithEmailPassword = async (
+    email: string,
+    password: string,
+    name: string
+) => {
+    try {
+        await createUserWithEmailAndPassword(auth, email, password);
+
+        // update the user's display name
+        if (auth.currentUser) {
+            await updateProfile(auth.currentUser, {
+                displayName: name,
+            }).catch((error) => console.log(error));
+        } else {
+            console.error("Error updating user profile: ", auth.currentUser);
+        }
+
+        // send email verification
+        if (auth.currentUser) {
+            await sendEmailVerification(auth.currentUser).then(() => {
+                console.log("Email verification sent");
+            });
+        } else {
+            console.error("No user is currently signed in.");
+        }
+
+        return auth.currentUser;
+    } catch (error) {
+        console.error("Error during signup: ", error);
+    }
+};
+
 // def a function to sign in with email and password
 export async function signInWithEmailPassword(email: string, password: string) {
     try {
@@ -35,6 +71,7 @@ export async function signInWithEmailPassword(email: string, password: string) {
             password
         );
         const user = userCredential.user;
+
         return user;
     } catch (error) {
         console.error("Error", error);

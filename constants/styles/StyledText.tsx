@@ -23,3 +23,17 @@ export function FuzzyBubblesText(props: TextProps) {
         />
     );
 }
+
+export function TimesRegularText(props: TextProps) {
+    return (
+        <Text
+            {...props}
+            style={[
+                props.style,
+                {
+                    fontFamily: "TimesRegular",
+                },
+            ]}
+        />
+    );
+}

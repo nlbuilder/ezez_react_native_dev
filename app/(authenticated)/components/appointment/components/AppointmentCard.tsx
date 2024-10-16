@@ -9,16 +9,21 @@ import {
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import React, { useState } from "react";
+import { router } from "expo-router";
+import { AntDesign } from "@expo/vector-icons";
 
 import { AppointmentCardProps } from "../types/types";
 import AppointmentCardBody from "./AppointmentCardBody";
-import AppointmentEachHourListModal from "@/app/(authenticated)/components/appointment/screens/AppointmentEachHourListModal";
-import { AntDesign } from "@expo/vector-icons";
-import { Link, router } from "expo-router";
 
-const AppointmentCard = ({ index, scrollY }: AppointmentCardProps) => {
+const AppointmentCard = ({
+    index,
+    scrollY,
+    time,
+    sumOfCustomerByRoundedTime,
+    listOfCustomerSumByService,
+}: AppointmentCardProps) => {
+    // code to handle the animation of the card
     const [cardHeight, setCardHeight] = useState(0);
-    const [modalVisible, setModalVisible] = useState(false);
 
     // def a stackRate variable to control how much one card is stacked on top of the other
     // (e.g., if stackRate = 1 => the ontop card fully covers the below cards)
@@ -39,15 +44,16 @@ const AppointmentCard = ({ index, scrollY }: AppointmentCardProps) => {
     );
 
     // declare business logic variables
-    const totalAppointment = 5;
     const totalCapacity = 10;
-    const listOfAppointmentSum = [
-        { service: "Service1", customers: 10 },
-        { service: "Service2", customers: 20 },
-        { service: "Service3", customers: 20 },
-        { service: "Service4", customers: 20 },
-        { service: "Service5", customers: 20 },
-    ];
+    const listOfAppointmentSum = listOfCustomerSumByService;
+
+    // const listOfAppointmentSum = [
+    //     { service: "Service1", customers: 10 },
+    //     { service: "Service2", customers: 20 },
+    //     { service: "Service3", customers: 20 },
+    //     { service: "Service4", customers: 20 },
+    //     { service: "Service5", customers: 20 },
+    // ];
 
     return (
         <View style={styles.container}>
@@ -69,11 +75,12 @@ const AppointmentCard = ({ index, scrollY }: AppointmentCardProps) => {
                 <View style={styles.appointmentCard}>
                     {/* header of the appointment card */}
                     <View style={[styles.appointmentCardHeader]}>
-                        <Text style={styles.title}>{index + 10}:00</Text>
+                        <Text style={styles.title}>{time}</Text>
                         <View style={styles.appointmentCapacityView}>
                             <Text style={styles.title}>
-                                {totalAppointment}/{totalCapacity}
+                                {sumOfCustomerByRoundedTime}/{totalCapacity}
                             </Text>
+
                             <View style={{ alignItems: "center" }}>
                                 <Text style={styles.lightText}>customer</Text>
                                 <View style={styles.divider} />
@@ -82,13 +89,16 @@ const AppointmentCard = ({ index, scrollY }: AppointmentCardProps) => {
                         </View>
 
                         {/* show appointment details */}
-
                         <Pressable
                             onPress={() => {
                                 // setModalVisible(!modalVisible);
-                                router.navigate(
-                                    "./components/appointment/screens/AppointmentEachHourListScreen"
-                                );
+                                router.push({
+                                    pathname:
+                                        "./components/appointment/screens/AppointmentEachHourListScreen",
+                                    params: {
+                                        time: time,
+                                    },
+                                });
                             }}
                         >
                             <AntDesign

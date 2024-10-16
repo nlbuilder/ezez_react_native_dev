@@ -9,12 +9,14 @@ import {
 } from "react-native-responsive-screen";
 
 import {
+    signUpWithEmailPassword,
     signInWithEmailPassword,
     signInWithGoogle,
-    signOut,
 } from "../utils/utils";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { WEB_CLIENT_ID, IOS_CLIENT_ID } from "@env";
+
+const WEB_CLIENT_ID = process.env.EXPO_PUBLIC_WEB_CLIENT_ID;
+const IOS_CLIENT_ID = process.env.EXPO_PUBLIC_IOS_CLIENT_ID;
 
 // this line is to keep the web browser showing inside the app
 WebBrowser.maybeCompleteAuthSession();
@@ -30,8 +32,27 @@ const welcome = () => {
         });
     }, []);
 
+    const email = "xfactor@yahoo.com";
+    const password = "123456";
+    const name = "Hello";
+
+    const handleSignUpWithEmailPassword = async () => {
+        const auth = await signUpWithEmailPassword(email, password, name);
+
+        if (auth) {
+            router.push({
+                pathname: "/(auth)/screens/loading",
+                params: {
+                    businessId: auth.uid,
+                    name: auth.displayName,
+                    email: auth.email,
+                },
+            });
+        }
+    };
+
     const handleSignInWithEmailPassword = async () => {
-        signInWithEmailPassword("etaylor@example.net", "#AJyhh!P4o");
+        await signInWithEmailPassword(email, password);
     };
 
     const handleSignInWithGoogle = async () => {
@@ -47,10 +68,6 @@ const welcome = () => {
                 },
             });
         }
-    };
-
-    const handleSignOut = async () => {
-        signOut();
     };
 
     return (
@@ -73,7 +90,20 @@ const welcome = () => {
                             borderRadius: 15,
                         }}
                     >
-                        <Text>Signin</Text>
+                        <Text>Signin with Email</Text>
+                    </View>
+                </Pressable>
+
+                <Pressable onPress={handleSignUpWithEmailPassword}>
+                    <View
+                        style={{
+                            padding: 10,
+                            marginVertical: hp("2%"),
+                            backgroundColor: "lightblue",
+                            borderRadius: 15,
+                        }}
+                    >
+                        <Text>SignUp with Email</Text>
                     </View>
                 </Pressable>
 
@@ -87,6 +117,25 @@ const welcome = () => {
                         }}
                     >
                         <Text>Signin Google</Text>
+                    </View>
+                </Pressable>
+
+                <Pressable
+                    onPress={() => {
+                        router.push({
+                            pathname: "/(auth)/screens/Signup",
+                        });
+                    }}
+                >
+                    <View
+                        style={{
+                            padding: 10,
+                            marginVertical: hp("2%"),
+                            backgroundColor: "lightblue",
+                            borderRadius: 15,
+                        }}
+                    >
+                        <Text>to sign up</Text>
                     </View>
                 </Pressable>
             </View>

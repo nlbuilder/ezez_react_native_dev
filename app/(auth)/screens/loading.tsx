@@ -1,16 +1,17 @@
 import { View } from "react-native";
-import React, { useEffect } from "react";
-import { useCreateBusinessAPI } from "../apis/createBusinessAPI";
-import { BusinessInfo } from "../types/types";
-import { useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { useCreateBusinessAPI } from "@/app/(authenticated)/components/profile/apis/createBusinessAPI";
+import { BusinessInfo } from "@/app/(authenticated)/components/profile/types/types";
+import { router, useLocalSearchParams } from "expo-router";
 import { Wander } from "react-native-animated-spinkit";
 
 const loading = () => {
     const { businessId, name, email } = useLocalSearchParams();
     const { createBusinessInfo } = useCreateBusinessAPI();
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const createBusinessRequest = async () => {
+        const handleCreateBusiness = async () => {
             if (businessId && name && email) {
                 try {
                     const businessInfo: BusinessInfo = {
@@ -21,23 +22,33 @@ const loading = () => {
                         email: Array.isArray(email) ? email[0] : email,
                     };
 
+                    // Call the API to create the business
                     await createBusinessInfo(businessInfo);
+
+                    // Navigate to authenticated tabs if successful
+                    router.replace("/(authenticated)/(tabs)");
                 } catch (error) {
                     console.error(
                         "Error creating business [loading screen]: ",
                         error
                     );
+
+                    setError("Failed to create business.");
                 }
+            } else {
+                setError("Missing business information.");
             }
         };
 
-        createBusinessRequest();
-    }, [createBusinessInfo]);
+        handleCreateBusiness();
+    }, [businessId, name, email, createBusinessInfo]);
 
     return (
-        <View>
-            <Wander size={48} color="blue" />
-        </View>
+        <>
+            <View>
+                <Wander size={48} color="blue" />
+            </View>
+        </>
     );
 };
 

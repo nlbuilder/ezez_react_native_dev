@@ -12,7 +12,9 @@ import { Text, View } from "@/constants/styles/Themed";
 import AppointmentDetails from "@/app/(authenticated)/components/appointment/components/AppointmentDetails";
 import Colors from "@/constants/styles/Colors";
 import { ModalProps } from "../types/types";
-import dummyAppointmentData from "@/dummy/dummyAppointmentData.json";
+import dummyAppointmentDataByDate from "@/dummy/dummyAppointmentDataByDate.json";
+import dummyAppointmentDataByDateByTime from "@/dummy/dummyAppointmentDataByDateByRoundedTime.json";
+import { filterAppointmentsByRoundedTime } from "@/app/(authenticated)/utils/utils";
 
 const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
     const navigation = useNavigation();
@@ -26,11 +28,22 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
 
     const colorScheme = useColorScheme();
 
-    const [appointmentDetails, setAppointmentDetails] =
-        useState(dummyAppointmentData);
+    const [appointmentDetails, setAppointmentDetails] = useState(
+        dummyAppointmentDataByDate
+    );
+
+    // console.log(appointmentDetails);
+    const A = filterAppointmentsByRoundedTime(
+        dummyAppointmentDataByDateByTime,
+        "20:00:00"
+    );
+
+    // console.log(A);
 
     const handleDeleteAppointment = (id: string) => {
-        const updatedData = appointmentDetails.filter((item) => item.id !== id);
+        const updatedData = appointmentDetails.filter(
+            (item) => item.appointmentId !== id
+        );
         setAppointmentDetails(updatedData);
     };
 
@@ -44,7 +57,7 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
                 },
             ]}
         >
-            {/* Title */}
+            {/* Header */}
             <View
                 style={[
                     styles.content,
@@ -62,6 +75,7 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
                         marginTop: hp("2%"),
                     }}
                 >
+                    {/* Title */}
                     <View style={{}}>
                         <Text
                             style={{
@@ -71,10 +85,11 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
                                 left: wp("4%"),
                             }}
                         >
-                            List of appointments
+                            List of Appointments
                         </Text>
                     </View>
 
+                    {/* close button */}
                     <View style={{ left: wp("20.5%") }}>
                         <Pressable
                             onPress={() => {
@@ -90,7 +105,7 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
                     </View>
                 </View>
 
-                {/* Separator */}
+                {/* Separator line */}
                 <View
                     style={{
                         borderColor:
@@ -102,10 +117,11 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
                     }}
                 ></View>
 
+                {/* FlastList of details information for each appointment */}
                 <View style={{ paddingBottom: hp("15%") }}>
                     <FlatList
-                        data={appointmentDetails}
-                        keyExtractor={(item) => item.id.toString()}
+                        data={A}
+                        keyExtractor={(item) => item.appointmentId.toString()}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={true}
                         renderItem={({ item }) => (

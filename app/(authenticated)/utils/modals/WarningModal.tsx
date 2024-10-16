@@ -14,12 +14,18 @@ import {
 import Colors from "@/constants/styles/Colors";
 
 interface WarningModalProps {
+    title: string;
     visible: boolean;
     onConfirm: () => void;
     onCancel: () => void;
 }
 
-const WarningModal = ({ visible, onConfirm, onCancel }: WarningModalProps) => {
+const WarningModal = ({
+    title,
+    visible,
+    onConfirm,
+    onCancel,
+}: WarningModalProps) => {
     const colorScheme = useColorScheme();
 
     return (
@@ -40,7 +46,7 @@ const WarningModal = ({ visible, onConfirm, onCancel }: WarningModalProps) => {
                             { color: Colors[colorScheme ?? "light"].text },
                         ]}
                     >
-                        This appointment will be deleted
+                        {title}
                     </Text>
 
                     <View style={[styles.separator]}></View>
@@ -60,11 +66,13 @@ const WarningModal = ({ visible, onConfirm, onCancel }: WarningModalProps) => {
                         onPress={onCancel}
                     >
                         <Text
-                            style={{
-                                fontSize: 18,
-                                color: Colors[colorScheme ?? "light"]
-                                    .tabIconSelected,
-                            }}
+                            style={[
+                                styles.buttonCancelText,
+                                {
+                                    color: Colors[colorScheme ?? "light"]
+                                        .tabIconSelected,
+                                },
+                            ]}
                         >
                             Cancel
                         </Text>
@@ -85,16 +93,16 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     modalContent: {
-        width: wp("96%"),
+        width: wp("69%"),
         borderColor: "white",
         borderWidth: 1,
         padding: 20,
-        borderRadius: 15,
+        borderRadius: 25,
         alignItems: "center",
     },
     modalText: {
-        marginBottom: 20,
         textAlign: "center",
+        paddingBottom: hp("1.5%"),
     },
     separator: {
         width: "100%",
@@ -102,18 +110,21 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(189, 195, 199, 0.5)",
     },
     confirmButton: {
-        width: wp("96%"),
-        padding: 10,
-        borderRadius: 5,
+        width: wp("69%"),
+        paddingVertical: hp("1%"),
     },
     cancelButton: {
-        top: 5,
-        paddingVertical: 10,
-        borderRadius: 5,
+        paddingTop: hp("2%"),
+    },
+    buttonCancelText: {
+        color: "blue",
+        textAlign: "center",
+        fontSize: 18,
+        fontWeight: 400,
     },
     buttonConfirmText: {
         color: "red",
         textAlign: "center",
-        fontSize: 18,
+        fontSize: 16,
     },
 });

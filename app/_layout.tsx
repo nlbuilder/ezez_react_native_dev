@@ -12,6 +12,8 @@ import { useColorScheme } from "react-native";
 
 import { FontProvider } from "@/constants/styles/FontContext";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ToastProvider } from "./(authenticated)/utils/toasts/toastContext";
+import { DateProvider } from "./(authenticated)/components/appointment/context/DateContext";
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -30,6 +32,7 @@ export default function RootLayout() {
     const [loaded, error] = useFonts({
         Calibri: require("../assets/fonts/calibri.ttf"),
         FuzzyBubbles: require("../assets/fonts/Fuzzy Bubbles Regular.ttf"),
+        TimesRegular: require("../assets/fonts/Times Regular.ttf"),
         ...FontAwesome.font,
     });
 
@@ -69,7 +72,11 @@ function RootLayoutNav() {
             <FontProvider>
                 <QueryClientProvider client={queryClient}>
                     <AuthProvider>
-                        <Slot />
+                        <ToastProvider>
+                            <DateProvider>
+                                <Slot />
+                            </DateProvider>
+                        </ToastProvider>
                     </AuthProvider>
                 </QueryClientProvider>
             </FontProvider>

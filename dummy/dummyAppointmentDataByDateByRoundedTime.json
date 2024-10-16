@@ -1,0 +1,44 @@
+[
+    {
+        "roundedTime": "21:00:00",
+        "appointments": [
+            {
+                "_id": "670eeff5b80896b897c189f5",
+                "appointmentId": "1729032181457",
+                "businessId": "KJKj5fGvu5hrw5M4pk7vomEuHcY2",
+                "customerId": "1",
+                "customerName": "A",
+                "customerPhoneNumber": "090",
+                "date": "Tue Oct 15 2024",
+                "note": "",
+                "numberOfCustomers": 2,
+                "roundedTime": "21:00:00",
+                "serviceId": "1",
+                "serviceName": "java",
+                "status": "booked",
+                "time": "20:55:00 GMT-0230"
+            }
+        ]
+    },
+    {
+        "roundedTime": "20:00:00",
+        "appointments": [
+            {
+                "_id": "670ef247b80896b897c18c4f",
+                "appointmentId": "1729032775570",
+                "businessId": "KJKj5fGvu5hrw5M4pk7vomEuHcY2",
+                "customerId": "1",
+                "customerName": "Ssas",
+                "customerPhoneNumber": "090",
+                "date": "Tue Oct 15 2024",
+                "note": "",
+                "numberOfCustomers": 2,
+                "roundedTime": "20:00:00",
+                "serviceId": "1",
+                "serviceName": "java",
+                "status": "booked",
+                "time": "20:22:45 GMT-0230"
+            }
+        ]
+    }
+]
