@@ -1,5 +1,5 @@
 // AppointmentModal.tsx
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { FlatList, Pressable, StyleSheet, useColorScheme } from "react-native";
 import {
@@ -12,14 +12,24 @@ import { Text, View } from "@/constants/styles/Themed";
 import AppointmentDetails from "@/app/(authenticated)/components/appointment/components/AppointmentDetails";
 import Colors from "@/constants/styles/Colors";
 import { ModalProps } from "../types/types";
-import dummyAppointmentDataByDate from "@/dummy/dummyAppointmentDataByDate.json";
-import dummyAppointmentDataByDateByTime from "@/dummy/dummyAppointmentDataByDateByRoundedTime.json";
+import { useGetAllAppointmentsAPI } from "../apis/getAllAppointmentsInfoAPI";
+import {
+    calculateOpenHours,
+    filterAppointmentsByDate,
+    formatDateToString,
+    groupCustomersByTime,
+    groupCustomersByTimeAndService,
+    transformData,
+} from "@/app/(authenticated)/utils/utils";
+import { useDate } from "../context/DateContext";
+import dummyServiceData from "@/dummy/dummyServiceData.json";
 
 const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
     const navigation = useNavigation();
-    const localParams = useLocalSearchParams();
+    const colorScheme = useColorScheme();
 
-    console.log("localParams", localParams);
+    const localParams = useLocalSearchParams();
+    const roundedTime = localParams.time as string;
 
     // hide the header when this screen is rendered
     useLayoutEffect(() => {
@@ -28,17 +38,86 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
         });
     }, [navigation]);
 
-    const colorScheme = useColorScheme();
+    const timeStart = "2024-10-15T12:30:00.000Z";
+    const timeFinish = "2024-10-15T21:30:00.000Z";
 
-    const [appointmentDetails, setAppointmentDetails] = useState(
-        dummyAppointmentDataByDate
+    const {
+        lengthOfHoursBetween,
+        timeStartFormatted,
+        timeFinishFormatted,
+        timeList,
+    } = calculateOpenHours(timeStart, timeFinish);
+
+    const {
+        allAppointmentInfo,
+        isLoading: isGetAllAppointmentsInfoLoading,
+        refetch: refetchAllAppointmentsInfo,
+    } = useGetAllAppointmentsAPI();
+
+    // make sure allAppointmentInfo is an array
+    const allAppointmentsArray = Array.isArray(allAppointmentInfo)
+        ? allAppointmentInfo
+        : [];
+
+    const { date } = useDate();
+    const dateString = formatDateToString(date.toISOString());
+
+    // filter the appointments by date
+    const filteredAppointmentsByDate = filterAppointmentsByDate(
+        allAppointmentsArray,
+        dateString
     );
 
+    // console.log(filteredAppointmentsByDate);
+
+    // group the customers by rounded time (this function returns an object)
+    const sumOfCustomerByTime = groupCustomersByTime(
+        timeList,
+        filteredAppointmentsByDate
+    );
+
+    // console.log(timeList);
+
+    // this is to convert the object to an array
+    // so that it can be used in the AppointmentCard component properly
+    const sumOfCustomerByTimeArray = sumOfCustomerByTime.map(
+        (item) => item.totalCustomers
+    );
+
+    const serviceList = dummyServiceData.map((item) => item.label);
+
+    // this is to group the customers by time and service
+    const sumOfCustomerByTimeAndService = groupCustomersByTimeAndService(
+        filteredAppointmentsByDate,
+        timeList,
+        serviceList
+    );
+
+    const transformedSumOfCustomerByTimeAndService = transformData(
+        sumOfCustomerByTimeAndService
+    );
+
+    // useEffect(() => {
+    //     refetchAllAppointmentsInfo();
+    // }, [
+    //     allAppointmentInfo,
+    //     sumOfCustomerByTimeArray,
+    //     transformedSumOfCustomerByTimeAndService,
+    // ]);
+
+    const appointmentDetails = filteredAppointmentsByDate.filter(
+        (appointment) => appointment.roundedTime === roundedTime
+    );
+
+    // const [appointmentDetails, setAppointmentDetails] = useState(
+    //     dummyAppointmentDataByDate
+    // );
+
     const handleDeleteAppointment = (id: string) => {
-        const updatedData = appointmentDetails.filter(
-            (item) => item.appointmentId !== id
-        );
-        setAppointmentDetails(updatedData);
+        // const updatedData = appointmentDetails.filter(
+        //     (item) => item.appointmentId !== id
+        // );
+        // setAppointmentDetails(updatedData);
     };
 
     return (
@@ -113,8 +192,8 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
 
                 {/* FlastList of details information for each appointment */}
                 <View style={{ paddingBottom: hp("15%") }}>
-                    {/* <FlatList
-                        data={A}
+                    <FlatList
+                        data={appointmentDetails}
                         keyExtractor={(item) => item.appointmentId.toString()}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={true}
@@ -124,7 +203,7 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
                                 onDelete={handleDeleteAppointment}
                             />
                         )}
-                    /> */}
+                    />
                 </View>
             </View>
         </View>

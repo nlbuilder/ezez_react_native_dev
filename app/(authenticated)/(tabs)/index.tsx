@@ -27,7 +27,8 @@ import { useDate } from "../components/appointment/context/DateContext";
 import dummyServiceData from "@/dummy/dummyServiceData.json";
 
 const AppointmentCardList = () => {
-    // code to handle the animation for the list of cards
+    // *** code to handle the animation for the list of cards ***
+
     const [listHeight, setListHeight] = useState(0);
     const { height: screenHeight } = useWindowDimensions();
 
@@ -69,15 +70,15 @@ const AppointmentCardList = () => {
         timeList,
     } = calculateOpenHours(timeStart, timeFinish);
 
-    // const appointmentCards = Array.from({ length: 10 }, (_, index) => index);
+    // console.log(timeList);
+
     const cardList = Array.from(
         { length: lengthOfHoursBetween + 1 },
         (_, index) => index
     );
 
-    // console.log(cardList);
-    // console.log(timeList);
-
+    // this is the code to handle the date from DateTimePicker
+    // it provides the date to use in the filtering appointments by date
     const { date, setDate } = useDate();
     const dateString = formatDateToString(date.toISOString());
 
@@ -108,82 +109,20 @@ const AppointmentCardList = () => {
 
     // console.log(timeList);
 
+    // this is to convert the object to an array
+    // so that it can be used in the AppointmentCard component properly
     const sumOfCustomerByTimeArray = sumOfCustomerByTime.map(
         (item) => item.totalCustomers
     );
 
     const serviceList = dummyServiceData.map((item) => item.label);
 
-    // console.log(dummyServiceData);
-
+    // this is to group the customers by time and service
     const sumOfCustomerByTimeAndService = groupCustomersByTimeAndService(
         filteredAppointmentsByDate,
         timeList,
         serviceList
     );
-
-    // console.log(serviceList);
-
-    const input = [
-        {
-            roundedTime: "10:00AM",
-            summary: [
-                { serviceName: "Service1", customers: 0 },
-                { serviceName: "Service2", customers: 0 },
-                { serviceName: "Service3", customers: 0 },
-                { serviceName: "Service4", customers: 9 },
-                { serviceName: "Service5", customers: 0 },
-            ],
-        },
-        {
-            roundedTime: "3:00PAM",
-            summary: [
-                { serviceName: "Service1", customers: 0 },
-                { serviceName: "Service2", customers: 0 },
-                { serviceName: "Service3", customers: 0 },
-                { serviceName: "Service4", customers: 0 },
-                { serviceName: "Service5", customers: 2 },
-            ],
-        },
-
-        {
-            roundedTime: "5:00PM",
-            summary: [
-                { serviceName: "Service1", customers: 6 },
-                { serviceName: "Service2", customers: 0 },
-                { serviceName: "Service3", customers: 0 },
-                { serviceName: "Service4", customers: 0 },
-                { serviceName: "Service5", customers: 0 },
-            ],
-        },
-    ];
-
-    const B0 = [
-        [
-            { serviceName: "Service1", customers: 0 },
-            { serviceName: "Service2", customers: 0 },
-            { serviceName: "Service3", customers: 0 },
-            { serviceName: "Service4", customers: 9 },
-            { serviceName: "Service5", customers: 0 },
-        ],
-        [
-            { serviceName: "Service1", customers: 0 },
-            { serviceName: "Service2", customers: 0 },
-            { serviceName: "Service3", customers: 0 },
-            { serviceName: "Service4", customers: 0 },
-            { serviceName: "Service5", customers: 2 },
-        ],
-        [
-            { serviceName: "Service1", customers: 6 },
-            { serviceName: "Service2", customers: 0 },
-            { serviceName: "Service3", customers: 0 },
-            { serviceName: "Service4", customers: 0 },
-            { serviceName: "Service5", customers: 0 },
-        ],
-    ];
-
-    // console.log(JSON.stringify(input, null, 2));
-    // console.log(JSON.stringify(sumOfCustomerByTimeAndService, null, 2));
 
     const transformedSumOfCustomerByTimeAndService = transformData(
         sumOfCustomerByTimeAndService
