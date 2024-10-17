@@ -19,8 +19,9 @@ const AppointmentCard = ({
     index,
     scrollY,
     time,
-    sumOfCustomerByRoundedTime,
-    listOfCustomerSumByService,
+    sumOfCustomerByTime,
+    sumOfCustomerByTimeAndService,
+    totalCapacity,
 }: AppointmentCardProps) => {
     // code to handle the animation of the card
     const [cardHeight, setCardHeight] = useState(0);
@@ -43,17 +44,7 @@ const AppointmentCard = ({
         }
     );
 
-    // declare business logic variables
-    const totalCapacity = 10;
-    const listOfAppointmentSum = listOfCustomerSumByService;
-
-    // const listOfAppointmentSum = [
-    //     { service: "Service1", customers: 10 },
-    //     { service: "Service2", customers: 20 },
-    //     { service: "Service3", customers: 20 },
-    //     { service: "Service4", customers: 20 },
-    //     { service: "Service5", customers: 20 },
-    // ];
+    const listOfAppointmentSum = sumOfCustomerByTimeAndService;
 
     return (
         <View style={styles.container}>
@@ -78,7 +69,7 @@ const AppointmentCard = ({
                         <Text style={styles.title}>{time}</Text>
                         <View style={styles.appointmentCapacityView}>
                             <Text style={styles.title}>
-                                {sumOfCustomerByRoundedTime}/{totalCapacity}
+                                {sumOfCustomerByTime}/{totalCapacity}
                             </Text>
 
                             <View style={{ alignItems: "center" }}>
@@ -111,16 +102,16 @@ const AppointmentCard = ({
                     </View>
 
                     {/* body of the appointment card */}
-                    <View style={{ marginVertical: "auto" }}>
+                    <View style={{ paddingVertical: "auto" }}>
                         <FlatList
                             data={listOfAppointmentSum}
                             renderItem={({ item }) => (
                                 <AppointmentCardBody
-                                    serviceTitle={item.service}
+                                    serviceTitle={item.serviceName}
                                     numberOfCustomers={item.customers}
                                 />
                             )}
-                            keyExtractor={(item) => item.service}
+                            keyExtractor={(item) => item.serviceName}
                             numColumns={2} // display the services in two columns
                             columnWrapperStyle={{
                                 justifyContent: "space-between",
@@ -129,12 +120,6 @@ const AppointmentCard = ({
                         />
                     </View>
                 </View>
-
-                {/* show the list of appointment details for each hour */}
-                {/* <AppointmentEachHourListModal
-                    visible={modalVisible}
-                    onClose={() => setModalVisible(false)}
-                /> */}
             </Animated.View>
         </View>
     );
@@ -159,9 +144,11 @@ const styles = StyleSheet.create({
     appointmentCard: {
         backgroundColor: "rgba(246,255,255, 1)",
         borderRadius: hp("2.5%"),
+        paddingBottom: hp("1%"),
+        // move the card down a bit, to separate the top card from the Date Picker
+        top: hp("1%"),
         height: hp("20%"),
         width: wp("96%"),
-        marginVertical: 5,
     },
     appointmentCardHeader: {
         // center the text horizontally
@@ -194,10 +181,5 @@ const styles = StyleSheet.create({
         height: 0.2,
         backgroundColor: "rgba(0, 0, 0, .20)",
         width: 50,
-    },
-    appointmentDetails: {
-        position: "absolute", // absolutely position the details under the card
-        top: hp("25%"),
-        width: "100%",
     },
 });

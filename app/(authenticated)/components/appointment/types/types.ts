@@ -1,15 +1,22 @@
 import { SharedValue } from "react-native-reanimated";
 
-interface ServiceSummary {
-    service: string;
+export interface ServiceSummary {
+    serviceName: string;
     customers: number;
 }
+
+export interface TimeSummary {
+    roundedTime: string;
+    summary: ServiceSummary[];
+}
+
 export interface AppointmentCardProps {
     index: number;
     scrollY: SharedValue<number>;
     time: string;
-    sumOfCustomerByRoundedTime: number;
-    listOfCustomerSumByService: ServiceSummary[];
+    sumOfCustomerByTime: number;
+    sumOfCustomerByTimeAndService: ServiceSummary[];
+    totalCapacity: number;
 }
 
 export interface AppointmentCardBodyProps {

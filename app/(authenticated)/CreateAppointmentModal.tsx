@@ -77,7 +77,7 @@ export default function CreateAppointmentModal() {
             serviceId: "1",
             date: date.toDateString(),
             time: time.toTimeString(),
-            roundedTime: roundToPreviousHour(time).toTimeString(),
+            roundedTime: roundToPreviousHour(time),
             serviceName: chosenService,
             numberOfCustomers: Number(numberOfPeople),
             customerPhoneNumber: phoneNumber,

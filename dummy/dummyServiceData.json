@@ -1,9 +1,8 @@
 [
-    { "label": "Java", "value": "java" },
-    { "label": "Python", "value": "python" },
-    { "label": "JavaScript", "value": "javascript" },
-    { "label": "C++", "value": "cpp" },
-    { "label": "C#", "value": "csharp" },
-    { "label": "Ruby", "value": "ruby" },
-    { "label": "Swift", "value": "swift" }
+    { "label": "Service1", "value": "Service1" },
+    { "label": "Service2", "value": "Service2" },
+    { "label": "Service3", "value": "Service3" },
+    { "label": "Service4", "value": "Service4" },
+    { "label": "Service5", "value": "Service5" },
+    { "label": "Service6", "value": "Service6" }
 ]

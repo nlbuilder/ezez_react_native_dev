@@ -1,6 +1,6 @@
 // AppointmentModal.tsx
 import React, { useLayoutEffect, useState } from "react";
-import { router, useNavigation } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { FlatList, Pressable, StyleSheet, useColorScheme } from "react-native";
 import {
     widthPercentageToDP as wp,
@@ -14,10 +14,12 @@ import Colors from "@/constants/styles/Colors";
 import { ModalProps } from "../types/types";
 import dummyAppointmentDataByDate from "@/dummy/dummyAppointmentDataByDate.json";
 import dummyAppointmentDataByDateByTime from "@/dummy/dummyAppointmentDataByDateByRoundedTime.json";
-import { filterAppointmentsByRoundedTime } from "@/app/(authenticated)/utils/utils";
 
 const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
     const navigation = useNavigation();
+    const localParams = useLocalSearchParams();
+
+    console.log("localParams", localParams);
 
     // hide the header when this screen is rendered
     useLayoutEffect(() => {
@@ -31,14 +33,6 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
     const [appointmentDetails, setAppointmentDetails] = useState(
         dummyAppointmentDataByDate
     );
-
-    // console.log(appointmentDetails);
-    const A = filterAppointmentsByRoundedTime(
-        dummyAppointmentDataByDateByTime,
-        "20:00:00"
-    );
-
-    // console.log(A);
 
     const handleDeleteAppointment = (id: string) => {
         const updatedData = appointmentDetails.filter(
@@ -119,7 +113,7 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
 
                 {/* FlastList of details information for each appointment */}
                 <View style={{ paddingBottom: hp("15%") }}>
-                    <FlatList
+                    {/* <FlatList
                         data={A}
                         keyExtractor={(item) => item.appointmentId.toString()}
                         showsVerticalScrollIndicator={false}
@@ -130,7 +124,7 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
                                 onDelete={handleDeleteAppointment}
                             />
                         )}
-                    />
+                    /> */}
                 </View>
             </View>
         </View>

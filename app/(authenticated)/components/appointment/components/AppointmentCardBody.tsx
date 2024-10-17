@@ -9,7 +9,7 @@ const AppointmentCardBody = ({
     numberOfCustomers,
 }: AppointmentCardBodyProps) => {
     return (
-        <View style={styles.item}>
+        <View style={styles.appointmentCardBody}>
             <Text style={{ fontSize: 14 }}>
                 {serviceTitle} : {numberOfCustomers} pp
             </Text>
@@ -20,9 +20,10 @@ const AppointmentCardBody = ({
 export default AppointmentCardBody;
 
 const styles = StyleSheet.create({
-    item: {
+    appointmentCardBody: {
         flex: 1,
-        padding: hp("1%"),
+        paddingTop: hp("2%"),
         alignItems: "center",
+        justifyContent: "center",
     },
 });

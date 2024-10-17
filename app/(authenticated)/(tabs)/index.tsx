@@ -18,11 +18,13 @@ import {
     calculateOpenHours,
     filterAppointmentsByDate,
     formatDateToString,
-    groupByRoundedTimeAndService,
-    groupCustomersByRoundedTime,
+    groupCustomersByTimeAndService,
+    groupCustomersByTime,
+    transformData,
 } from "../utils/utils";
 import { useGetAllAppointmentsAPI } from "../components/appointment/apis/getAllAppointmentsInfoAPI";
 import { useDate } from "../components/appointment/context/DateContext";
+import dummyServiceData from "@/dummy/dummyServiceData.json";
 
 const AppointmentCardList = () => {
     // code to handle the animation for the list of cards
@@ -68,10 +70,13 @@ const AppointmentCardList = () => {
     } = calculateOpenHours(timeStart, timeFinish);
 
     // const appointmentCards = Array.from({ length: 10 }, (_, index) => index);
-    const appointmentCards = Array.from(
+    const cardList = Array.from(
         { length: lengthOfHoursBetween + 1 },
         (_, index) => index
     );
+
+    // console.log(cardList);
+    // console.log(timeList);
 
     const { date, setDate } = useDate();
     const dateString = formatDateToString(date.toISOString());
@@ -82,35 +87,116 @@ const AppointmentCardList = () => {
         refetch: refetchAllAppointmentsInfo,
     } = useGetAllAppointmentsAPI();
 
+    // make sure allAppointmentInfo is an array
     const allAppointmentsArray = Array.isArray(allAppointmentInfo)
         ? allAppointmentInfo
         : [];
 
+    // filter the appointments by date
     const filteredAppointmentsByDate = filterAppointmentsByDate(
         allAppointmentsArray,
         dateString
     );
 
     // console.log(filteredAppointmentsByDate);
+
+    // group the customers by rounded time (this function returns an object)
+    const sumOfCustomerByTime = groupCustomersByTime(
+        timeList,
+        filteredAppointmentsByDate
+    );
+
     // console.log(timeList);
 
-    const sumOfCustomerByRoundedTimeObject = groupCustomersByRoundedTime(
-        filteredAppointmentsByDate
+    const sumOfCustomerByTimeArray = sumOfCustomerByTime.map(
+        (item) => item.totalCustomers
     );
 
-    const sumOfCustomerByRoundedTimeList = Object.values(
-        sumOfCustomerByRoundedTimeObject
+    const serviceList = dummyServiceData.map((item) => item.label);
+
+    // console.log(dummyServiceData);
+
+    const sumOfCustomerByTimeAndService = groupCustomersByTimeAndService(
+        filteredAppointmentsByDate,
+        timeList,
+        serviceList
     );
 
-    const listOfCustomerSumByService = groupByRoundedTimeAndService(
-        filteredAppointmentsByDate
-    );
+    // console.log(serviceList);
 
-    // console.log(listOfCustomerSumByService);
+    const input = [
+        {
+            roundedTime: "10:00AM",
+            summary: [
+                { serviceName: "Service1", customers: 0 },
+                { serviceName: "Service2", customers: 0 },
+                { serviceName: "Service3", customers: 0 },
+                { serviceName: "Service4", customers: 9 },
+                { serviceName: "Service5", customers: 0 },
+            ],
+        },
+        {
+            roundedTime: "3:00PAM",
+            summary: [
+                { serviceName: "Service1", customers: 0 },
+                { serviceName: "Service2", customers: 0 },
+                { serviceName: "Service3", customers: 0 },
+                { serviceName: "Service4", customers: 0 },
+                { serviceName: "Service5", customers: 2 },
+            ],
+        },
+
+        {
+            roundedTime: "5:00PM",
+            summary: [
+                { serviceName: "Service1", customers: 6 },
+                { serviceName: "Service2", customers: 0 },
+                { serviceName: "Service3", customers: 0 },
+                { serviceName: "Service4", customers: 0 },
+                { serviceName: "Service5", customers: 0 },
+            ],
+        },
+    ];
+
+    const B0 = [
+        [
+            { serviceName: "Service1", customers: 0 },
+            { serviceName: "Service2", customers: 0 },
+            { serviceName: "Service3", customers: 0 },
+            { serviceName: "Service4", customers: 9 },
+            { serviceName: "Service5", customers: 0 },
+        ],
+        [
+            { serviceName: "Service1", customers: 0 },
+            { serviceName: "Service2", customers: 0 },
+            { serviceName: "Service3", customers: 0 },
+            { serviceName: "Service4", customers: 0 },
+            { serviceName: "Service5", customers: 2 },
+        ],
+        [
+            { serviceName: "Service1", customers: 6 },
+            { serviceName: "Service2", customers: 0 },
+            { serviceName: "Service3", customers: 0 },
+            { serviceName: "Service4", customers: 0 },
+            { serviceName: "Service5", customers: 0 },
+        ],
+    ];
+
+    // console.log(JSON.stringify(input, null, 2));
+    // console.log(JSON.stringify(sumOfCustomerByTimeAndService, null, 2));
+
+    const transformedSumOfCustomerByTimeAndService = transformData(
+        sumOfCustomerByTimeAndService
+    );
 
     useEffect(() => {
         refetchAllAppointmentsInfo();
-    }, [allAppointmentInfo, date]);
+    }, [
+        allAppointmentInfo,
+        date,
+        sumOfCustomerByTimeArray,
+        transformedSumOfCustomerByTimeAndService,
+    ]);
 
     return (
         <GestureDetector gesture={pan}>
@@ -120,18 +206,17 @@ const AppointmentCardList = () => {
                     setListHeight(event.nativeEvent.layout.height)
                 }
             >
-                {appointmentCards.map((_, index) => (
+                {timeList.map((time, index) => (
                     <AppointmentCard
-                        key={index}
+                        key={time}
                         index={index}
                         scrollY={scrollY}
                         time={timeList[index]}
-                        sumOfCustomerByRoundedTime={
-                            sumOfCustomerByRoundedTimeList[index]
+                        sumOfCustomerByTime={sumOfCustomerByTimeArray[index]}
+                        sumOfCustomerByTimeAndService={
+                            transformedSumOfCustomerByTimeAndService[index]
                         }
-                        listOfCustomerSumByService={
-                            listOfCustomerSumByService[index]
-                        }
+                        totalCapacity={10}
                     />
                 ))}
             </View>
