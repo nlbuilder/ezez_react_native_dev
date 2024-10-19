@@ -38,7 +38,7 @@ export const useGetBusinessStaffInfoAPI = () => {
 
             // this trick is used to handle the case
             // where there is no staff added to the business yet
-            if (response.status === 404) {
+            if (response.status == 404) {
                 return null;
             }
 

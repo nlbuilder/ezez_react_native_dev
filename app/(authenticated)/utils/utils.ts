@@ -26,6 +26,37 @@ export function compareObjects(obj1: any, obj2: any) {
     return differences.length > 0 ? differences : "No differences found";
 }
 
+export function convertToLocalTime(time: string, timeZoneName: string): string {
+    const date = new Date(time); // Create a Date object from the input time
+
+    // Use Intl.DateTimeFormat to format the time in the given time zone
+    const formatter = new Intl.DateTimeFormat("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+        timeZone: timeZoneName,
+    });
+
+    return formatter.format(date);
+}
+
+// def a function to convert a time to 12-hour format
+// this one is used to handle the time in AppointmentDetails component only
+// the future me might remove the use of this function
+export function convertTo12HourFormat(time: string): string {
+    // Extract the time part, e.g., "10:05:00" from "10:05:00 GMT-0230"
+    const [hours, minutes] = time.split(" ")[0].split(":").map(Number);
+
+    // Determine AM/PM
+    const period = hours >= 12 ? " PM" : " AM";
+
+    // Convert to 12-hour format
+    const adjustedHours = hours % 12 || 12; // Handle "0" as "12"
+
+    // Return formatted time
+    return `${adjustedHours}:${minutes.toString().padStart(2, "0")}${period}`;
+}
+
 // def a function to round a time to the previous hour and format it as "10:00AM"
 export function roundToPreviousHour(date: Date): string {
     // Create a new date object rounded down to the previous hour
@@ -45,52 +76,96 @@ export function roundToPreviousHour(date: Date): string {
     return `${hours}:${minutes}${period}`;
 }
 
-// def a function to generate a list of open hours
-// this function is the engine of the function calculateOpenHours below
-function generateTimeList(start: Date, end: Date): string[] {
+// this is a helper function for the generateTimeList function
+const normalizeTimeString = (time: string): string => {
+    // Replace any non-breaking space (U+202F) or multiple spaces with a single space
+    return time
+        .replace(/\s+/g, " ")
+        .replace(/\u202F/g, " ")
+        .trim();
+};
+
+// def a function to generate a timeList for using to define
+// the number of AppointmentCards per hour
+// basically, each hour will have an AppointmentCard
+export function generateTimeList(
+    timeStart: string,
+    timeFinish: string
+): string[] {
+    const convertTo24HourFormat = (time: string): Date => {
+        const normalizedTime = normalizeTimeString(time); // Normalize the time string
+        const [timeString, modifier] = normalizedTime.split(" ");
+        let [hours, minutes] = timeString.split(":").map(Number);
+
+        if (modifier === "PM" && hours !== 12) hours += 12;
+        if (modifier === "AM" && hours === 12) hours = 0;
+
+        const date = new Date();
+        date.setHours(hours, minutes, 0, 0);
+        return date;
+    };
+
+    const format12Hour = (date: Date): string => {
+        let hours = date.getHours();
+        const minutes = date.getMinutes().toString().padStart(2, "0");
+        const ampm = hours >= 12 ? "PM" : "AM";
+
+        hours = hours % 12 || 12; // Convert to 12-hour format
+
+        return `${hours}:${minutes}${ampm}`;
+    };
+
+    const start = convertTo24HourFormat(timeStart);
+    const end = convertTo24HourFormat(timeFinish);
     const timeList: string[] = [];
+
     let current = new Date(start);
 
-    // Generate times from start to end, incrementing by one hour
     while (current <= end) {
-        timeList.push(roundToPreviousHour(current)); // Use the new roundToPreviousHour function
-        current.setHours(current.getHours() + 1); // Increment by one hour
+        timeList.push(format12Hour(current));
+        current.setHours(current.getHours() + 1);
     }
 
     return timeList;
 }
 
-// def a function to calculate the open hours
-export function calculateOpenHours(
-    timeStart: string,
-    timeFinish: string
-): {
-    lengthOfHoursBetween: number;
-    timeStartFormatted: string;
-    timeFinishFormatted: string;
-    timeList: string[];
-} {
-    // Convert ISO time strings to Date objects
-    const dateStart = new Date(timeStart);
-    const dateFinish = new Date(timeFinish);
+// def a function to parse a time string to a Date object
+export function parseTimeToDate(time: string, timeZoneName: string): Date {
+    // Normalize the input to replace non-breaking spaces and trim
+    const normalizedTime = time.replace(/\u202F/g, " ").trim();
 
-    // Round both dates to the previous hour and get formatted strings
-    const timeStartFormatted = roundToPreviousHour(dateStart);
-    const timeFinishFormatted = roundToPreviousHour(dateFinish);
+    // Split the normalized time into components (e.g., "12:00 PM")
+    const [timeString, modifier] = normalizedTime.split(" ");
+    let [hours, minutes] = timeString.split(":").map(Number);
 
-    // Calculate the difference in hours
-    const lengthOfHoursBetween =
-        (dateFinish.getTime() - dateStart.getTime()) / (1000 * 60 * 60);
+    // Convert to 24-hour format
+    if (modifier === "PM" && hours !== 12) hours += 12;
+    if (modifier === "AM" && hours === 12) hours = 0;
 
-    // Generate list of formatted times between start and finish
-    const timeList = generateTimeList(dateStart, dateFinish);
+    // Create a Date object for the current day
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0); // Set time in local time zone
 
-    return {
-        lengthOfHoursBetween: Math.floor(lengthOfHoursBetween),
-        timeStartFormatted,
-        timeFinishFormatted,
-        timeList,
-    };
+    // Adjust the time based on the specified time zone
+    const formatter = new Intl.DateTimeFormat("en-US", {
+        timeZone: timeZoneName,
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        hour12: false,
+    });
+
+    // Format the time to get the correct time in the target time zone
+    const parts = formatter.formatToParts(date);
+
+    // Extract hours and minutes from the formatted parts
+    const parsedHours = Number(parts.find((p) => p.type === "hour")?.value);
+    const parsedMinutes = Number(parts.find((p) => p.type === "minute")?.value);
+
+    // Set the time in the Date object
+    date.setHours(parsedHours, parsedMinutes, 0, 0);
+
+    return date;
 }
 
 // def a function to get the time zone name
@@ -206,3 +281,31 @@ export function groupCustomersByTimeAndService(
 export function transformData(input: TimeSummary[]): ServiceSummary[][] {
     return input.map((item) => item.summary);
 }
+
+// def a function to parse a time string to a Date object
+// this is super helpful to pass the current appointment time to the time picker
+//  in the edit appointment form in the EditAppointmentScreen
+export const parseTimeStringToDate = (timeString: string): Date => {
+    const [timePart, timezone] = timeString.split(" ");
+    const [hours, minutes, seconds] = timePart.split(":").map(Number);
+
+    // Create a new Date object for today
+    const date = new Date();
+    date.setUTCHours(hours, minutes, seconds, 0); // Set the time to the UTC equivalent
+
+    // Handle timezone offset dynamically
+    const match = timezone.match(/GMT([+-])(\d{2})(\d{2})/);
+    if (match) {
+        const sign = match[1] === "+" ? 1 : -1;
+        const offsetHours = parseInt(match[2], 10);
+        const offsetMinutes = parseInt(match[3], 10);
+
+        // Calculate the total offset in minutes
+        const totalOffsetMinutes = sign * (offsetHours * 60 + offsetMinutes);
+
+        // Adjust the date by the offset
+        date.setMinutes(date.getMinutes() - totalOffsetMinutes);
+    }
+
+    return date;
+};

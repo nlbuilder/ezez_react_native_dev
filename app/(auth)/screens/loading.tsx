@@ -1,14 +1,25 @@
 import { View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useCreateBusinessAPI } from "@/app/(authenticated)/components/profile/apis/createBusinessAPI";
-import { BusinessInfo } from "@/app/(authenticated)/components/profile/types/types";
 import { router, useLocalSearchParams } from "expo-router";
 import { Wander } from "react-native-animated-spinkit";
+
+import { useCreateBusinessAPI } from "@/app/(authenticated)/components/profile/apis/createBusinessAPI";
+import { useCreateBusinessHourAPI } from "@/app/(authenticated)/components/profile/apis/createBusinessHourAPI";
+import { BusinessInfo } from "@/app/(authenticated)/components/profile/types/types";
+import { BusinessHourInfo } from "@/app/(authenticated)/components/profile/types/types";
 
 const loading = () => {
     const { businessId, name, email } = useLocalSearchParams();
     const { createBusinessInfo } = useCreateBusinessAPI();
+    const { createBusinessHour } = useCreateBusinessHourAPI();
+
     const [error, setError] = useState<string | null>(null);
+
+    // initialize the startTime = "10:00 AM"
+    const initStartTime = "10:00 AM";
+
+    // initialize the finishTime = "7:00 PM"
+    const initFinishTime = "7:00 PM";
 
     useEffect(() => {
         const handleCreateBusiness = async () => {
@@ -22,7 +33,7 @@ const loading = () => {
                         email: Array.isArray(email) ? email[0] : email,
                     };
 
-                    // Call the API to create the business
+                    // call the API to create the business
                     await createBusinessInfo(businessInfo);
 
                     // Navigate to authenticated tabs if successful
@@ -32,16 +43,38 @@ const loading = () => {
                         "Error creating business [loading screen]: ",
                         error
                     );
-
-                    setError("Failed to create business.");
                 }
-            } else {
-                setError("Missing business information.");
+            }
+        };
+
+        const handleCreateBusinessHour = async () => {
+            if (businessId && name && email) {
+                try {
+                    const businessHourInfo: BusinessHourInfo = {
+                        businessId: Array.isArray(businessId)
+                            ? businessId[0]
+                            : businessId,
+                        startTime: initStartTime,
+                        finishTime: initFinishTime,
+                    };
+
+                    // call the API to create the business hour
+                    await createBusinessHour(businessHourInfo);
+
+                    // Navigate to authenticated tabs if successful
+                    router.replace("/(authenticated)/(tabs)");
+                } catch (error) {
+                    console.error(
+                        "Error creating business hour [loading screen]: ",
+                        error
+                    );
+                }
             }
         };
 
         handleCreateBusiness();
-    }, [businessId, name, email, createBusinessInfo]);
+        handleCreateBusinessHour();
+    }, [businessId, name, email, createBusinessInfo, createBusinessHour]);
 
     return (
         <>

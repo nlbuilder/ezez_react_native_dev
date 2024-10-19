@@ -86,9 +86,6 @@ export default function CreateAppointmentModal() {
             status: "booked",
         };
 
-        console.log(newAppointmentData.roundedTime);
-        console.log(newAppointmentData.time);
-
         try {
             const newAppointment = await createAppointment(newAppointmentData);
 
@@ -253,13 +250,13 @@ export default function CreateAppointmentModal() {
                         left: wp("2%"),
                     }}
                 >
-                    Note
+                    Request
                 </Text>
                 <View style={[styles.appointmentForm, { width: wp("84%") }]}>
                     <TextInput
                         placeholder="Enter a note"
                         placeholderTextColor={"rgba(189, 195, 199, 0.8)"}
-                        style={{ height: "100%", color: "white" }}
+                        style={{ height: "100%", color: "black" }}
                         value={note}
                         onChangeText={(value) => setNote(value)}
                     />

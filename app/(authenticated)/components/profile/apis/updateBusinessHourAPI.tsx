@@ -1,27 +1,26 @@
 import { useMutation } from "react-query";
 
 import { useAuth } from "@/app/(auth)/components/hooks/useAuth";
-import { ServiceInfo } from "@/app/(authenticated)/components/profile/types/types";
+import { BusinessHourInfo } from "@/app/(authenticated)/components/profile/types/types";
 
-// def a hook to update the service info given a serviceId and businessId
-export const useUpdateServiceAPI = () => {
+// def a hook to update the businessHour info given businessId
+export const useUpdateBusinessHourAPI = () => {
     const auth = useAuth();
 
     const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
     // this method is meant to be used by an authenticated business manager
-    //  to update the service info that they offer
+    //  to update the setting of the business hours
 
-    // def a function to update service info
-    const updateServiceInfoRequest = async (
-        // serviceId: string,
-        formData: ServiceInfo
+    // def a function to update businessHour info
+    const updateBusinessHourInfoRequest = async (
+        formData: BusinessHourInfo
     ) => {
         // get the access token from auth
         const accessToken = auth?.user?.IdToken;
 
-        // make a PUT request to the backend to update service info
-        const response = await fetch(`${BASE_URL}/service`, {
+        // make a PUT request to the backend to update businessHour info
+        const response = await fetch(`${BASE_URL}/businessHour`, {
             method: "PUT",
             headers: {
                 Authorization: `Bearer ${accessToken}`, // add the access token to the headers
@@ -34,7 +33,7 @@ export const useUpdateServiceAPI = () => {
 
         // check if the request was successful
         if (!response.ok) {
-            throw new Error("Failed to update service info");
+            throw new Error("Failed to update businessHour info");
         }
 
         return response.json();
@@ -42,15 +41,15 @@ export const useUpdateServiceAPI = () => {
 
     // use the useMutation hook to update the business info
     const {
-        mutateAsync: updateServiceInfo,
+        mutateAsync: updateBusinessHourInfo,
         isLoading,
         isError,
         isSuccess,
         error,
-    } = useMutation(updateServiceInfoRequest);
+    } = useMutation(updateBusinessHourInfoRequest);
 
     return {
-        updateServiceInfo,
+        updateBusinessHourInfo,
         isLoading,
         isError,
         isSuccess,

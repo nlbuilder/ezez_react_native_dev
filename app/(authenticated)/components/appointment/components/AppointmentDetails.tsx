@@ -1,7 +1,6 @@
 import {
     Pressable,
     StyleSheet,
-    TextInput,
     Text,
     useColorScheme,
     View,
@@ -13,14 +12,9 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import DateTimePicker, {
-    DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-
 import Colors from "@/constants/styles/Colors";
 import { AntDesign } from "@expo/vector-icons";
-import dummyServiceData from "@/dummy/dummyServiceData.json";
 
 import Animated, {
     Easing,
@@ -32,6 +26,8 @@ import Animated, {
 } from "react-native-reanimated";
 import WarningModal from "@/app/(authenticated)/utils/modals/WarningModal";
 import { router } from "expo-router";
+import { convertTo12HourFormat } from "@/app/(authenticated)/utils/utils";
+import { useDeleteAppointmentAPI } from "../apis/deleteAppointmentAPI";
 
 const AppointmentDetails = ({
     appointmentDetails,
@@ -42,44 +38,7 @@ const AppointmentDetails = ({
 }) => {
     const colorScheme = useColorScheme();
 
-    // editng date object
-    const [dateObject, setDateObject] = useState(
-        new Date(appointmentDetails.date)
-    );
-    const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
-        if (selectedDate) {
-            setDateObject(selectedDate);
-        }
-    };
-
-    // editing time object
-    const [hours, minutes] = appointmentDetails.time.split(":").map(Number);
-    const timeObject0 = new Date();
-    timeObject0.setHours(hours, minutes, 0, 0);
-    const [timeObject, setTimeObject] = useState(timeObject0);
-    const onChangeTime = (event: DateTimePickerEvent, selectedTime?: Date) => {
-        if (selectedTime) {
-            setTimeObject(selectedTime);
-        }
-    };
-
-    // DropDownPicker for service title editing
-    const [serviceItems, setServiceItems] = useState(dummyServiceData);
-
-    const [editNumberOfCustomers, setEditNumberOfCustomers] = useState(
-        appointmentDetails.numberOfCustomers.toString()
-    );
-    const [editCustomerPhoneNumber, setEditCustomerPhoneNumber] = useState(
-        appointmentDetails.customerPhoneNumber
-    );
-    const [editNote, setEditNote] = useState(appointmentDetails.note);
-
-    const [isEditable, setIsEditable] = useState(false);
-
-    const handleEditButton = () => {
-        setIsEditable(!isEditable);
-    };
-
+    // *** code to handle the animation of the swipable content ***
     // handle swipe left to delete and edit
     const translateX = useSharedValue(0);
     const showDeleteButton = useSharedValue(false);
@@ -131,8 +90,12 @@ const AppointmentDetails = ({
         ),
     }));
 
+    // *** code to handle the functionality of the delete button ***
     // warning modal for delete confirmation or cancelation
     const [modalVisible, setModalVisible] = useState(false);
+
+    const { deleteAppointment, isLoading: isDeleteAppointmentLoading } =
+        useDeleteAppointmentAPI();
 
     const handleDeletePress = () => {
         setModalVisible(true);
@@ -146,8 +109,19 @@ const AppointmentDetails = ({
 
     const confirmDelete = () => {
         console.log("delete confirmed");
-        onDelete(appointmentDetails.appointmentId);
+
+        deleteAppointment(appointmentDetails.appointmentId);
+
         setModalVisible(false);
+
+        // handle back to the original position after delete
+        translateX.value = withTiming(0, {
+            duration: 500,
+            easing: Easing.bezier(0.45, 0, 0.55, 1), // refer to easeInOutQuad in https://easings.net/#
+            reduceMotion: ReduceMotion.System,
+        });
+
+        console.log(appointmentDetails.appointmentId);
     };
 
     const cancelDelete = () => {
@@ -160,34 +134,12 @@ const AppointmentDetails = ({
         });
         showDeleteButton.value = false;
     };
+    // *** end of code to handle the animation of the swipable content ***
+
+    // *** code to handle the appointment summary ***
 
     return (
         <View>
-            {/* edit button */}
-            {/* <View
-                style={{
-                    width: wp("90%"),
-                    alignItems: "flex-end",
-                    marginBottom: hp(".5%"),
-                }}
-            >
-                <Pressable
-                    onPress={() => {
-                        router.push(
-                            "/components/appointment/screens/EditAppointmentScreen"
-                        );
-                        // handleEditButton();
-                        console.log("edit button pressed");
-                    }}
-                >
-                    <AntDesign
-                        name={isEditable ? "check" : "edit"}
-                        size={24}
-                        color={Colors[colorScheme ?? "light"].tint}
-                    />
-                </Pressable>
-            </View> */}
-
             <View
                 style={{
                     flexDirection: "row",
@@ -197,9 +149,9 @@ const AppointmentDetails = ({
                     borderRadius: hp("2.5%"),
                     borderWidth: 1,
                     borderColor: Colors[colorScheme ?? "light"].tabIconDefault,
-                    height: hp("15%"),
+                    height: hp("10%"),
                     width: wp("96%"),
-                    marginBottom: isEditable ? hp("5%") : hp("5%"),
+                    marginBottom: hp("3.5%"),
                 }}
             >
                 <GestureDetector gesture={pan}>
@@ -228,7 +180,6 @@ const AppointmentDetails = ({
                             {/* Edit Button */}
                             <Pressable
                                 onPress={() => {
-                                    console.log("edit pressed");
                                     router.push({
                                         pathname:
                                             "/(authenticated)/components/appointment/screens/EditAppointmentScreen",
@@ -321,12 +272,12 @@ const AppointmentDetails = ({
                                     backgroundColor:
                                         Colors[colorScheme ?? "light"]
                                             .background,
-                                    borderRadius: hp("2.5%"),
+                                    borderRadius: hp("2%"),
                                     borderWidth: 1,
                                     borderColor:
                                         Colors[colorScheme ?? "light"]
                                             .tabIconDefault,
-                                    height: hp("15%"),
+                                    height: hp("10%"),
                                     width: wp("96%"),
 
                                     flexDirection: "row",
@@ -344,83 +295,24 @@ const AppointmentDetails = ({
                                     alignSelf: "center",
                                 }}
                             >
-                                <View
-                                    style={{
-                                        borderColor: isEditable
-                                            ? Colors[colorScheme ?? "light"]
-                                                  .tabIconSelected
-                                            : "transparent",
-                                        borderWidth: 1,
-                                        borderRadius: 15,
-                                        width: wp("30%"),
-                                        height: hp("4.5%"),
-                                        transform: [{ scale: 0.9 }], // a trick to customize the date text input
-                                    }}
-                                >
-                                    <DateTimePicker
-                                        value={dateObject}
-                                        mode={"date"}
-                                        onChange={onChangeDate}
-                                        disabled={!isEditable}
-                                    />
+                                <View>
+                                    <Text style={{ paddingBottom: hp("1.5%") }}>
+                                        {appointmentDetails.date
+                                            .split(" ")
+                                            .slice(0, 3)
+                                            .join(" ")}
+                                    </Text>
                                 </View>
-                                <View
-                                    style={{
-                                        borderWidth: 1,
-                                        width: wp("30%"),
-                                        height: hp("4.5%"),
-                                        top: hp(".5%"),
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        borderColor: "transparent",
-                                    }}
-                                >
-                                    {!isEditable ? (
-                                        <Text
-                                            style={{
-                                                color: Colors[
-                                                    colorScheme ?? "light"
-                                                ].text,
-                                            }}
-                                        >
-                                            {appointmentDetails.serviceName}
-                                        </Text>
-                                    ) : (
-                                        <View style={{ left: wp(".5%") }}>
-                                            {/* <RNPickerSelect
-                                                onValueChange={(value) =>
-                                                    console.log(value)
-                                                }
-                                                items={serviceItems.map(
-                                                    (item) => {
-                                                        return {
-                                                            label: item.label,
-                                                            value: item.value,
-                                                        };
-                                                    }
-                                                )}
-                                                disabled={!isEditable}
-                                                placeholder={{
-                                                    label: "Select a service",
-                                                    value: null,
-                                                }}
-                                                style={{
-                                                    inputIOS: {
-                                                        color: Colors[
-                                                            colorScheme ??
-                                                                "light"
-                                                        ].text,
-                                                    },
-                                                    inputAndroid: {
-                                                        color: Colors[
-                                                            colorScheme ??
-                                                                "light"
-                                                        ].text,
-                                                    },
-                                                }}
-                                            /> */}
-                                        </View>
-                                    )}
+                                <View>
+                                    <Text
+                                        style={{
+                                            color: Colors[
+                                                colorScheme ?? "light"
+                                            ].text,
+                                        }}
+                                    >
+                                        {appointmentDetails.serviceName}
+                                    </Text>
                                 </View>
                             </View>
 
@@ -432,77 +324,37 @@ const AppointmentDetails = ({
                                     alignSelf: "center",
                                 }}
                             >
-                                <View
-                                    style={{
-                                        borderColor: isEditable
-                                            ? Colors[colorScheme ?? "light"]
-                                                  .tabIconSelected
-                                            : "transparent",
-                                        borderWidth: 1,
-                                        borderRadius: 15,
-                                        height: hp("4.5%"),
-                                        width: wp("30%"),
-                                        // bottom: hp(".1%"),
-                                        transform: [{ scale: 0.86 }], // a trick to customize the time text input
-                                    }}
-                                >
-                                    <DateTimePicker
-                                        value={timeObject}
-                                        mode={"time"}
-                                        onChange={onChangeTime}
-                                        disabled={!isEditable}
-                                        minuteInterval={15}
-                                        is24Hour={true}
-                                        style={{
-                                            right: wp("2.2%"),
-                                        }}
-                                    />
+                                <View>
+                                    <Text style={{ paddingBottom: hp("1.5%") }}>
+                                        {convertTo12HourFormat(
+                                            appointmentDetails.time
+                                        )}
+                                    </Text>
                                 </View>
 
                                 <View
                                     style={{
-                                        width: wp("22.5%"),
-                                        height: hp("4.5%"),
                                         flexDirection: "row",
                                         alignItems: "center",
-                                        justifyContent: "center",
-                                        top: hp(".5%"),
                                     }}
                                 >
                                     <View
                                         style={{
-                                            borderColor: isEditable
-                                                ? Colors[colorScheme ?? "light"]
-                                                      .tabIconSelected
-                                                : "transparent",
-                                            borderWidth: 1,
-                                            borderRadius: 15,
-                                            width: wp("8%"),
-                                            height: hp("4.5%"),
                                             alignItems: "center",
-                                            justifyContent: "center",
                                         }}
                                     >
-                                        <TextInput
-                                            value={editNumberOfCustomers}
-                                            onChangeText={
-                                                setEditNumberOfCustomers
+                                        <Text style={{ right: wp(".5%") }}>
+                                            {
+                                                appointmentDetails.numberOfCustomers
                                             }
-                                            editable={isEditable}
-                                            style={{
-                                                color: Colors[
-                                                    colorScheme ?? "light"
-                                                ].text,
-                                            }}
-                                            keyboardType="number-pad"
-                                            placeholder={isEditable ? "0" : ""}
-                                        />
+                                        </Text>
                                     </View>
                                     <Text
                                         style={{
                                             color: Colors[
                                                 colorScheme ?? "light"
                                             ].text,
+                                            left: wp(".5%"),
                                         }}
                                     >
                                         people
@@ -518,65 +370,16 @@ const AppointmentDetails = ({
                                     alignSelf: "center",
                                 }}
                             >
-                                <View
-                                    style={{
-                                        borderColor: isEditable
-                                            ? Colors[colorScheme ?? "light"]
-                                                  .tabIconSelected
-                                            : "transparent",
-                                        borderWidth: 1,
-                                        borderRadius: 15,
-                                        width: wp("30%"),
-                                        height: hp("4.5%"),
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                    }}
-                                >
-                                    <TextInput
-                                        value={editNote}
-                                        onChangeText={setEditNote}
-                                        editable={isEditable}
-                                        style={{
-                                            color: Colors[
-                                                colorScheme ?? "light"
-                                            ].text,
-                                        }}
-                                        placeholder={
-                                            isEditable ? "Add a note" : ""
-                                        }
-                                    />
+                                <View>
+                                    <Text style={{ paddingBottom: hp("1.5%") }}>
+                                        {appointmentDetails.note}
+                                    </Text>
                                 </View>
 
-                                <View
-                                    style={{
-                                        borderColor: isEditable
-                                            ? Colors[colorScheme ?? "light"]
-                                                  .tabIconSelected
-                                            : "transparent",
-                                        borderWidth: 1,
-                                        borderRadius: 15,
-                                        width: wp("30%"),
-                                        height: hp("4.5%"),
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        top: hp(".5%"),
-                                    }}
-                                >
-                                    <TextInput
-                                        value={editCustomerPhoneNumber}
-                                        onChangeText={
-                                            setEditCustomerPhoneNumber
-                                        }
-                                        editable={isEditable}
-                                        style={{
-                                            color: Colors[
-                                                colorScheme ?? "light"
-                                            ].text,
-                                        }}
-                                        keyboardType="phone-pad" // to handle phone numbers
-                                    />
+                                <View>
+                                    <Text>
+                                        {appointmentDetails.customerPhoneNumber}
+                                    </Text>
                                 </View>
                             </View>
                         </Animated.View>

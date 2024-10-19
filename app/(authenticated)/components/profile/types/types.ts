@@ -63,3 +63,9 @@ export interface ServiceInfo {
     price: number;
     notes?: string;
 }
+
+export interface BusinessHourInfo {
+    businessId: string;
+    startTime: string;
+    finishTime: string;
+}

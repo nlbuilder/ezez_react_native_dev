@@ -28,6 +28,9 @@ function TabBarIcon(props: {
 
 export default function _layout() {
     const colorScheme = useColorScheme();
+
+    // I have to use the useDate hook to handle the date as a global state
+    // so I can use it in the home screen and other components
     const { date, setDate } = useDate();
     const timeZoneName = getTimeZoneName();
 

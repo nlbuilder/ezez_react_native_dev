@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import {
     Pressable,
     SafeAreaView,
@@ -21,46 +20,109 @@ import DateTimePicker, {
 
 import dummyServiceData from "@/dummy/dummyServiceData.json";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import {
+    convertToLocalTime,
+    getTimeZoneName,
+    parseTimeStringToDate,
+    roundToPreviousHour,
+} from "@/app/(authenticated)/utils/utils";
+import { useGetAllServicesAPI } from "../../profile/apis/getAllServicesAPI";
+import { useUpdateAppointmentAPI } from "../apis/updateAppointmentInfoAPI";
 
 export default function EditAppointmentScreen() {
-    const { data } = useLocalSearchParams();
-    const appointmentDetails = data ? JSON.parse(data as string) : {};
-
     const navigation = useNavigation();
-
     const colorScheme = useColorScheme();
+    const localParams = useLocalSearchParams();
 
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [fullName, setFullName] = useState("");
+    // get the appointment details from the local params
+    // passing from the AppointmentDetails component
+    const appointmentDetails = localParams.data
+        ? JSON.parse(localParams.data as string)
+        : {};
 
-    // DropDownPicker for selecting a service
-    const [serviceItems, setServiceItems] = useState(dummyServiceData);
-
-    // editng date object
-    const [dateObject, setDateObject] = useState(
-        new Date(appointmentDetails.date)
-    );
+    console.log(appointmentDetails.date);
+    // handle the Date picker
+    const [date, setDate] = useState(new Date(appointmentDetails.date));
     const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
         if (selectedDate) {
-            setDateObject(selectedDate);
+            setDate(selectedDate);
+            console.log("Date changed to: ", selectedDate);
         }
     };
 
-    // editing time object
-    const [hours, minutes] = appointmentDetails.time.split(":").map(Number);
-    const timeObject0 = new Date();
-    timeObject0.setHours(hours, minutes, 0, 0);
-    const [timeObject, setTimeObject] = useState(timeObject0);
+    // get the time zone of the device
+    const timeZoneName = getTimeZoneName();
+
+    // handle the Time picker
+    const [time, setTime] = useState(
+        parseTimeStringToDate(appointmentDetails.time)
+    );
     const onChangeTime = (event: DateTimePickerEvent, selectedTime?: Date) => {
         if (selectedTime) {
-            setTimeObject(selectedTime);
+            setTime(selectedTime);
+            console.log("Time changed to: ", selectedTime);
         }
     };
 
-    console.log(appointmentDetails);
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [customerName, setCustomerName] = useState("");
+    const [numberOfPeople, setNumberOfPeople] = useState("");
+    const [note, setNote] = useState("");
+
+    // prepare options for the DropDownPicker for selecting a service
+    const [serviceItems, setServiceItems] = useState(dummyServiceData);
+    const [chosenService, setChosenService] = useState(serviceItems[0].value);
+
+    const { updateAppointmentInfo, isLoading: isUpdateAppointmentInfoLoading } =
+        useUpdateAppointmentAPI();
+
+    const {
+        allServicesInfo,
+        isLoading: isGetAllServicesLoading,
+        refetch: refetchGetAllServices,
+    } = useGetAllServicesAPI();
+
+    const handleEditAppointment = async () => {
+        const updateAppointmentData = {
+            appointmentId: appointmentDetails.appointmentId,
+            businessId: appointmentDetails.businessId,
+            customerId: "1",
+            serviceId: "1",
+            date: date.toDateString(),
+            time: time.toTimeString(),
+            roundedTime: roundToPreviousHour(time),
+            serviceName: chosenService,
+            numberOfCustomers: Number(numberOfPeople),
+            customerPhoneNumber: phoneNumber,
+            customerName: customerName,
+            note: note,
+            status: "booked",
+        };
+
+        try {
+            const updateAppointment = await updateAppointmentInfo(
+                updateAppointmentData
+            );
+            if (updateAppointment) {
+                refetchGetAllServices();
+
+                router.back();
+            }
+        } catch (error) {
+            console.error(
+                "Error edit appointment [frontend error message]: ",
+                error
+            );
+        }
+    };
 
     useEffect(() => {
-        navigation.setOptions({ headerShown: false });
+        navigation.setOptions({
+            headerShown: true,
+            headerTitle: "Edit Appointment",
+            headerBackTitle: "Back",
+            headerTitleAlign: "center",
+        });
     }, [navigation]);
 
     return (
@@ -73,62 +135,14 @@ export default function EditAppointmentScreen() {
                 },
             ]}
         >
-            {/* Title  */}
-            <View style={styles.content}>
-                <View
-                    style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                >
-                    <View style={{}}>
-                        <Text
-                            style={{
-                                fontSize: 18,
-                                fontWeight: "500",
-                                color: Colors[colorScheme ?? "light"].text,
-                                left: wp("4%"),
-                            }}
-                        >
-                            Edit appointment
-                        </Text>
-                    </View>
-
-                    <View style={{ left: wp("24.5%") }}>
-                        <Pressable
-                            onPress={() => {
-                                router.back();
-                            }}
-                        >
-                            <AntDesign
-                                name="close"
-                                size={28}
-                                color={Colors[colorScheme ?? "light"].text}
-                            />
-                        </Pressable>
-                    </View>
-                </View>
-
-                {/* Separator */}
-                <View
-                    style={{
-                        borderColor:
-                            Colors[colorScheme ?? "light"].tabIconDefault,
-                        borderWidth: 0.5,
-                        width: wp("96%"),
-                        marginTop: hp("1.8%"),
-                        marginBottom: hp("2.5%"),
-                    }}
-                ></View>
-
-                {/* Date and time pickers */}
+            <View style={styles.container}>
                 <View
                     style={{
                         flexDirection: "row",
                         alignSelf: "flex-start",
                         alignItems: "center",
                         left: wp("5.5%"),
+                        marginTop: hp("2%"),
                     }}
                 >
                     <View
@@ -138,59 +152,51 @@ export default function EditAppointmentScreen() {
                         }}
                     >
                         <DateTimePicker
-                            value={dateObject}
+                            value={date}
                             mode={"date"}
                             onChange={onChangeDate}
+                            // disabled={true}
                         />
 
                         <DateTimePicker
-                            value={timeObject}
+                            value={time}
                             mode={"time"}
                             onChange={onChangeTime}
+                            minuteInterval={5}
+                            timeZoneName={timeZoneName} // set the time zone
+                            // disabled={true}
                         />
                     </View>
                 </View>
 
-                {/* Phone number and Full name forms */}
+                {/* Phone number and customer name forms */}
                 <View
                     style={{
                         flexDirection: "row",
                         alignItems: "center",
                         justifyContent: "space-between",
                         width: wp("84%"),
-                        marginTop: hp("5%"),
+                        marginTop: hp("2%"),
                     }}
                 >
                     <View style={{ alignItems: "center" }}>
                         <Text
                             style={{
                                 marginBottom: hp(".5%"),
+                                color: Colors[colorScheme ?? "light"].text,
                             }}
                         >
                             Phone number
                         </Text>
-                        <View
-                            style={{
-                                backgroundColor:
-                                    Colors[colorScheme ?? "light"].background,
-                                borderColor:
-                                    Colors[colorScheme ?? "light"]
-                                        .tabIconDefault,
-                                borderWidth: 1,
-                                width: wp("40%"),
-                                height: hp("6%"),
-                                borderRadius: 10,
-                                paddingLeft: 10,
-                            }}
-                        >
+                        <View style={styles.appointmentForm}>
                             <TextInput
                                 placeholder={
                                     appointmentDetails.customerPhoneNumber
                                 }
                                 placeholderTextColor={
-                                    "rgba(189, 195, 199, 0.8)"
+                                    Colors[colorScheme ?? "light"].text
                                 }
-                                style={{ height: "100%", color: "white" }}
+                                style={{ height: "100%", color: "black" }}
                                 value={phoneNumber}
                                 onChangeText={(value) => setPhoneNumber(value)}
                             />
@@ -200,34 +206,20 @@ export default function EditAppointmentScreen() {
                         <Text
                             style={{
                                 marginBottom: hp(".5%"),
+                                color: Colors[colorScheme ?? "light"].text,
                             }}
                         >
-                            Full name
+                            Customer's name
                         </Text>
-                        <View
-                            style={{
-                                backgroundColor:
-                                    Colors[colorScheme ?? "light"].background,
-                                borderColor:
-                                    Colors[colorScheme ?? "light"]
-                                        .tabIconDefault,
-                                borderWidth: 1,
-                                width: wp("40%"),
-                                height: hp("6%"),
-                                borderRadius: 10,
-                                paddingLeft: 10,
-                            }}
-                        >
+                        <View style={styles.appointmentForm}>
                             <TextInput
-                                placeholder={
-                                    appointmentDetails.customerFullName
-                                }
+                                placeholder={appointmentDetails.customerName}
                                 placeholderTextColor={
-                                    "rgba(189, 195, 199, 0.8)"
+                                    Colors[colorScheme ?? "light"].text
                                 }
-                                style={{ height: "100%", color: "white" }}
-                                value={fullName}
-                                onChangeText={(value) => setFullName(value)}
+                                style={{ height: "100%", color: "black" }}
+                                value={customerName}
+                                onChangeText={(value) => setCustomerName(value)}
                             />
                         </View>
                     </View>
@@ -240,7 +232,7 @@ export default function EditAppointmentScreen() {
                         alignItems: "center",
                         justifyContent: "space-between",
                         width: wp("84%"),
-                        marginTop: hp("2.5%"),
+                        marginTop: hp("2%"),
                     }}
                 >
                     <View
@@ -249,61 +241,87 @@ export default function EditAppointmentScreen() {
                             alignItems: "center",
                         }}
                     >
-                        <Text style={{ marginBottom: hp(".5%") }}>Service</Text>
+                        <Text
+                            style={{
+                                marginBottom: hp(".5%"),
+                                color: Colors[colorScheme ?? "light"].text,
+                            }}
+                        >
+                            Service
+                        </Text>
 
-                        <View>
-                            <DropDownPickerModal
-                                data={serviceItems}
-                                onChange={(value) => {
-                                    console.log(value);
-                                }}
-                                placeholder={appointmentDetails.serviceTitle}
-                            />
-                        </View>
+                        <DropDownPickerModal
+                            data={serviceItems}
+                            onChange={(value) => {
+                                setChosenService(value.value);
+                            }}
+                            placeholder={appointmentDetails.serviceName}
+                        />
                     </View>
 
                     <View style={{ alignItems: "center" }}>
-                        <Text style={{ marginBottom: hp(".5%") }}>
+                        <Text
+                            style={{
+                                marginBottom: hp(".5%"),
+                                color: Colors[colorScheme ?? "light"].text,
+                            }}
+                        >
                             Number of people
                         </Text>
 
-                        <View
-                            style={{
-                                backgroundColor:
-                                    Colors[colorScheme ?? "light"].background,
-                                borderColor:
-                                    Colors[colorScheme ?? "light"]
-                                        .tabIconDefault,
-                                borderWidth: 1,
-                                width: wp("40%"),
-                                height: hp("6%"),
-                                borderRadius: 10,
-                                paddingLeft: 10,
-                            }}
-                        >
+                        <View style={styles.appointmentForm}>
                             <TextInput
                                 placeholder={appointmentDetails.numberOfCustomers.toString()}
                                 placeholderTextColor={
-                                    "rgba(189, 195, 199, 0.8)"
+                                    Colors[colorScheme ?? "light"].text
                                 }
-                                style={{ height: "100%", color: "white" }}
-                                value={fullName}
-                                onChangeText={(value) => setFullName(value)}
+                                style={{ height: "100%", color: "black" }}
+                                value={numberOfPeople.toString()}
+                                onChangeText={(value) =>
+                                    setNumberOfPeople(value)
+                                }
                             />
                         </View>
                     </View>
                 </View>
 
-                {/* confirm button */}
+                {/* note */}
+                <View style={{ width: wp("84%") }}>
+                    <Text
+                        style={{
+                            marginBottom: hp(".5%"),
+                            color: Colors[colorScheme ?? "light"].text,
+                            marginTop: hp("2%"),
+                            left: wp("2%"),
+                        }}
+                    >
+                        Request
+                    </Text>
+                    <View
+                        style={[styles.appointmentForm, { width: wp("84%") }]}
+                    >
+                        <TextInput
+                            placeholder={appointmentDetails.note}
+                            placeholderTextColor={
+                                Colors[colorScheme ?? "light"].text
+                            }
+                            style={{ height: "100%", color: "black" }}
+                            value={note}
+                            onChangeText={(value) => setNote(value)}
+                        />
+                    </View>
+                </View>
+
+                {/* confirm and candel buttons */}
                 <View
                     style={{
                         marginLeft: wp("50%"),
-                        marginTop: hp("5%"),
+                        marginTop: hp("2.5%"),
                     }}
                 >
                     <Pressable
                         onPress={() => {
-                            console.log("confirm button pressed");
+                            handleEditAppointment();
                         }}
                         style={{
                             flexDirection: "row",
@@ -313,9 +331,7 @@ export default function EditAppointmentScreen() {
                         <Text
                             style={{
                                 paddingHorizontal: wp("2.5%"),
-                                opacity: 0.5,
-                                color: Colors[colorScheme ?? "light"]
-                                    .tabIconSelected,
+                                color: Colors[colorScheme ?? "light"].text,
                             }}
                         >
                             Confirm
@@ -329,6 +345,8 @@ export default function EditAppointmentScreen() {
                         />
                     </Pressable>
                 </View>
+
+                {/* <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} /> */}
             </View>
         </SafeAreaView>
     );
@@ -336,8 +354,12 @@ export default function EditAppointmentScreen() {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        // flex: 1,
         alignItems: "center",
+        width: wp("100%"),
+        height: hp("48%"),
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
     },
     title: {
         fontSize: 20,
@@ -354,5 +376,17 @@ const styles = StyleSheet.create({
         height: hp("95%"),
         paddingTop: hp("2%"),
         alignItems: "center",
+    },
+    appointmentForm: {
+        backgroundColor: Colors.light.background,
+        borderColor: Colors.light.tabIconDefault,
+        borderWidth: 1,
+        width: wp("40%"),
+        height: hp("6%"),
+        borderRadius: 10,
+        paddingLeft: 10,
+    },
+    formTitle: {
+        marginBottom: hp(".5%"),
     },
 });

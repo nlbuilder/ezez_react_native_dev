@@ -37,7 +37,7 @@ export const useDeleteAppointmentAPI = () => {
 
     // use the useMutation hook to delete the appointment info
     const {
-        data: deleteAppointment,
+        mutateAsync: deleteAppointment,
         isLoading,
         isError,
         isSuccess,

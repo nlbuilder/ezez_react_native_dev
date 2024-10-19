@@ -15,7 +15,7 @@ import {
 
 import AppointmentCard from "@/app/(authenticated)/components/appointment/components/AppointmentCard";
 import {
-    calculateOpenHours,
+    generateTimeList,
     filterAppointmentsByDate,
     formatDateToString,
     groupCustomersByTimeAndService,
@@ -25,6 +25,7 @@ import {
 import { useGetAllAppointmentsAPI } from "../components/appointment/apis/getAllAppointmentsInfoAPI";
 import { useDate } from "../components/appointment/context/DateContext";
 import dummyServiceData from "@/dummy/dummyServiceData.json";
+import { useGetBusinessHourAPI } from "../components/profile/apis/getBusinessHourAPI";
 
 const AppointmentCardList = () => {
     // *** code to handle the animation for the list of cards ***
@@ -59,23 +60,18 @@ const AppointmentCardList = () => {
 
     // code to compute the length of hours between the start and finish time
     //(i.e., the number of hours the business is open)
-    // define the start and finish time of the business
-    const timeStart = "2024-10-15T12:30:00.000Z";
-    const timeFinish = "2024-10-15T21:30:00.000Z";
+    // get the businessHour info
+    const { businessHourInfo, refetch: refetchBusinessHourInfo } =
+        useGetBusinessHourAPI();
 
-    const {
-        lengthOfHoursBetween,
-        timeStartFormatted,
-        timeFinishFormatted,
-        timeList,
-    } = calculateOpenHours(timeStart, timeFinish);
+    const startTime =
+        (Array.isArray(businessHourInfo) && businessHourInfo[0]?.startTime) ||
+        "10:00 AM";
+    const finishTime =
+        (Array.isArray(businessHourInfo) && businessHourInfo[0]?.finishTime) ||
+        "7:00 PM";
 
-    // console.log(timeList);
-
-    const cardList = Array.from(
-        { length: lengthOfHoursBetween + 1 },
-        (_, index) => index
-    );
+    const timeList = generateTimeList(startTime, finishTime);
 
     // this is the code to handle the date from DateTimePicker
     // it provides the date to use in the filtering appointments by date
@@ -99,15 +95,11 @@ const AppointmentCardList = () => {
         dateString
     );
 
-    // console.log(filteredAppointmentsByDate);
-
     // group the customers by rounded time (this function returns an object)
     const sumOfCustomerByTime = groupCustomersByTime(
         timeList,
         filteredAppointmentsByDate
     );
-
-    // console.log(timeList);
 
     // this is to convert the object to an array
     // so that it can be used in the AppointmentCard component properly
@@ -130,11 +122,15 @@ const AppointmentCardList = () => {
 
     useEffect(() => {
         refetchAllAppointmentsInfo();
+        refetchBusinessHourInfo();
     }, [
         allAppointmentInfo,
         date,
         sumOfCustomerByTimeArray,
         transformedSumOfCustomerByTimeAndService,
+        startTime,
+        finishTime,
+        timeList,
     ]);
 
     return (

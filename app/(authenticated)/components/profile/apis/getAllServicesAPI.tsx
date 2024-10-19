@@ -33,7 +33,7 @@ export const useGetAllServicesAPI = () => {
 
         // this trick is used to handle the case
         // where there is no service added to the business yet
-        if (response.status === 404) {
+        if (response.status == 404) {
             return null;
         }
 

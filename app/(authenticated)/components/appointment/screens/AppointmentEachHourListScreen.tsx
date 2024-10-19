@@ -1,5 +1,5 @@
 // AppointmentModal.tsx
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { FlatList, Pressable, StyleSheet, useColorScheme } from "react-native";
 import {
@@ -14,15 +14,16 @@ import Colors from "@/constants/styles/Colors";
 import { ModalProps } from "../types/types";
 import { useGetAllAppointmentsAPI } from "../apis/getAllAppointmentsInfoAPI";
 import {
-    calculateOpenHours,
     filterAppointmentsByDate,
     formatDateToString,
+    generateTimeList,
     groupCustomersByTime,
     groupCustomersByTimeAndService,
     transformData,
 } from "@/app/(authenticated)/utils/utils";
 import { useDate } from "../context/DateContext";
 import dummyServiceData from "@/dummy/dummyServiceData.json";
+import { useGetBusinessHourAPI } from "../../profile/apis/getBusinessHourAPI";
 
 const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
     const navigation = useNavigation();
@@ -38,15 +39,19 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
         });
     }, [navigation]);
 
-    const timeStart = "2024-10-15T12:30:00.000Z";
-    const timeFinish = "2024-10-15T21:30:00.000Z";
-
+    // get the businessHour info
     const {
-        lengthOfHoursBetween,
-        timeStartFormatted,
-        timeFinishFormatted,
-        timeList,
-    } = calculateOpenHours(timeStart, timeFinish);
+        businessHourInfo,
+        isLoading: isGetBusinessHourLoading,
+        refetch: refetchBusinessHour,
+    } = useGetBusinessHourAPI();
+
+    const startTime =
+        Array.isArray(businessHourInfo) && businessHourInfo[0]?.startTime;
+    const finishTime =
+        Array.isArray(businessHourInfo) && businessHourInfo[0]?.finishTime;
+
+    const timeList = generateTimeList(startTime, finishTime);
 
     const {
         allAppointmentInfo,
@@ -68,15 +73,11 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
         dateString
     );
 
-    // console.log(filteredAppointmentsByDate);
-
     // group the customers by rounded time (this function returns an object)
     const sumOfCustomerByTime = groupCustomersByTime(
         timeList,
         filteredAppointmentsByDate
     );
-
-    // console.log(timeList);
 
     // this is to convert the object to an array
     // so that it can be used in the AppointmentCard component properly
@@ -93,25 +94,36 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
         serviceList
     );
 
-    const transformedSumOfCustomerByTimeAndService = transformData(
-        sumOfCustomerByTimeAndService
-    );
-
-    // useEffect(() => {
-    //     refetchAllAppointmentsInfo();
-    // }, [
-    //     allAppointmentInfo,
-    //     sumOfCustomerByTimeArray,
-    //     transformedSumOfCustomerByTimeAndService,
-    // ]);
-
+    // filter the appointments by roundedTime
+    // to get the appointment details for this specific roundedTime
     const appointmentDetails = filteredAppointmentsByDate.filter(
-        (appointment) => appointment.roundedTime === roundedTime
+        (item) => item.roundedTime === roundedTime
     );
 
-    // const [appointmentDetails, setAppointmentDetails] = useState(
-    //     dummyAppointmentDataByDate
-    // );
+    // filter the sumOfCustomerByTimeAndService by roundedTime
+    const filteredSumOfCustomerByTimeAndService =
+        sumOfCustomerByTimeAndService.filter(
+            (item) => item.roundedTime === roundedTime
+        );
+
+    // transform the data to be used in the summary section
+    const transformedSumOfCustomerByTimeAndService = transformData(
+        filteredSumOfCustomerByTimeAndService.flat()
+    );
+
+    // assign the transformed data to the listOfAppointmentSum
+    // I did this on purpose to make the code more readable,
+    // also it is easier when I need to revise the code in the future
+    const listOfAppointmentSum =
+        transformedSumOfCustomerByTimeAndService.flat();
+
+    useEffect(() => {
+        refetchAllAppointmentsInfo();
+    }, [
+        allAppointmentInfo,
+        appointmentDetails,
+        transformedSumOfCustomerByTimeAndService,
+    ]);
 
     const handleDeleteAppointment = (id: string) => {
         // const updatedData = appointmentDetails.filter(
@@ -144,18 +156,27 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
                     style={{
                         flexDirection: "row",
                         alignItems: "center",
-                        justifyContent: "center",
                         marginTop: hp("2%"),
                     }}
                 >
                     {/* Title */}
-                    <View style={{}}>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Text
+                            style={{ right: 45, fontSize: 14, fontWeight: 400 }}
+                        >
+                            {roundedTime}
+                        </Text>
                         <Text
                             style={{
                                 fontSize: 18,
                                 fontWeight: "500",
                                 color: Colors[colorScheme ?? "light"].text,
-                                left: wp("4%"),
+                                right: 10,
                             }}
                         >
                             List of Appointments
@@ -163,7 +184,7 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
                     </View>
 
                     {/* close button */}
-                    <View style={{ left: wp("20.5%") }}>
+                    <View style={{ left: wp("12.5%") }}>
                         <Pressable
                             onPress={() => {
                                 router.back();
@@ -186,12 +207,29 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
                         borderWidth: 0.5,
                         width: wp("96%"),
                         marginTop: hp("1.8%"),
-                        marginBottom: hp("5%"),
+                        marginBottom: hp("2.5%"),
                     }}
                 ></View>
 
+                {/* Summary of appointments */}
+                <View style={styles.summaryContainer}>
+                    {listOfAppointmentSum.map((item, index) => (
+                        <View key={index} style={styles.summaryItem}>
+                            <Text style={styles.summaryServiceName}>
+                                {item.serviceName}
+                            </Text>
+                            <View style={styles.summaryInfo}>
+                                <Text style={styles.summaryCustomers}>
+                                    {item.customers}
+                                </Text>
+                                <Text>pp</Text>
+                            </View>
+                        </View>
+                    ))}
+                </View>
+
                 {/* FlastList of details information for each appointment */}
-                <View style={{ paddingBottom: hp("15%") }}>
+                <View style={{ paddingTop: hp("5%") }}>
                     <FlatList
                         data={appointmentDetails}
                         keyExtractor={(item) => item.appointmentId.toString()}
@@ -224,5 +262,27 @@ const styles = StyleSheet.create({
         height: hp("95%"),
         top: hp("2.5%"),
         alignItems: "center",
+    },
+    summaryContainer: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        paddingHorizontal: 10,
+        opacity: 0.68,
+    },
+    summaryItem: {
+        paddingHorizontal: 15,
+        paddingBottom: 10,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    summaryServiceName: {
+        marginBottom: 5,
+    },
+    summaryInfo: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    summaryCustomers: {
+        marginRight: 5,
     },
 });

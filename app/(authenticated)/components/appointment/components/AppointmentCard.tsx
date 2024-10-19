@@ -46,6 +46,8 @@ const AppointmentCard = ({
 
     const listOfAppointmentSum = sumOfCustomerByTimeAndService;
 
+    // console.log("listOfAppointmentSum: ", listOfAppointmentSum);
+
     return (
         <View style={styles.container}>
             <Animated.View
