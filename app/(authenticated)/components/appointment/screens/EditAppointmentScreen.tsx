@@ -18,16 +18,16 @@ import DateTimePicker, {
     DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 
-import dummyServiceData from "@/dummy/dummyServiceData.json";
+// import dummyServiceData from "@/dummy/dummyServiceData.json";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import {
-    convertToLocalTime,
     getTimeZoneName,
     parseTimeStringToDate,
     roundToPreviousHour,
 } from "@/app/(authenticated)/utils/utils";
 import { useGetAllServicesAPI } from "../../profile/apis/getAllServicesAPI";
 import { useUpdateAppointmentAPI } from "../apis/updateAppointmentInfoAPI";
+import { validateAppointmentDetails } from "@/app/(authenticated)/utils/validations/validations";
 
 export default function EditAppointmentScreen() {
     const navigation = useNavigation();
@@ -97,6 +97,20 @@ export default function EditAppointmentScreen() {
     );
 
     const handleEditAppointment = async () => {
+        const isValid = validateAppointmentDetails(
+            phoneNumber,
+            customerName,
+            numberOfPeople,
+            note,
+            chosenService
+        );
+
+        if (!isValid) {
+            console.log("Invalid appointment details");
+
+            return;
+        }
+
         const updateAppointmentData = {
             appointmentId: appointmentDetails.appointmentId,
             businessId: appointmentDetails.businessId,

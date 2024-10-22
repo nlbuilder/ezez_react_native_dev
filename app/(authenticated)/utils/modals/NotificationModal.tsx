@@ -45,7 +45,7 @@ const NotificationModal = ({ title, visible, onOK }: WarningModalProps) => {
 
                     <View style={[styles.separator]}></View>
                     <Pressable style={styles.OKButton} onPress={onOK}>
-                        <Text style={styles.buttonOKText}>Ok</Text>
+                        <Text style={styles.buttonOKText}>OK</Text>
                     </Pressable>
                 </View>
             </View>
@@ -86,9 +86,10 @@ const styles = StyleSheet.create({
         paddingVertical: hp("1%"),
     },
     buttonOKText: {
-        color: "green",
+        color: "#007AFF",
         textAlign: "center",
         fontSize: 16,
+        fontWeight: 500,
         top: 9,
     },
 });

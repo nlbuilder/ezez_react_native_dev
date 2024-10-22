@@ -5,6 +5,7 @@ import {
     TextInput,
     Pressable,
     useColorScheme,
+    Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Colors from "@/constants/styles/Colors";
@@ -13,14 +14,10 @@ import {
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Link, router } from "expo-router";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 
-import {
-    signInWithEmailPassword,
-    signInWithGoogle,
-    signUpWithEmailPassword,
-} from "../../utils/utils";
-import { AntDesign } from "@expo/vector-icons";
+import { signUpWithEmailPassword } from "../../utils/utils";
+import { validatePassword } from "@/app/(authenticated)/utils/validations/validations";
 
 const SignUpForm = () => {
     const colorScheme = useColorScheme();
@@ -30,6 +27,14 @@ const SignUpForm = () => {
     const [confirmPassword, setConfirmPassword] = useState<string>("");
 
     const handleSignUpWithEmailPassword = async () => {
+        const { isValid, message } = validatePassword(password);
+
+        if (!isValid) {
+            Alert.alert("Invalid Password", message);
+
+            return;
+        }
+
         const auth = await signUpWithEmailPassword(email, password, name);
 
         if (auth) {
@@ -42,6 +47,11 @@ const SignUpForm = () => {
                 },
             });
         }
+    };
+
+    const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible(!isPasswordVisible);
     };
 
     return (
@@ -82,8 +92,18 @@ const SignUpForm = () => {
                     style={{ height: "100%", color: "black", paddingLeft: 10 }}
                     value={password}
                     onChangeText={(value) => setPassword(value)}
-                    secureTextEntry={true} // Hide the password
+                    secureTextEntry={isPasswordVisible ? false : true}
                 />
+                <Pressable
+                    onPress={togglePasswordVisibility}
+                    style={{ right: 15 }}
+                >
+                    <Ionicons
+                        name={isPasswordVisible ? "eye-off" : "eye"}
+                        size={24}
+                        color={Colors.light.tabIconDefault}
+                    />
+                </Pressable>
             </View>
 
             <View style={{ width: wp("80%"), marginVertical: 10 }}>
@@ -162,7 +182,9 @@ const styles = StyleSheet.create({
         width: wp("84%"),
         borderRadius: 35,
         paddingLeft: 10,
-        justifyContent: "center",
+        justifyContent: "space-between",
+        flexDirection: "row",
+        alignItems: "center",
         marginBottom: hp("1.5%"),
     },
     authButton: {

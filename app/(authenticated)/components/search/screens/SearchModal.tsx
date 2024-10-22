@@ -1,5 +1,5 @@
 // AppointmentModal.tsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Pressable, StyleSheet, useColorScheme } from "react-native";
 import { View, Text } from "@/constants/styles/Themed";
 import {
@@ -11,9 +11,39 @@ import { AntDesign } from "@expo/vector-icons";
 import Colors from "@/constants/styles/Colors";
 import { TextInput } from "react-native-gesture-handler";
 import { ModalProps } from "../types/types";
+import { useGetAllAppointmentsAPI } from "../../appointment/apis/getAllAppointmentsInfoAPI";
+import { AppointmentDetailsProps } from "../../appointment/types/types";
 
 const SearchModal = ({ visible, onClose }: ModalProps) => {
     const colorScheme = useColorScheme();
+
+    const {
+        allAppointmentInfo,
+        isLoading: isGetAllAppointmentsInfoLoading,
+        refetch: refetchAllAppointmentsInfo,
+    } = useGetAllAppointmentsAPI();
+
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [filteredAppointments, setFilteredAppointments] = useState<
+        AppointmentDetailsProps[]
+    >([]);
+
+    // Update the filtered list whenever the search query or appointments change
+    useEffect(() => {
+        if (searchQuery === "") {
+            // If search is empty, show all appointments
+            setFilteredAppointments(allAppointmentInfo || []);
+        } else {
+            // Filter appointments based on search query
+            const filtered = (allAppointmentInfo || []).filter((appointment) =>
+                appointment.customerPhoneNumber
+                    .trim()
+                    .toLowerCase()
+                    .includes(searchQuery.trim().toLowerCase())
+            );
+            setFilteredAppointments(filtered);
+        }
+    }, [searchQuery, allAppointmentInfo]); // Run on search query or appointment data change
 
     return (
         <Modal
@@ -70,6 +100,7 @@ const SearchModal = ({ visible, onClose }: ModalProps) => {
                         <Pressable
                             onPress={() => {
                                 console.log("search pressed");
+                                // handleSearch(searchQuery);
                             }}
                         >
                             <AntDesign

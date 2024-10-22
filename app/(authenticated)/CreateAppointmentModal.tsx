@@ -13,18 +13,19 @@ import {
 } from "react-native-responsive-screen";
 import Colors from "@/constants/styles/Colors";
 import { AntDesign } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { TextInput } from "react-native-gesture-handler";
 import DropDownPickerModal from "./utils/modals/DropDownPickerModal";
 import DateTimePicker, {
     DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
+import { router } from "expo-router";
 
 import { useAuth } from "../(auth)/components/hooks/useAuth";
 import { useCreateAppointmentAPI } from "./components/appointment/apis/createAppointmentAPI";
 import { useGetAllServicesAPI } from "./components/profile/apis/getAllServicesAPI";
 import { getTimeZoneName, roundToPreviousHour } from "./utils/utils";
-import { router } from "expo-router";
+import { validateAppointmentDetails } from "./utils/validations/validations";
 
 export default function CreateAppointmentModal() {
     const colorScheme = useColorScheme();
@@ -78,6 +79,18 @@ export default function CreateAppointmentModal() {
     const timeZoneName = getTimeZoneName();
 
     const handleCreateAppointment = async () => {
+        const isValid = validateAppointmentDetails(
+            phoneNumber,
+            customerName,
+            numberOfPeople,
+            note,
+            chosenService
+        );
+
+        if (!isValid) {
+            return;
+        }
+
         const newAppointmentData = {
             appointmentId: new Date().getTime().toString(),
             businessId: businessId,

@@ -7,7 +7,6 @@ import {
     View,
     Alert,
     TextInput,
-    ActivityIndicator,
 } from "react-native";
 import { router } from "expo-router";
 import {
@@ -42,22 +41,10 @@ const InitBusinessProfileScreen = () => {
     } = useGetBusinessHourAPI();
 
     useEffect(() => {
-        refetchBusinessHourInfo();
-
         if (businessHourInfo) {
             router.replace("/(authenticated)/(tabs)");
         }
     }, [businessHourInfo]);
-
-    if (isBusinessHourInfoLoading) {
-        return (
-            <SafeAreaView>
-                <View style={{ alignSelf: "center", justifyContent: "center" }}>
-                    <ActivityIndicator size="small" color="grey" />
-                </View>
-            </SafeAreaView>
-        );
-    }
 
     const { currentBusinessInfo } = useGetBusinessInfoAPI();
     const { createBusinessHour } = useCreateBusinessHourAPI();
@@ -402,7 +389,7 @@ const InitBusinessProfileScreen = () => {
 
             <NotificationModal
                 title={
-                    "We initialized business hours and services based on your selection. You can always change them later in the settings."
+                    "We initialized business name, business hours and services based on your inputs. You can always change them later in the settings."
                 }
                 visible={showModal}
                 onOK={handleOnOK}

@@ -7,10 +7,9 @@ import {
 } from "react-native-responsive-screen";
 import { router } from "expo-router";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 
 import { signInWithEmailPassword, signInWithGoogle } from "../../utils/utils";
-import { useGetBusinessInfoAPI } from "@/app/(authenticated)/components/profile/apis/getBusinessInfoAPI";
 
 const WEB_CLIENT_ID = process.env.EXPO_PUBLIC_WEB_CLIENT_ID;
 const IOS_CLIENT_ID = process.env.EXPO_PUBLIC_IOS_CLIENT_ID;
@@ -48,6 +47,11 @@ const SignInForm = () => {
         }
     };
 
+    const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible(!isPasswordVisible);
+    };
+
     return (
         <View
             style={{
@@ -75,7 +79,18 @@ const SignInForm = () => {
                     style={{ height: "100%", color: "black", paddingLeft: 10 }}
                     value={password}
                     onChangeText={(value) => setPassword(value)}
+                    secureTextEntry={isPasswordVisible ? false : true}
                 />
+                <Pressable
+                    onPress={togglePasswordVisibility}
+                    style={{ right: 15 }}
+                >
+                    <Ionicons
+                        name={isPasswordVisible ? "eye-off" : "eye"}
+                        size={24}
+                        color={Colors.light.tabIconDefault}
+                    />
+                </Pressable>
             </View>
 
             {/* Continue button */}
@@ -176,8 +191,10 @@ const styles = StyleSheet.create({
         width: wp("84%"),
         borderRadius: 35,
         paddingLeft: 10,
-        justifyContent: "center",
+        justifyContent: "space-between",
         marginBottom: hp("1.5%"),
+        flexDirection: "row",
+        alignItems: "center",
     },
     authButton: {
         backgroundColor: Colors.light.background,

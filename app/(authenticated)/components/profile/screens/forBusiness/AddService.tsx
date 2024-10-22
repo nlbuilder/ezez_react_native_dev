@@ -1,5 +1,6 @@
 import {
     ActivityIndicator,
+    Alert,
     Pressable,
     Text,
     TextInput,
@@ -18,6 +19,7 @@ import Colors from "@/constants/styles/Colors";
 import { useCreateServiceAPI } from "../../apis/createServiceAPI";
 import { useGetAllServicesAPI } from "../../apis/getAllServicesAPI";
 import { useToast } from "@/app/(authenticated)/utils/toasts/toastContext";
+import { validateServiceInfo } from "@/app/(authenticated)/utils/validations/validations";
 
 const AddService = () => {
     const navigation = useNavigation();
@@ -49,6 +51,17 @@ const AddService = () => {
             price: price,
             note: note,
         };
+
+        const { isValid, message } = validateServiceInfo(
+            newServiceInfo.serviceName,
+            newServiceInfo.price.toString(),
+            newServiceInfo.note
+        );
+
+        if (!isValid) {
+            Alert.alert("Service Information Error", message);
+            return;
+        }
 
         try {
             const service = await createService(newServiceInfo);

@@ -1,5 +1,6 @@
 import {
     ActivityIndicator,
+    Alert,
     Pressable,
     Text,
     TextInput,
@@ -18,6 +19,7 @@ import Colors from "@/constants/styles/Colors";
 import { useCreateBusinessStaffAPI } from "@/app/(authenticated)/components/profile/apis/createBusinessStaffAPI";
 import { useGetBusinessInfoAPI } from "@/app/(authenticated)/components/profile/apis/getBusinessInfoAPI";
 import { useToast } from "@/app/(authenticated)/utils/toasts/toastContext";
+import { validateStaffInfo } from "@/app/(authenticated)/utils/validations/validations";
 
 const AddStaffInfo = () => {
     const navigation = useNavigation();
@@ -46,6 +48,18 @@ const AddStaffInfo = () => {
             password: defaultPassword,
             role: role,
         };
+
+        const { isValid, message } = validateStaffInfo(
+            firstName,
+            phoneNumber,
+            email,
+            role
+        );
+
+        if (!isValid) {
+            Alert.alert("Invalid Staff Information", message);
+            return;
+        }
 
         try {
             const staff = await createBusinessStaff(businessStaffInfoBrief);
