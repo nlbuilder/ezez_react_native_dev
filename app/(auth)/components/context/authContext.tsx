@@ -61,8 +61,7 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
                 // basically, this will redirect to the welcome screen,
                 // if the user is not authenticated
                 console.log("user is not authenticated");
-                alert("user is not authenticated");
-                router.replace("/(auth)/screens/welcome");
+                router.replace("/(auth)/screens/Welcome");
             }
         });
         return () => unsubscribeAuth();

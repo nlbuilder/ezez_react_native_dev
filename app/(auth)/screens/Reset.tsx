@@ -2,7 +2,7 @@ import { Pressable, StyleSheet } from "react-native";
 import { Text, View } from "@/constants/styles/Themed";
 import React, { useEffect, useState } from "react";
 import * as WebBrowser from "expo-web-browser";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -17,29 +17,14 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import Colors from "@/constants/styles/Colors";
 import { CalibriText } from "@/constants/styles/StyledText";
 import SignInForm from "../components/authComponents/SignInForm";
+import SignUpForm from "../components/authComponents/SignUpForm";
+import ResetForm from "../components/authComponents/ResetForm";
 
-// this line is to keep the web browser showing inside the app
-WebBrowser.maybeCompleteAuthSession();
-
-const Welcome = () => {
+const Reset = () => {
+    const navigation = useNavigation();
     const email = "xfactor@yahoo.com";
     const password = "123456";
     const name = "Hello";
-
-    const handleSignUpWithEmailPassword = async () => {
-        const auth = await signUpWithEmailPassword(email, password, name);
-
-        if (auth) {
-            router.push({
-                pathname: "/(auth)/screens/loading",
-                params: {
-                    businessId: auth.uid,
-                    name: auth.displayName,
-                    email: auth.email,
-                },
-            });
-        }
-    };
 
     return (
         <>
@@ -61,7 +46,7 @@ const Welcome = () => {
                         left: wp("15%"),
                     }}
                 >
-                    Welcome
+                    Reset
                 </CalibriText>
 
                 <View
@@ -75,12 +60,12 @@ const Welcome = () => {
                     }}
                 ></View>
 
-                <SignInForm />
+                <ResetForm />
             </View>
         </>
     );
 };
 
-export default Welcome;
+export default Reset;
 
 const styles = StyleSheet.create({});

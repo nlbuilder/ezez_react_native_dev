@@ -34,8 +34,9 @@ const DeleteBusiness = () => {
     const [isFinalBoxChecked, setIsFinalBoxChecked] = useState(false);
 
     const handleCheckBox = () => {
-        setIsDeleteStaffBoxChecked(!isDeleteStaffBoxChecked);
-        setIsFinalBoxChecked(false);
+        // setIsDeleteStaffBoxChecked(!isDeleteStaffBoxChecked);
+        // setIsFinalBoxChecked(false);
+        setIsFinalBoxChecked(!isFinalBoxChecked);
     };
 
     const { deleteBusiness, isLoading: isDeleteBusinessLoading } =
@@ -158,7 +159,7 @@ const DeleteBusiness = () => {
                 </ScrollView>
 
                 {/* check delete staff */}
-                <View
+                {/* <View
                     style={{
                         margin: 10,
                         width: wp("80%"),
@@ -176,18 +177,19 @@ const DeleteBusiness = () => {
                     <Text style={{ marginLeft: 20 }}>
                         I have deleted all staff accounts
                     </Text>
-                </View>
+                </View> */}
 
                 {/* final check before delete */}
-                {isDeleteStaffBoxChecked ? (
+                <View style={{ height: hp("60%") }}>
                     <View
                         style={{
                             // margin: 10,
                             width: wp("80%"),
-                            left: wp("5%"),
-                            marginBottom: !isFinalBoxChecked
-                                ? hp("2%")
-                                : hp("2%"),
+                            left: wp("2.5%"),
+                            paddingVertical: hp("2.5%"),
+                            // paddingVertical: !isFinalBoxChecked
+                            //     ? hp("2.5%")
+                            //     : hp("2.5%"),
                             flexDirection: "row",
                             alignContent: "center",
                         }}
@@ -201,34 +203,34 @@ const DeleteBusiness = () => {
                             I have read and agree to the terms and conditions
                         </Text>
                     </View>
-                ) : null}
 
-                {/* DELETE BUTTON */}
-                {isDeleteStaffBoxChecked && isFinalBoxChecked ? (
-                    <View
-                        style={{
-                            width: wp("20%"),
-                            height: hp("3.5%"),
-                            backgroundColor: "red",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            alignSelf: "flex-start",
-                            left: wp("15%"),
-                            borderRadius: 8,
-                            marginBottom: hp("25%"),
-                        }}
-                    >
-                        <Pressable
-                            onPress={() => {
-                                handleDeleteBusiness();
+                    {/* DELETE BUTTON */}
+                    {isFinalBoxChecked ? (
+                        <View
+                            style={{
+                                width: wp("20%"),
+                                height: hp("3.5%"),
+                                backgroundColor: "red",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                alignSelf: "flex-start",
+                                left: wp("2.5%"),
+                                borderRadius: 8,
+                                // marginBottom: hp("2.5%"),
                             }}
                         >
-                            <Text style={{ color: "white" }}>DELETE</Text>
-                        </Pressable>
-                    </View>
-                ) : null}
+                            <Pressable
+                                onPress={() => {
+                                    handleDeleteBusiness();
+                                }}
+                            >
+                                <Text style={{ color: "white" }}>DELETE</Text>
+                            </Pressable>
+                        </View>
+                    ) : null}
 
-                <Toast />
+                    <Toast />
+                </View>
             </View>
         </>
     );

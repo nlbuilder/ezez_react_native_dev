@@ -334,7 +334,7 @@ const Profile = () => {
                         <Pressable
                             onPress={() =>
                                 signOut().then(() => {
-                                    router.replace("/(auth)/screens/welcome");
+                                    router.replace("/(auth)/screens/Welcome");
                                 })
                             }
                         >

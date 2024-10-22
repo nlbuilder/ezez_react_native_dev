@@ -36,7 +36,7 @@ const OpeningHourSetting = () => {
     // handle the header when this screen is rendered
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerTitle: "Settings",
+            headerTitle: "Edit Opening Hours",
             headerBackTitle: "Back",
             // presentation: "modal",
         });
@@ -50,12 +50,12 @@ const OpeningHourSetting = () => {
         useGetBusinessHourAPI();
 
     const openingTime = parseTimeToDate(
-        businessHourInfo[0]?.startTime as string,
+        (businessHourInfo?.startTime as string) || "10:00",
         timeZoneName
     );
 
     const closingTime = parseTimeToDate(
-        businessHourInfo[0]?.finishTime as string,
+        (businessHourInfo?.finishTime as string) || "19:00",
         timeZoneName
     );
 

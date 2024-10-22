@@ -15,7 +15,7 @@ import {
 } from "react-native-responsive-screen";
 import Colors from "@/constants/styles/Colors";
 
-import { useGetBusinessHourAPI } from "../../apis/getBusinessHourAPI";
+import { useGetBusinessHourAPI } from "@/app/(authenticated)/components/profile/apis/getBusinessHourAPI";
 
 const Settings = () => {
     const navigation = useNavigation();
@@ -34,10 +34,10 @@ const Settings = () => {
     const { businessHourInfo } = useGetBusinessHourAPI();
 
     const startTime =
-        (Array.isArray(businessHourInfo) && businessHourInfo[0]?.startTime) ||
+        (Array.isArray(businessHourInfo) && businessHourInfo?.startTime) ||
         "10:00 AM";
     const finishTime =
-        (Array.isArray(businessHourInfo) && businessHourInfo[0]?.finishTime) ||
+        (Array.isArray(businessHourInfo) && businessHourInfo?.finishTime) ||
         "7:00 PM";
 
     return (
@@ -121,8 +121,17 @@ const Settings = () => {
                 </View>
             </View>
 
-            <View style={styles.settingComponent}>
-                {/* Account deletion setting */}
+            {/* business capacity setting */}
+            <View
+                style={[
+                    styles.settingComponent,
+                    {
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                    },
+                ]}
+            >
                 <Text
                     style={[
                         {
@@ -131,48 +140,95 @@ const Settings = () => {
                         styles.titleText,
                     ]}
                 >
-                    Danger Zone
+                    Business Capacity
                 </Text>
+                <Pressable
+                    onPress={() => {
+                        router.navigate(
+                            "/(authenticated)/components/profile/components/settings/forBusiness/UpdateCapacitySetting"
+                        );
+                    }}
+                    style={{ paddingHorizontal: 10 }}
+                >
+                    <AntDesign name="setting" size={24} color="black" />
+                </Pressable>
             </View>
 
             <View
                 style={{
                     width: wp("86%"),
-                    height: hp("10%"),
-                    borderColor: "rgba(192,88,88,1)",
+                    alignSelf: "center",
+                    borderColor: "rgba(189, 195, 199, 0.8)",
                     borderWidth: 1,
                     borderRadius: 15,
+                    flexDirection: "row",
+                    alignItems: "center",
+                }}
+            >
+                <Text style={{ margin: wp("5%") }}>capacity</Text>
+                <Text>customers at once</Text>
+            </View>
+
+            <View
+                style={{
+                    position: "absolute",
+                    bottom: hp("10%"),
+                    width: wp("86%"),
                     alignSelf: "center",
                     justifyContent: "center",
                 }}
             >
+                <View style={styles.dangerZoneText}>
+                    {/* Account deletion setting */}
+                    <Text
+                        style={[
+                            {
+                                color: Colors[colorScheme ?? "light"].text,
+                                marginBottom: hp("1%"),
+                            },
+
+                            styles.titleText,
+                        ]}
+                    >
+                        Danger Zone
+                    </Text>
+                </View>
+
                 <View
                     style={{
-                        flexDirection: "row",
-                        alignItems: "center",
+                        borderColor: "rgba(192,88,88,1)",
+                        borderWidth: 1,
+                        borderRadius: 15,
                     }}
                 >
-                    <Text style={{ color: "red", margin: wp("5%") }}>
-                        Delete business account
-                    </Text>
-
-                    <Pressable
-                        onPress={() => {
-                            router.push({
-                                pathname:
-                                    "/(authenticated)/components/profile/screens/forBusiness/DeleteBusiness",
-                            });
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
                         }}
                     >
-                        <MaterialCommunityIcons
-                            name="delete-forever"
-                            size={24}
-                            color="red"
-                            style={{
-                                marginLeft: wp("20%"),
+                        <Text style={{ color: "red", margin: wp("5%") }}>
+                            Delete business account
+                        </Text>
+
+                        <Pressable
+                            onPress={() => {
+                                router.push({
+                                    pathname:
+                                        "/(authenticated)/components/profile/screens/forBusiness/DeleteBusiness",
+                                });
                             }}
-                        />
-                    </Pressable>
+                        >
+                            <MaterialCommunityIcons
+                                name="delete-forever"
+                                size={24}
+                                color="red"
+                                style={{
+                                    marginLeft: wp("20%"),
+                                }}
+                            />
+                        </Pressable>
+                    </View>
                 </View>
             </View>
         </View>
@@ -187,6 +243,8 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         marginHorizontal: wp("10%"),
     },
+
+    dangerZoneText: { marginHorizontal: wp("5%") },
     titleText: {
         fontSize: 16,
         fontWeight: 400,

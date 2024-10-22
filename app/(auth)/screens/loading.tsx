@@ -1,25 +1,15 @@
-import { View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
+import React, { useEffect } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { Wander } from "react-native-animated-spinkit";
 
 import { useCreateBusinessAPI } from "@/app/(authenticated)/components/profile/apis/createBusinessAPI";
-import { useCreateBusinessHourAPI } from "@/app/(authenticated)/components/profile/apis/createBusinessHourAPI";
 import { BusinessInfo } from "@/app/(authenticated)/components/profile/types/types";
-import { BusinessHourInfo } from "@/app/(authenticated)/components/profile/types/types";
 
 const loading = () => {
     const { businessId, name, email } = useLocalSearchParams();
-    const { createBusinessInfo } = useCreateBusinessAPI();
-    const { createBusinessHour } = useCreateBusinessHourAPI();
-
-    const [error, setError] = useState<string | null>(null);
-
-    // initialize the startTime = "10:00 AM"
-    const initStartTime = "10:00 AM";
-
-    // initialize the finishTime = "7:00 PM"
-    const initFinishTime = "7:00 PM";
+    const { createBusinessInfo, isLoading: isCreateBusinessInfoLoading } =
+        useCreateBusinessAPI();
 
     useEffect(() => {
         const handleCreateBusiness = async () => {
@@ -34,10 +24,24 @@ const loading = () => {
                     };
 
                     // call the API to create the business
-                    await createBusinessInfo(businessInfo);
+                    const business = await createBusinessInfo(businessInfo);
 
-                    // Navigate to authenticated tabs if successful
-                    router.replace("/(authenticated)/(tabs)");
+                    if (!business) {
+                        console.error("Error creating business: ", business);
+                    }
+
+                    if (business) {
+                        // Navigate to authenticated tabs if successful
+                        // deciding between InitBusinessProfile screens
+
+                        // router.replace(
+                        //     "/(authenticated)/components/profile/screens/forBusiness/InitBusinessProfile"
+                        // );
+
+                        router.replace(
+                            "/(auth)/screens/InitBusinessProfileScreen"
+                        );
+                    }
                 } catch (error) {
                     console.error(
                         "Error creating business [loading screen]: ",
@@ -47,34 +51,24 @@ const loading = () => {
             }
         };
 
-        const handleCreateBusinessHour = async () => {
-            if (businessId && name && email) {
-                try {
-                    const businessHourInfo: BusinessHourInfo = {
-                        businessId: Array.isArray(businessId)
-                            ? businessId[0]
-                            : businessId,
-                        startTime: initStartTime,
-                        finishTime: initFinishTime,
-                    };
-
-                    // call the API to create the business hour
-                    await createBusinessHour(businessHourInfo);
-
-                    // Navigate to authenticated tabs if successful
-                    router.replace("/(authenticated)/(tabs)");
-                } catch (error) {
-                    console.error(
-                        "Error creating business hour [loading screen]: ",
-                        error
-                    );
-                }
-            }
-        };
-
         handleCreateBusiness();
-        handleCreateBusinessHour();
-    }, [businessId, name, email, createBusinessInfo, createBusinessHour]);
+    }, [businessId, name, email, createBusinessInfo]);
+
+    if (isCreateBusinessInfoLoading) {
+        return (
+            <>
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <ActivityIndicator size="small" color="grey" />
+                </View>
+            </>
+        );
+    }
 
     return (
         <>

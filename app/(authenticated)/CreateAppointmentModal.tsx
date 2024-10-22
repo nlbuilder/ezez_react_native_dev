@@ -24,7 +24,6 @@ import { useAuth } from "../(auth)/components/hooks/useAuth";
 import { useCreateAppointmentAPI } from "./components/appointment/apis/createAppointmentAPI";
 import { useGetAllServicesAPI } from "./components/profile/apis/getAllServicesAPI";
 import { getTimeZoneName, roundToPreviousHour } from "./utils/utils";
-import dummyServiceData from "@/dummy/dummyServiceData.json";
 import { router } from "expo-router";
 
 export default function CreateAppointmentModal() {
@@ -41,13 +40,22 @@ export default function CreateAppointmentModal() {
         refetch: refetchGetAllServices,
     } = useGetAllServicesAPI();
 
+    const serviceList = Array.isArray(allServicesInfo)
+        ? allServicesInfo.map((item) => ({
+              label: item.serviceName,
+              value: item.serviceName,
+          })) || []
+        : [];
+
+    // console.log("serviceList: ", serviceList);
+
     const [phoneNumber, setPhoneNumber] = useState("");
     const [customerName, setCustomerName] = useState("");
     const [numberOfPeople, setNumberOfPeople] = useState("");
     const [note, setNote] = useState("");
 
     // prepare options for the DropDownPicker for selecting a service
-    const [serviceItems, setServiceItems] = useState(dummyServiceData);
+    const [serviceItems, setServiceItems] = useState(serviceList);
     const [chosenService, setChosenService] = useState(serviceItems[0].value);
 
     const [date, setDate] = useState(new Date());
@@ -214,7 +222,7 @@ export default function CreateAppointmentModal() {
                         onChange={(value) => {
                             setChosenService(value.value);
                         }}
-                        placeholder={serviceItems[0].label}
+                        placeholder={serviceItems[0].value}
                     />
                 </View>
 

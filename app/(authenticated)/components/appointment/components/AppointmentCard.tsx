@@ -8,7 +8,7 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -45,7 +45,6 @@ const AppointmentCard = ({
     );
 
     const listOfAppointmentSum = sumOfCustomerByTimeAndService;
-
     // console.log("listOfAppointmentSum: ", listOfAppointmentSum);
 
     return (
@@ -71,13 +70,16 @@ const AppointmentCard = ({
                         <Text style={styles.title}>{time}</Text>
                         <View style={styles.appointmentCapacityView}>
                             <Text style={styles.title}>
-                                {sumOfCustomerByTime}/{totalCapacity}
+                                {sumOfCustomerByTime}
+                                {/* /{totalCapacity} */}
                             </Text>
 
                             <View style={{ alignItems: "center" }}>
-                                <Text style={styles.lightText}>customer</Text>
-                                <View style={styles.divider} />
-                                <Text style={styles.lightText}>capacity</Text>
+                                {/* <Text style={styles.lightText}>customer</Text> */}
+                                <Text style={styles.lightText}>total</Text>
+                                {/* <View style={styles.divider} /> */}
+                                <Text style={styles.lightText}>customers</Text>
+                                {/* <Text style={styles.lightText}>capacity</Text> */}
                             </View>
                         </View>
 

@@ -9,20 +9,11 @@ import {
     createUserWithEmailAndPassword,
     sendEmailVerification,
     updateProfile,
+    getAuth,
+    sendPasswordResetEmail,
 } from "firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { auth } from "@/firebase/firebaseConfig";
-// import { REACT_APP_BASE_URL } from "@env";
-
-// export const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
-
-// import {
-//     LoginManager,
-//     AccessToken,
-//     LoginButton,
-//     Settings,
-//     Profile,
-// } from "react-native-fbsdk-next";
 
 // Handle Auth State Changes
 export function onAuthStateChanged(callback: NextOrObserver<User>) {
@@ -58,7 +49,10 @@ export const signUpWithEmailPassword = async (
 
         return auth.currentUser;
     } catch (error) {
-        console.error("Error during signup: ", error);
+        console.error(
+            "Error when executing createUserWithEmailAndPassword(): ",
+            error
+        );
     }
 };
 
@@ -74,7 +68,10 @@ export async function signInWithEmailPassword(email: string, password: string) {
 
         return user;
     } catch (error) {
-        console.error("Error", error);
+        console.error(
+            "Error when executing signInWithEmailPassword(): ",
+            error
+        );
     }
 }
 
@@ -99,34 +96,19 @@ export async function signInWithGoogle() {
 
         return userCredential.user;
     } catch (error) {
-        console.error("Error during Google Sign-In:", error);
+        console.error("Error when executing signInWithGoogle: ", error);
     }
 }
 
-// const loginWithFacebook = () => {
-//     LoginManager.logInWithPermissions(["public_profile", "email"]).then(
-//         function (result) {
-//             if (result.isCancelled) {
-//                 console.log("==> Login cancelled");
-//             } else {
-//                 console.log(result);
-//                 AccessToken.getCurrentAccessToken().then((data) => {
-//                     console.log(data);
-//                     getUserFBData();
-//                 });
-//             }
-//         },
-//         function (error) {
-//             console.log("==> Login fail with error: " + error);
-//         }
-//     );
-// };
-
-// const getUserFBData = () => {
-//     Profile.getCurrentProfile().then((currentProfile) => {
-//         console.log(currentProfile);
-//     });
-// };
+// def a function to reset the password
+export async function resetPassword(email: string) {
+    try {
+        // send password reset email
+        await sendPasswordResetEmail(auth, email);
+    } catch (error) {
+        console.error("Error updating password: ", error);
+    }
+}
 
 // sign out function
 export async function signOut() {

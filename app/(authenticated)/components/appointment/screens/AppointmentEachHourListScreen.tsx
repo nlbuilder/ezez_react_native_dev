@@ -24,6 +24,7 @@ import {
 import { useDate } from "../context/DateContext";
 import dummyServiceData from "@/dummy/dummyServiceData.json";
 import { useGetBusinessHourAPI } from "../../profile/apis/getBusinessHourAPI";
+import { useGetAllServicesAPI } from "../../profile/apis/getAllServicesAPI";
 
 const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
     const navigation = useNavigation();
@@ -85,13 +86,35 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
         (item) => item.totalCustomers
     );
 
-    const serviceList = dummyServiceData.map((item) => item.label);
+    const {
+        allServicesInfo,
+        isLoading: isGetAllServicesLoading,
+        refetch: refetchGetAllServices,
+    } = useGetAllServicesAPI();
+
+    const serviceList = Array.isArray(allServicesInfo)
+        ? allServicesInfo.map((item) => ({
+              label: item.serviceName,
+              value: item.serviceName,
+          })) || []
+        : [];
+
+    const serviceListArray = serviceList.map((item) => item.label);
+
+    // console.log("serviceList: ", serviceList);
+
+    // console.log("serviceListArray: ", serviceListArray);
+
+    // const serviceList = dummyServiceData.map((item) => item.label);
+
+    // console.log("serviceList: ", serviceList);
 
     // this is to group the customers by time and service
     const sumOfCustomerByTimeAndService = groupCustomersByTimeAndService(
         filteredAppointmentsByDate,
         timeList,
-        serviceList
+        // serviceList
+        serviceListArray
     );
 
     // filter the appointments by roundedTime

@@ -1,4 +1,9 @@
-import { StyleSheet, useWindowDimensions, View } from "react-native";
+import {
+    ActivityIndicator,
+    StyleSheet,
+    useWindowDimensions,
+    View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
@@ -26,6 +31,7 @@ import { useGetAllAppointmentsAPI } from "../components/appointment/apis/getAllA
 import { useDate } from "../components/appointment/context/DateContext";
 import dummyServiceData from "@/dummy/dummyServiceData.json";
 import { useGetBusinessHourAPI } from "../components/profile/apis/getBusinessHourAPI";
+import { useGetAllServicesAPI } from "../components/profile/apis/getAllServicesAPI";
 
 const AppointmentCardList = () => {
     // *** code to handle the animation for the list of cards ***
@@ -107,13 +113,27 @@ const AppointmentCardList = () => {
         (item) => item.totalCustomers
     );
 
-    const serviceList = dummyServiceData.map((item) => item.label);
+    const { allServicesInfo } = useGetAllServicesAPI();
+
+    // console.log("allServicesInfo", allServicesInfo);
+
+    // const serviceList = dummyServiceData.map((item) => item.label);
+    // console.log("serviceList", serviceList);
+
+    const serviceList = Array.isArray(allServicesInfo)
+        ? allServicesInfo.map((item) => ({
+              label: item.serviceName,
+              value: item.serviceName,
+          })) || []
+        : [];
+
+    const serviceListArray = serviceList.map((item) => item.label);
 
     // this is to group the customers by time and service
     const sumOfCustomerByTimeAndService = groupCustomersByTimeAndService(
         filteredAppointmentsByDate,
         timeList,
-        serviceList
+        serviceListArray
     );
 
     const transformedSumOfCustomerByTimeAndService = transformData(
@@ -132,6 +152,20 @@ const AppointmentCardList = () => {
         finishTime,
         timeList,
     ]);
+
+    if (isGetAllAppointmentsInfoLoading) {
+        return (
+            <View
+                style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <ActivityIndicator size="small" color="grey" />
+            </View>
+        );
+    }
 
     return (
         <GestureDetector gesture={pan}>

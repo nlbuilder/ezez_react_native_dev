@@ -54,28 +54,4 @@ export const useUpdateAppointmentAPI = () => {
         isSuccess,
         error,
     };
-
-    // // use the useMutation hook to create the mutation
-    // const mutation = useMutation(
-    //     ({
-    //         appointmentId,
-    //         formData,
-    //     }: {
-    //         appointmentId: string;
-    //         formData: AppointmentDetailsProps;
-    //     }) => updateAppointmentInfoRequest(appointmentId, formData)
-    // );
-
-    // // destructure the returned values from the mutation
-    // const { data, isLoading, isError, isSuccess, error } = mutation;
-
-    // // return the mutation and its states
-    // return {
-    //     updateAppointmentInfo: mutation.mutate,
-    //     data,
-    //     isLoading,
-    //     isError,
-    //     isSuccess,
-    //     error,
-    // };
 };

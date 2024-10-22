@@ -40,13 +40,12 @@ export default function EditAppointmentScreen() {
         ? JSON.parse(localParams.data as string)
         : {};
 
-    console.log(appointmentDetails.date);
     // handle the Date picker
     const [date, setDate] = useState(new Date(appointmentDetails.date));
     const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
         if (selectedDate) {
             setDate(selectedDate);
-            console.log("Date changed to: ", selectedDate);
+            // console.log("Date changed to: ", selectedDate);
         }
     };
 
@@ -60,18 +59,20 @@ export default function EditAppointmentScreen() {
     const onChangeTime = (event: DateTimePickerEvent, selectedTime?: Date) => {
         if (selectedTime) {
             setTime(selectedTime);
-            console.log("Time changed to: ", selectedTime);
+            // console.log("Time changed to: ", selectedTime);
         }
     };
 
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [customerName, setCustomerName] = useState("");
-    const [numberOfPeople, setNumberOfPeople] = useState("");
-    const [note, setNote] = useState("");
-
-    // prepare options for the DropDownPicker for selecting a service
-    const [serviceItems, setServiceItems] = useState(dummyServiceData);
-    const [chosenService, setChosenService] = useState(serviceItems[0].value);
+    const [phoneNumber, setPhoneNumber] = useState(
+        appointmentDetails.customerPhoneNumber
+    );
+    const [customerName, setCustomerName] = useState(
+        appointmentDetails.customerName
+    );
+    const [numberOfPeople, setNumberOfPeople] = useState(
+        appointmentDetails.numberOfCustomers.toString()
+    );
+    const [note, setNote] = useState(appointmentDetails.note);
 
     const { updateAppointmentInfo, isLoading: isUpdateAppointmentInfoLoading } =
         useUpdateAppointmentAPI();
@@ -81,6 +82,19 @@ export default function EditAppointmentScreen() {
         isLoading: isGetAllServicesLoading,
         refetch: refetchGetAllServices,
     } = useGetAllServicesAPI();
+
+    const serviceList = Array.isArray(allServicesInfo)
+        ? allServicesInfo.map((item) => ({
+              label: item.serviceName,
+              value: item.serviceName,
+          })) || []
+        : [];
+
+    // prepare options for the DropDownPicker for selecting a service
+    const [serviceItems, setServiceItems] = useState(serviceList);
+    const [chosenService, setChosenService] = useState(
+        appointmentDetails.serviceName
+    );
 
     const handleEditAppointment = async () => {
         const updateAppointmentData = {

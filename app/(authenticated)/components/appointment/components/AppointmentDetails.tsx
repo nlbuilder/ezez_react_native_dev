@@ -108,7 +108,7 @@ const AppointmentDetails = ({
     };
 
     const confirmDelete = () => {
-        console.log("delete confirmed");
+        // console.log("delete confirmed");
 
         deleteAppointment(appointmentDetails.appointmentId);
 
@@ -120,8 +120,6 @@ const AppointmentDetails = ({
             easing: Easing.bezier(0.45, 0, 0.55, 1), // refer to easeInOutQuad in https://easings.net/#
             reduceMotion: ReduceMotion.System,
         });
-
-        console.log(appointmentDetails.appointmentId);
     };
 
     const cancelDelete = () => {

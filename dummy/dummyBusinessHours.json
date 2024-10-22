@@ -1,0 +1,5 @@
+[
+    { "openingHour": "8:00 AM", "closingHour": "5:00 PM" },
+    { "openingHour": "9:00 AM", "closingHour": "6:00 PM" },
+    { "openingHour": "10:00 AM", "closingHour": "7:00 PM" }
+]

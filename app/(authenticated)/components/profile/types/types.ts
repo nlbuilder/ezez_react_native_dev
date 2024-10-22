@@ -9,6 +9,11 @@
 //     email: string;
 // }
 
+export interface initServiceInfo {
+    businessId: string;
+    chosenOption: string;
+}
+
 export interface BusinessInfo {
     businessId: string;
     name?: string;
@@ -24,6 +29,7 @@ export interface BusinessInfo {
     description?: string;
     managerName?: string[];
     listOfStaff?: BusinessStaffInfoBrief[];
+    capacity?: number;
 }
 
 export interface BusinessStaffInfoBrief {

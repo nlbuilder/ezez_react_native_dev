@@ -5,7 +5,7 @@
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./assets/images/icon.png",
-        "scheme": ["ezez", "846103247647188"],
+        "scheme": ["ezez"],
         "userInterfaceStyle": "automatic",
         "splash": {
             "image": "./assets/images/splash.png",
