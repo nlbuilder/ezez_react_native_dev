@@ -29,7 +29,7 @@ import {
 } from "../utils/utils";
 import { useGetAllAppointmentsAPI } from "../components/appointment/apis/getAllAppointmentsInfoAPI";
 import { useDate } from "../components/appointment/context/DateContext";
-import dummyServiceData from "@/dummy/dummyServiceData.json";
+// import dummyServiceData from "@/dummy/dummyServiceData.json";
 import { useGetBusinessHourAPI } from "../components/profile/apis/getBusinessHourAPI";
 import { useGetAllServicesAPI } from "../components/profile/apis/getAllServicesAPI";
 

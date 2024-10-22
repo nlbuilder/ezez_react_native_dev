@@ -6,38 +6,41 @@ export const validateAppointmentDetails = (
     numberOfPeople: string,
     note: string,
     chosenService: string
-): boolean => {
+): { isValid: boolean; message: string } => {
     const phoneNumberRegex = /^\d{10,15}$/;
     // const nameRegex = /^[a-zA-Z\s]{2,50}$/;
 
     if (!phoneNumberRegex.test(phoneNumber)) {
-        Alert.alert(
-            "Invalid Phone Number",
-            "Phone number must be 10-15 digits with no spaces or special characters. Please check your input."
-        );
-        return false;
+        return {
+            isValid: false,
+            message: "Invalid Phone Number. Please check your input.",
+        };
     }
 
     const peopleCount = parseInt(numberOfPeople, 10);
     if (isNaN(peopleCount) || peopleCount < 1 || peopleCount > 100) {
-        Alert.alert("Invalid Number of People", "Please check your input.");
-        return false;
+        return {
+            isValid: false,
+            message: "Invalid Number of People. Please check your input.",
+        };
     }
 
     if (note.length > 100) {
-        Alert.alert(
-            "Note Too Long",
-            "Note must be under 100 characters. Please check your input."
-        );
-        return false;
+        return {
+            isValid: false,
+            message:
+                "Invalid Note. Note must be under 100 characters. Please check your input.",
+        };
     }
 
     if (!chosenService) {
-        Alert.alert("Invalid Service", "Please select a valid service.");
-        return false;
+        return {
+            isValid: false,
+            message: "Invalid Service. Please check your input.",
+        };
     }
 
-    return true;
+    return { isValid: true, message: "Appointment details are valid." };
 };
 
 export const validatePassword = (

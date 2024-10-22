@@ -29,21 +29,6 @@ const SearchModal = ({ visible, onClose }: ModalProps) => {
     >([]);
 
     // Update the filtered list whenever the search query or appointments change
-    useEffect(() => {
-        if (searchQuery === "") {
-            // If search is empty, show all appointments
-            setFilteredAppointments(allAppointmentInfo || []);
-        } else {
-            // Filter appointments based on search query
-            const filtered = (allAppointmentInfo || []).filter((appointment) =>
-                appointment.customerPhoneNumber
-                    .trim()
-                    .toLowerCase()
-                    .includes(searchQuery.trim().toLowerCase())
-            );
-            setFilteredAppointments(filtered);
-        }
-    }, [searchQuery, allAppointmentInfo]); // Run on search query or appointment data change
 
     return (
         <Modal
