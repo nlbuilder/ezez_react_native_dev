@@ -33,13 +33,15 @@ export const useGetAllServicesAPI = () => {
 
         // this trick is used to handle the case
         // where there is no service added to the business yet
-        if (response.status == 404) {
+        if (response.status === 404) {
             return null;
         }
 
         // check if the request was successful
         if (!response.ok) {
-            throw new Error("Failed to get service info");
+            throw new Error(
+                "Failed to get service info [frontend error message]"
+            );
         }
 
         return response.json();

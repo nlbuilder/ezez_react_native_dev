@@ -32,7 +32,7 @@ export const useCreateInitServicesAPI = () => {
 
         // check if the request was successful
         if (!response.ok) {
-            throw new Error("Failed to create service");
+            throw new Error("Failed to create service [init services]");
         }
 
         // return the response

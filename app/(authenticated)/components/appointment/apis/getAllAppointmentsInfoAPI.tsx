@@ -34,14 +34,16 @@ export const useGetAllAppointmentsAPI = () => {
 
             // this trick is used to handle the case
             // where there is no appointment added to the business yet
-            if (response.status == 404) {
+            if (response.status === 404) {
                 // console.log(response.status);
                 return null;
             }
 
             // check if the request was successful
             if (!response.ok) {
-                throw new Error("Failed to get appointment info");
+                throw new Error(
+                    "Failed to get appointment info [frontend error message]"
+                );
             }
 
             return response.json();
