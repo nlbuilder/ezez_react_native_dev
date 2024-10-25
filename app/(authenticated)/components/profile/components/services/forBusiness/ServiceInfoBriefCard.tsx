@@ -39,11 +39,13 @@ const ServiceInfoBriefCard: React.FC<ServiceInfoBriefCardProps> = ({
             <View
                 style={{
                     backgroundColor: Colors[colorScheme ?? "light"].background,
-                    borderBottomColor:
-                        colorScheme === "dark"
-                            ? "white"
-                            : "rgba(189, 195, 199, 0.8)",
-                    borderBottomWidth: 1,
+                    borderTopColor: Colors[colorScheme ?? "light"].separator,
+                    borderTopWidth: 1,
+                    // borderBottomColor:
+                    //     colorScheme === "dark"
+                    //         ? "white"
+                    //         : "rgba(189, 195, 199, 0.8)",
+                    // borderBottomWidth: 1,
                     justifyContent: "space-between",
                     alignItems: "center",
                     height: hp("12.5%"),
@@ -84,9 +86,7 @@ const ServiceInfoBriefCard: React.FC<ServiceInfoBriefCardProps> = ({
                     <View
                         style={{
                             borderBottomColor:
-                                colorScheme === "dark"
-                                    ? "white"
-                                    : "rgba(189, 195, 199, 0.5)",
+                                Colors[colorScheme ?? "light"].separator,
                             borderBottomWidth: 1,
                             width: wp("50%"),
                             marginTop: hp("1%"),

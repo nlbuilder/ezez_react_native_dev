@@ -79,6 +79,9 @@ export default function _layout() {
                                     onChange={onChangeDate}
                                     style={{ left: -wp("2%") }}
                                     timeZoneName={timeZoneName}
+                                    // textColor="black"
+                                    // accentColor="black"
+                                    themeVariant="light"
                                 />
                             </View>
                         ),

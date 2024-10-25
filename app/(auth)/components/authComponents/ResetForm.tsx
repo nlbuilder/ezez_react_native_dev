@@ -5,6 +5,7 @@ import {
     TextInput,
     Pressable,
     useColorScheme,
+    Alert,
 } from "react-native";
 import React, { useState } from "react";
 import Colors from "@/constants/styles/Colors";
@@ -17,13 +18,23 @@ import { AntDesign } from "@expo/vector-icons";
 
 import { resetPassword } from "../../utils/utils";
 import NotificationModal from "@/app/(authenticated)/utils/modals/NotificationModal";
+import { validateResetForm } from "@/app/validations/validations";
 
 const ResetForm = () => {
     const colorScheme = useColorScheme();
+
     const [email, setEmail] = useState<string>("");
     const [showModal, setShowModal] = useState<boolean>(false);
 
     const handleResetPassword = async () => {
+        const { isValid, message } = validateResetForm(email);
+
+        if (!isValid) {
+            Alert.alert("Invalid Email", message);
+
+            return;
+        }
+
         if (email) {
             try {
                 await resetPassword(email);
@@ -46,25 +57,54 @@ const ResetForm = () => {
             style={{
                 alignItems: "center",
                 justifyContent: "center",
-                bottom: hp("8%"),
+                top: hp("2.5%"),
             }}
         >
             {/* Email */}
-            <View style={[styles.authForm, { width: wp("84%") }]}>
+            <View
+                style={[
+                    styles.authForm,
+                    {
+                        width: wp("84%"),
+                        backgroundColor:
+                            Colors[colorScheme ?? "light"].background,
+                        borderColor: Colors[colorScheme ?? "light"].formBorder,
+                    },
+                ]}
+            >
                 <TextInput
                     placeholder="Email"
-                    placeholderTextColor={"rgba(189, 195, 199, 0.8)"}
-                    style={{ height: "100%", color: "black", paddingLeft: 10 }}
+                    placeholderTextColor={
+                        Colors[colorScheme ?? "light"].placeholder
+                    }
+                    style={{
+                        height: "100%",
+                        width: "100%",
+                        color: "black",
+                        paddingLeft: 10,
+                    }}
                     value={email}
                     onChangeText={(value) => setEmail(value)}
                 />
             </View>
 
             {/* Agree And Continue button */}
-            <View style={styles.authButton}>
+            <View
+                style={[
+                    styles.authButton,
+                    {
+                        backgroundColor:
+                            Colors[colorScheme ?? "light"]
+                                .mainButtonBackgroundColor,
+                        borderColor:
+                            Colors[colorScheme ?? "light"]
+                                .mainButtonBorderColor,
+                    },
+                ]}
+            >
                 <Pressable
                     style={{
-                        width: wp("84%"),
+                        width: "100%",
                         height: "100%",
                         justifyContent: "center",
                     }}
@@ -82,13 +122,18 @@ const ResetForm = () => {
                     flexDirection: "row",
                     alignItems: "center",
                     position: "absolute",
-                    top: hp("56%"),
+                    top: hp("44%"),
                     alignSelf: "flex-start",
-                    left: wp("2.5%"),
+                    left: wp("10%"),
                 }}
             >
                 <Pressable
-                    style={{ flexDirection: "row", alignItems: "center" }}
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        width: "100%",
+                        height: "100%",
+                    }}
                     onPress={() => {
                         router.push({
                             pathname: "/(auth)/screens/Welcome",

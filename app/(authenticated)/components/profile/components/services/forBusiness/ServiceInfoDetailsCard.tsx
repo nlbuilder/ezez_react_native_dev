@@ -22,11 +22,10 @@ const ServiceInfoDetailsCard: React.FC<ServiceInfoDetailsCardProps> = ({
             <View
                 style={{
                     backgroundColor: Colors[colorScheme ?? "light"].background,
-                    borderTopColor:
-                        colorScheme === "dark"
-                            ? "white"
-                            : "rgba(189, 195, 199, 0.8)",
+
+                    borderTopColor: Colors[colorScheme ?? "light"].separator,
                     borderTopWidth: 1,
+
                     borderBottomColor:
                         colorScheme === "dark"
                             ? "white"
@@ -53,9 +52,7 @@ const ServiceInfoDetailsCard: React.FC<ServiceInfoDetailsCardProps> = ({
                 <View
                     style={{
                         borderBottomColor:
-                            colorScheme === "dark"
-                                ? "white"
-                                : "rgba(189, 195, 199, 0.5)",
+                            Colors[colorScheme ?? "light"].separator,
                         borderBottomWidth: 1,
                         width: wp("50%"),
                         marginLeft: wp("10%"),

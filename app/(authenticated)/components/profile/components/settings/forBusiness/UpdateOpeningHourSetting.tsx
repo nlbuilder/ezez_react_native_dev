@@ -86,6 +86,9 @@ const OpeningHourSetting = () => {
         timeZoneName
     );
 
+    // set the theme variant for the date and time pickers
+    const themeVariantDateTimePicker = "light";
+
     // make use of the updateBusinessHour API
     const { updateBusinessHourInfo } = useUpdateBusinessHourAPI();
 
@@ -123,6 +126,8 @@ const OpeningHourSetting = () => {
         <View
             style={{
                 // flex: 1,
+                borderTopColor: Colors[colorScheme ?? "light"].separator,
+                borderTopWidth: 1,
                 backgroundColor: Colors[colorScheme ?? "light"].background,
 
                 height: hp("36%"),
@@ -178,6 +183,7 @@ const OpeningHourSetting = () => {
                         mode={"time"}
                         onChange={onChangeTimeStart}
                         timeZoneName={timeZoneName} // set the time zone
+                        themeVariant={themeVariantDateTimePicker}
                     />
                     <Text style={{ left: wp("10%") }}>Set Opening Time</Text>
                 </View>
@@ -196,6 +202,7 @@ const OpeningHourSetting = () => {
                         mode={"time"}
                         onChange={onChangeTimeFinish}
                         timeZoneName={timeZoneName} // set the time zone
+                        themeVariant={themeVariantDateTimePicker}
                     />
                     <Text style={{ left: wp("12.5%") }}>Set Closing Time</Text>
                 </View>

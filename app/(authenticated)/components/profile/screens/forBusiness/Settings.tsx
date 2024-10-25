@@ -45,6 +45,8 @@ const Settings = () => {
             style={{
                 flex: 1,
                 backgroundColor: Colors[colorScheme ?? "light"].background,
+                borderTopColor: Colors[colorScheme ?? "light"].separator,
+                borderTopWidth: 1,
             }}
         >
             {/* Opening hours setting */}
@@ -122,7 +124,7 @@ const Settings = () => {
             </View>
 
             {/* business capacity setting */}
-            <View
+            {/* <View
                 style={[
                     styles.settingComponent,
                     {
@@ -167,8 +169,9 @@ const Settings = () => {
             >
                 <Text style={{ margin: wp("5%") }}>capacity</Text>
                 <Text>customers at once</Text>
-            </View>
+            </View> */}
 
+            {/* danger zone */}
             <View
                 style={{
                     position: "absolute",

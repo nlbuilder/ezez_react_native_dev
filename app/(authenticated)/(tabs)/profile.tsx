@@ -309,7 +309,7 @@ const Profile = () => {
                 </View>
 
                 {/* sign out */}
-                <View style={{ marginTop: hp("2%") }}>
+                <View style={{ marginTop: hp("8%") }}>
                     <View
                         style={{
                             backgroundColor:

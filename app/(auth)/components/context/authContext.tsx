@@ -1,6 +1,7 @@
 import * as React from "react";
 import { router } from "expo-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import * as LocalAuthentication from "expo-local-authentication";
 
 import { ContextInterface, User } from "../../types/types";
 import { useProtectedRoute } from "../hooks/useProtectedRoute";
@@ -38,6 +39,14 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
     React.useEffect(() => {
         const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
             if (user) {
+                // const biometricSuccess = await handleBiometricAuth(); // Perform Face ID
+
+                // if (!biometricSuccess) {
+                //     console.log("Biometric authentication failed or canceled");
+                //     router.replace("/(auth)/screens/Welcome");
+                //     return;
+                // }
+
                 const IdToken = await user.getIdToken();
 
                 const authenticatedUserData: User = {
@@ -66,6 +75,24 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
         });
         return () => unsubscribeAuth();
     }, []);
+
+    // // def function to handle biometric authentication
+    // const handleBiometricAuth = async () => {
+    //     const hasHardware = await LocalAuthentication.hasHardwareAsync();
+    //     const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+
+    //     if (!hasHardware || !isEnrolled) {
+    //         console.log("Biometric authentication not available or not set up");
+    //         return false;
+    //     }
+
+    //     const result = await LocalAuthentication.authenticateAsync({
+    //         promptMessage: "Authenticate with Face ID",
+    //         fallbackLabel: "Use Password", // Optional fallback for users
+    //     });
+
+    //     return result.success;
+    // };
 
     // return the context provider
     return (

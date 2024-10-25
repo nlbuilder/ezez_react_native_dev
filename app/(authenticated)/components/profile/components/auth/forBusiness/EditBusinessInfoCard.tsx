@@ -1,4 +1,12 @@
-import { Text, TextInput, useColorScheme, View } from "react-native";
+import {
+    Keyboard,
+    KeyboardAvoidingView,
+    Text,
+    TextInput,
+    TouchableWithoutFeedback,
+    useColorScheme,
+    View,
+} from "react-native";
 import React from "react";
 import {
     widthPercentageToDP as wp,
@@ -21,33 +29,36 @@ const EditBusinessInfoCard: React.FC<BusinessInfoCardProps> = ({
     const [infoDetailsValue, setInfoDetailsValue] = React.useState(infoDetails);
 
     return (
-        <View>
-            <View
-                style={{
-                    backgroundColor: Colors[colorScheme ?? "light"].background,
-                    borderBottomColor:
-                        colorScheme === "dark"
-                            ? "white"
-                            : "rgba(189, 195, 199, 0.8)",
-                    borderBottomWidth: 1,
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    height: hp("10%"),
-                    width: wp("90%"),
-                }}
-            >
-                <Text
-                    style={{
-                        color: Colors[colorScheme ?? "light"].text,
-                        marginLeft: wp("10%"),
-                        opacity: 0.8,
-                    }}
-                >
-                    {infoTitle}
-                </Text>
+        <>
+            <KeyboardAvoidingView behavior="padding">
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View>
+                        <View
+                            style={{
+                                backgroundColor:
+                                    Colors[colorScheme ?? "light"].background,
+                                borderBottomColor:
+                                    Colors[colorScheme ?? "light"].separator,
+                                borderBottomWidth: 1,
+                                justifyContent: "center",
+                                alignSelf: "center",
+                                height: hp("12%"),
+                                width: wp("90%"),
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    color: Colors[colorScheme ?? "light"].text,
+                                    marginLeft: wp("12%"),
+                                    opacity: 0.8,
+                                }}
+                            >
+                                {infoTitle}
+                            </Text>
 
-                {/* separator between key and item */}
-                {/* <View
+                            {/* I kind of hate this separator for now, so I turned it off */}
+                            {/* separator between key and item */}
+                            {/* <View
                     style={{
                         borderBottomColor:
                             colorScheme === "dark"
@@ -60,41 +71,49 @@ const EditBusinessInfoCard: React.FC<BusinessInfoCardProps> = ({
                     }}
                 ></View> */}
 
-                <View
-                    style={{
-                        borderColor:
-                            Colors[colorScheme ?? "light"].tabIconDefault,
-                        borderWidth: 1.25,
-                        width: wp("80%"),
-                        height: hp("4.5%"),
-                        borderRadius: 10,
-                        left: wp("5%"),
-                        justifyContent: "center",
-                        marginTop: hp("1%"),
-                        opacity: 0.8,
-                    }}
-                >
-                    <TextInput
-                        placeholder={infoDetailsValue}
-                        placeholderTextColor={
-                            colorScheme === "dark"
-                                ? "white"
-                                : "rgba(189, 195, 199, 0.8)"
-                        }
-                        style={{
-                            color: Colors[colorScheme ?? "light"].text,
-                            marginLeft: wp("6%"),
-                            fontWeight: "400",
-                        }}
-                        value={infoDetailsValue}
-                        onChangeText={(value) => {
-                            setInfoDetailsValue(value);
-                            onChange(value);
-                        }}
-                    />
-                </View>
-            </View>
-        </View>
+                            {/* this is the input form */}
+                            <View
+                                style={{
+                                    borderColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .tabIconDefault,
+                                    borderWidth: 1.25,
+                                    width: wp("80%"),
+                                    height: hp("4.5%"),
+                                    borderRadius: 10,
+                                    left: wp("5%"),
+                                    justifyContent: "center",
+                                    marginTop: hp("1%"),
+                                    opacity: 0.8,
+                                }}
+                            >
+                                <TextInput
+                                    placeholder={infoDetailsValue}
+                                    placeholderTextColor={
+                                        colorScheme === "dark"
+                                            ? "white"
+                                            : "rgba(189, 195, 199, 0.8)"
+                                    }
+                                    style={{
+                                        color: Colors[colorScheme ?? "light"]
+                                            .text,
+                                        marginLeft: wp("6%"),
+                                        fontWeight: "400",
+                                        height: "100%",
+                                        width: "100%",
+                                    }}
+                                    value={infoDetailsValue}
+                                    onChangeText={(value) => {
+                                        setInfoDetailsValue(value);
+                                        onChange(value);
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    </View>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
+        </>
     );
 };
 

@@ -6,6 +6,9 @@ import {
     useColorScheme,
     Text,
     View,
+    KeyboardAvoidingView,
+    TouchableWithoutFeedback,
+    Keyboard,
 } from "react-native";
 import {
     widthPercentageToDP as wp,
@@ -25,7 +28,7 @@ import { useAuth } from "../(auth)/components/hooks/useAuth";
 import { useCreateAppointmentAPI } from "./components/appointment/apis/createAppointmentAPI";
 import { useGetAllServicesAPI } from "./components/profile/apis/getAllServicesAPI";
 import { getTimeZoneName, roundToPreviousHour } from "./utils/utils";
-import { validateAppointmentDetails } from "./utils/validations/validations";
+import { validateAppointmentDetails } from "../validations/validations";
 
 export default function CreateAppointmentModal() {
     const colorScheme = useColorScheme();
@@ -59,6 +62,7 @@ export default function CreateAppointmentModal() {
     const [serviceItems, setServiceItems] = useState(serviceList);
     const [chosenService, setChosenService] = useState(serviceItems[0].value);
 
+    //  date picker
     const [date, setDate] = useState(new Date());
     const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
         if (selectedDate) {
@@ -67,6 +71,7 @@ export default function CreateAppointmentModal() {
         }
     };
 
+    // time picker
     const [time, setTime] = useState(new Date());
     const onChangeTime = (event: DateTimePickerEvent, selectedTime?: Date) => {
         if (selectedTime) {
@@ -78,13 +83,16 @@ export default function CreateAppointmentModal() {
     // get the time zone of the device
     const timeZoneName = getTimeZoneName();
 
+    // set the theme variant for the date and time pickers
+    const themeVariantDateTimePicker = "light";
+
     const handleCreateAppointment = async () => {
         const isValid = validateAppointmentDetails(
             phoneNumber,
             customerName,
             numberOfPeople,
-            note,
-            chosenService
+            note
+            // chosenService
         );
 
         if (!isValid) {
@@ -123,203 +131,259 @@ export default function CreateAppointmentModal() {
     };
 
     return (
-        <View style={styles.container}>
-            <View
-                style={{
-                    flexDirection: "row",
-                    alignSelf: "flex-start",
-                    alignItems: "center",
-                    left: wp("5.5%"),
-                    marginTop: hp("2%"),
-                }}
-            >
-                <View
-                    style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                    }}
-                >
-                    <DateTimePicker
-                        value={date}
-                        mode={"date"}
-                        onChange={onChangeDate}
-                    />
+        <>
+            <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={styles.container}>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignSelf: "flex-start",
+                                alignItems: "center",
+                                left: wp("5.5%"),
+                                marginTop: hp("2%"),
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <DateTimePicker
+                                    value={date}
+                                    mode={"date"}
+                                    onChange={onChangeDate}
+                                    themeVariant={themeVariantDateTimePicker}
+                                />
 
-                    <DateTimePicker
-                        value={time}
-                        mode={"time"}
-                        onChange={onChangeTime}
-                        minuteInterval={5}
-                        timeZoneName={timeZoneName} // set the time zone
-                    />
-                </View>
-            </View>
+                                <DateTimePicker
+                                    value={time}
+                                    mode={"time"}
+                                    onChange={onChangeTime}
+                                    minuteInterval={5}
+                                    timeZoneName={timeZoneName} // set the time zone
+                                    themeVariant={themeVariantDateTimePicker}
+                                />
+                            </View>
+                        </View>
 
-            {/* Phone number and customer name forms */}
-            <View
-                style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    width: wp("84%"),
-                    marginTop: hp("2%"),
-                }}
-            >
-                <View style={{ alignItems: "center" }}>
-                    <Text
-                        style={{
-                            marginBottom: hp(".5%"),
-                            color: Colors[colorScheme ?? "light"].text,
-                        }}
-                    >
-                        Phone number
-                    </Text>
-                    <View style={styles.appointmentForm}>
-                        <TextInput
-                            placeholder="Phone number"
-                            placeholderTextColor={"rgba(189, 195, 199, 0.8)"}
-                            style={{ height: "100%", color: "black" }}
-                            value={phoneNumber}
-                            onChangeText={(value) => setPhoneNumber(value)}
+                        {/* Phone number and customer name forms */}
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                width: wp("84%"),
+                                marginTop: hp("2%"),
+                            }}
+                        >
+                            <View style={{ alignItems: "center" }}>
+                                <Text
+                                    style={{
+                                        marginBottom: hp(".5%"),
+                                        color: Colors[colorScheme ?? "light"]
+                                            .text,
+                                    }}
+                                >
+                                    Phone number
+                                </Text>
+                                <View style={styles.appointmentForm}>
+                                    <TextInput
+                                        placeholder="Phone number"
+                                        placeholderTextColor={
+                                            Colors[colorScheme ?? "light"]
+                                                .placeholder
+                                        }
+                                        style={{
+                                            height: "100%",
+                                            width: "100%",
+                                            color: "black",
+                                        }}
+                                        value={phoneNumber}
+                                        onChangeText={(value) =>
+                                            setPhoneNumber(value)
+                                        }
+                                        keyboardType="phone-pad"
+                                    />
+                                </View>
+                            </View>
+                            <View style={{ alignItems: "center" }}>
+                                <Text
+                                    style={{
+                                        marginBottom: hp(".5%"),
+                                        color: Colors[colorScheme ?? "light"]
+                                            .text,
+                                    }}
+                                >
+                                    Customer's name
+                                </Text>
+                                <View style={styles.appointmentForm}>
+                                    <TextInput
+                                        placeholder="Full name"
+                                        placeholderTextColor={
+                                            Colors[colorScheme ?? "light"]
+                                                .placeholder
+                                        }
+                                        style={{
+                                            height: "100%",
+                                            width: "100%",
+                                            color: "black",
+                                        }}
+                                        value={customerName}
+                                        onChangeText={(value) =>
+                                            setCustomerName(value)
+                                        }
+                                    />
+                                </View>
+                            </View>
+                        </View>
+
+                        {/* service selection and Number of People */}
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                width: wp("84%"),
+                                marginTop: hp("2%"),
+                            }}
+                        >
+                            <View
+                                style={{
+                                    width: wp("40%"),
+                                    alignItems: "center",
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        marginBottom: hp(".5%"),
+                                        color: Colors[colorScheme ?? "light"]
+                                            .text,
+                                    }}
+                                >
+                                    Service
+                                </Text>
+
+                                <DropDownPickerModal
+                                    data={serviceItems}
+                                    onChange={(value) => {
+                                        setChosenService(value.value);
+                                    }}
+                                    placeholder={serviceItems[0].value}
+                                />
+                            </View>
+
+                            <View style={{ alignItems: "center" }}>
+                                <Text
+                                    style={{
+                                        marginBottom: hp(".5%"),
+                                        color: Colors[colorScheme ?? "light"]
+                                            .text,
+                                    }}
+                                >
+                                    Number of people
+                                </Text>
+
+                                <View style={styles.appointmentForm}>
+                                    <TextInput
+                                        placeholder={"0"}
+                                        placeholderTextColor={
+                                            Colors[colorScheme ?? "light"]
+                                                .placeholder
+                                        }
+                                        style={{
+                                            height: "100%",
+                                            width: "100%",
+                                            color: "black",
+                                        }}
+                                        value={numberOfPeople.toString()}
+                                        onChangeText={(value) =>
+                                            setNumberOfPeople(value)
+                                        }
+                                        keyboardType="number-pad"
+                                    />
+                                </View>
+                            </View>
+                        </View>
+
+                        {/* note */}
+                        <View style={{ width: wp("84%") }}>
+                            <Text
+                                style={{
+                                    marginBottom: hp(".5%"),
+                                    color: Colors[colorScheme ?? "light"].text,
+                                    marginTop: hp("2%"),
+                                    left: wp("2%"),
+                                }}
+                            >
+                                Request
+                            </Text>
+                            <View
+                                style={[
+                                    styles.appointmentForm,
+                                    { width: wp("84%") },
+                                ]}
+                            >
+                                <TextInput
+                                    placeholder="Enter a note"
+                                    placeholderTextColor={
+                                        Colors[colorScheme ?? "light"]
+                                            .placeholder
+                                    }
+                                    style={{
+                                        height: "100%",
+                                        width: "100%",
+                                        color: "black",
+                                    }}
+                                    value={note}
+                                    onChangeText={(value) => setNote(value)}
+                                />
+                            </View>
+                        </View>
+
+                        {/* confirm and candel buttons */}
+                        <View
+                            style={{
+                                marginLeft: wp("50%"),
+                                marginTop: hp("2.5%"),
+                            }}
+                        >
+                            <Pressable
+                                onPress={() => {
+                                    handleCreateAppointment();
+                                }}
+                                style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        paddingHorizontal: wp("2.5%"),
+                                        color: Colors[colorScheme ?? "light"]
+                                            .text,
+                                    }}
+                                >
+                                    Confirm
+                                </Text>
+
+                                <AntDesign
+                                    name="check"
+                                    size={28}
+                                    color={Colors[colorScheme ?? "light"].tint}
+                                    style={{ marginRight: 10 }}
+                                />
+                            </Pressable>
+                        </View>
+
+                        <StatusBar
+                            style={Platform.OS === "ios" ? "light" : "auto"}
                         />
                     </View>
-                </View>
-                <View style={{ alignItems: "center" }}>
-                    <Text
-                        style={{
-                            marginBottom: hp(".5%"),
-                            color: Colors[colorScheme ?? "light"].text,
-                        }}
-                    >
-                        Customer's name
-                    </Text>
-                    <View style={styles.appointmentForm}>
-                        <TextInput
-                            placeholder="Full name"
-                            placeholderTextColor={"rgba(189, 195, 199, 0.8)"}
-                            style={{ height: "100%", color: "black" }}
-                            value={customerName}
-                            onChangeText={(value) => setCustomerName(value)}
-                        />
-                    </View>
-                </View>
-            </View>
-
-            {/* service selection and Number of People */}
-            <View
-                style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    width: wp("84%"),
-                    marginTop: hp("2%"),
-                }}
-            >
-                <View
-                    style={{
-                        width: wp("40%"),
-                        alignItems: "center",
-                    }}
-                >
-                    <Text
-                        style={{
-                            marginBottom: hp(".5%"),
-                            color: Colors[colorScheme ?? "light"].text,
-                        }}
-                    >
-                        Service
-                    </Text>
-
-                    <DropDownPickerModal
-                        data={serviceItems}
-                        onChange={(value) => {
-                            setChosenService(value.value);
-                        }}
-                        placeholder={serviceItems[0].value}
-                    />
-                </View>
-
-                <View style={{ alignItems: "center" }}>
-                    <Text
-                        style={{
-                            marginBottom: hp(".5%"),
-                            color: Colors[colorScheme ?? "light"].text,
-                        }}
-                    >
-                        Number of people
-                    </Text>
-
-                    <View style={styles.appointmentForm}>
-                        <TextInput
-                            placeholder={"0"}
-                            placeholderTextColor={"rgba(189, 195, 199, 0.8)"}
-                            style={{ height: "100%", color: "black" }}
-                            value={numberOfPeople.toString()}
-                            onChangeText={(value) => setNumberOfPeople(value)}
-                        />
-                    </View>
-                </View>
-            </View>
-
-            {/* note */}
-            <View style={{ width: wp("84%") }}>
-                <Text
-                    style={{
-                        marginBottom: hp(".5%"),
-                        color: Colors[colorScheme ?? "light"].text,
-                        marginTop: hp("2%"),
-                        left: wp("2%"),
-                    }}
-                >
-                    Request
-                </Text>
-                <View style={[styles.appointmentForm, { width: wp("84%") }]}>
-                    <TextInput
-                        placeholder="Enter a note"
-                        placeholderTextColor={"rgba(189, 195, 199, 0.8)"}
-                        style={{ height: "100%", color: "black" }}
-                        value={note}
-                        onChangeText={(value) => setNote(value)}
-                    />
-                </View>
-            </View>
-
-            {/* confirm and candel buttons */}
-            <View
-                style={{
-                    marginLeft: wp("50%"),
-                    marginTop: hp("2.5%"),
-                }}
-            >
-                <Pressable
-                    onPress={() => {
-                        handleCreateAppointment();
-                    }}
-                    style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                    }}
-                >
-                    <Text
-                        style={{
-                            paddingHorizontal: wp("2.5%"),
-                            color: Colors[colorScheme ?? "light"].text,
-                        }}
-                    >
-                        Confirm
-                    </Text>
-
-                    <AntDesign
-                        name="check"
-                        size={28}
-                        color={Colors[colorScheme ?? "light"].tint}
-                        style={{ marginRight: 10 }}
-                    />
-                </Pressable>
-            </View>
-
-            <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
-        </View>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
+        </>
     );
 }
 

@@ -6,6 +6,9 @@ import {
     Pressable,
     useColorScheme,
     Alert,
+    KeyboardAvoidingView,
+    TouchableWithoutFeedback,
+    Keyboard,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Colors from "@/constants/styles/Colors";
@@ -17,17 +20,22 @@ import { Link, router } from "expo-router";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 
 import { signUpWithEmailPassword } from "../../utils/utils";
-import { validatePassword } from "@/app/(authenticated)/utils/validations/validations";
+import { validateSignUpForm } from "@/app/validations/validations";
 
 const SignUpForm = () => {
     const colorScheme = useColorScheme();
+
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
 
     const handleSignUpWithEmailPassword = async () => {
-        const { isValid, message } = validatePassword(password);
+        const { isValid, message } = validateSignUpForm(
+            email,
+            password,
+            confirmPassword
+        );
 
         if (!isValid) {
             Alert.alert("Invalid Password", message);
@@ -55,15 +63,19 @@ const SignUpForm = () => {
     };
 
     return (
-        <View
-            style={{
-                top: hp("2%"),
-                alignItems: "center",
-                justifyContent: "center",
-            }}
-        >
-            {/* Name */}
-            <View style={[styles.authForm, { width: wp("84%") }]}>
+        <>
+            {/* <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
+            <View
+                style={{
+                    // flex: 1,
+                    top: hp("2.5%"),
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
+                {/* Name */}
+                {/* <View style={[styles.authForm, { width: wp("84%") }]}>
                 <TextInput
                     placeholder="Display Name"
                     placeholderTextColor={"rgba(189, 195, 199, 0.8)"}
@@ -71,103 +83,199 @@ const SignUpForm = () => {
                     value={name}
                     onChangeText={(value) => setName(value)}
                 />
-            </View>
+            </View> */}
 
-            {/* Email */}
-            <View style={[styles.authForm, { width: wp("84%") }]}>
-                <TextInput
-                    placeholder="Email"
-                    placeholderTextColor={"rgba(189, 195, 199, 0.8)"}
-                    style={{ height: "100%", color: "black", paddingLeft: 10 }}
-                    value={email}
-                    onChangeText={(value) => setEmail(value)}
-                />
-            </View>
-
-            {/* Password */}
-            <View style={[styles.authForm, { width: wp("84%") }]}>
-                <TextInput
-                    placeholder="Password"
-                    placeholderTextColor={"rgba(189, 195, 199, 0.8)"}
-                    style={{ height: "100%", color: "black", paddingLeft: 10 }}
-                    value={password}
-                    onChangeText={(value) => setPassword(value)}
-                    secureTextEntry={isPasswordVisible ? false : true}
-                />
-                <Pressable
-                    onPress={togglePasswordVisibility}
-                    style={{ right: 15 }}
+                {/* Email */}
+                <View
+                    style={[
+                        styles.authForm,
+                        {
+                            width: wp("84%"),
+                            backgroundColor:
+                                Colors[colorScheme ?? "light"].background,
+                            borderColor:
+                                Colors[colorScheme ?? "light"].formBorder,
+                        },
+                    ]}
                 >
-                    <Ionicons
-                        name={isPasswordVisible ? "eye-off" : "eye"}
-                        size={24}
-                        color={Colors.light.tabIconDefault}
+                    <TextInput
+                        placeholder="Email"
+                        placeholderTextColor={
+                            Colors[colorScheme ?? "light"].placeholder
+                        }
+                        style={{
+                            height: "100%",
+                            width: "100%",
+                            color: "black",
+                            paddingLeft: 10,
+                        }}
+                        value={email}
+                        onChangeText={(value) => setEmail(value)}
                     />
-                </Pressable>
-            </View>
+                </View>
 
-            <View style={{ width: wp("80%"), marginVertical: 10 }}>
-                <Text>
-                    By selecting Agree and Continue below, I agree to{" "}
-                    <Link href="https://example.com" asChild>
-                        <Text
-                            style={{
-                                color: "blue",
-                            }}
-                        >
-                            Terms of Service and Privacy Policy
-                        </Text>
-                    </Link>
-                </Text>
-            </View>
-
-            {/* Agree And Continue button */}
-            <View style={styles.authButton}>
-                <Pressable
-                    style={{
-                        width: wp("84%"),
-                        height: "100%",
-                        justifyContent: "center",
-                    }}
-                    onPress={() => {
-                        handleSignUpWithEmailPassword();
-                    }}
+                {/* Password */}
+                <View
+                    style={[
+                        styles.authForm,
+                        {
+                            width: wp("84%"),
+                            backgroundColor:
+                                Colors[colorScheme ?? "light"].background,
+                            borderColor:
+                                Colors[colorScheme ?? "light"].formBorder,
+                        },
+                    ]}
                 >
-                    <Text style={{ textAlign: "center" }}>
-                        Agree and Continue
+                    <TextInput
+                        placeholder="Password"
+                        placeholderTextColor={
+                            Colors[colorScheme ?? "light"].placeholder
+                        }
+                        style={{
+                            height: "100%",
+                            width: "100%",
+                            color: "black",
+                            paddingLeft: 10,
+                        }}
+                        value={password}
+                        onChangeText={(value) => setPassword(value)}
+                        secureTextEntry={isPasswordVisible ? false : true}
+                    />
+                    <Pressable
+                        onPress={togglePasswordVisibility}
+                        style={{ right: wp("10%") }}
+                    >
+                        <Ionicons
+                            name={isPasswordVisible ? "eye-off" : "eye"}
+                            size={24}
+                            color={Colors.light.tabIconDefault}
+                        />
+                    </Pressable>
+                </View>
+
+                {/* Confirm Password */}
+                <View
+                    style={[
+                        styles.authForm,
+                        {
+                            width: wp("84%"),
+                            backgroundColor:
+                                Colors[colorScheme ?? "light"].background,
+                            borderColor:
+                                Colors[colorScheme ?? "light"].formBorder,
+                        },
+                    ]}
+                >
+                    <TextInput
+                        placeholder="Confirm password"
+                        placeholderTextColor={
+                            Colors[colorScheme ?? "light"].placeholder
+                        }
+                        style={{
+                            height: "100%",
+                            width: "100%",
+                            color: "black",
+                            paddingLeft: 10,
+                        }}
+                        value={confirmPassword}
+                        onChangeText={(value) => setConfirmPassword(value)}
+                        secureTextEntry={isPasswordVisible ? false : true}
+                    />
+                    <Pressable
+                        onPress={togglePasswordVisibility}
+                        style={{ right: wp("10%") }}
+                    >
+                        <Ionicons
+                            name={isPasswordVisible ? "eye-off" : "eye"}
+                            size={24}
+                            color={Colors.light.tabIconDefault}
+                        />
+                    </Pressable>
+                </View>
+
+                <View style={{ width: wp("80%"), marginVertical: 10 }}>
+                    <Text>
+                        By selecting Agree and Continue below, I agree to{" "}
+                        <Link href="https://example.com" asChild>
+                            <Text
+                                style={{
+                                    color: "blue",
+                                }}
+                            >
+                                Terms of Service and Privacy Policy
+                            </Text>
+                        </Link>
                     </Text>
-                </Pressable>
-            </View>
+                </View>
 
-            {/* Back button */}
-            <View
-                style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    position: "absolute",
-                    top: hp("56%"),
-                    alignSelf: "flex-start",
-                    left: wp("2.5%"),
-                }}
-            >
-                <Pressable
-                    style={{ flexDirection: "row", alignItems: "center" }}
-                    onPress={() => {
-                        router.push({
-                            pathname: "/(auth)/screens/Welcome",
-                        });
+                {/* Agree And Continue button */}
+                <View
+                    style={[
+                        styles.authButton,
+                        {
+                            backgroundColor:
+                                Colors[colorScheme ?? "light"]
+                                    .mainButtonBackgroundColor,
+                            borderColor:
+                                Colors[colorScheme ?? "light"]
+                                    .mainButtonBorderColor,
+                        },
+                    ]}
+                >
+                    <Pressable
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            justifyContent: "center",
+                        }}
+                        onPress={() => {
+                            handleSignUpWithEmailPassword();
+                        }}
+                    >
+                        <Text style={{ textAlign: "center" }}>
+                            Agree and Continue
+                        </Text>
+                    </Pressable>
+                </View>
+
+                {/* Back button */}
+                <View
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        position: "absolute",
+                        top: hp("44%"),
+                        alignSelf: "flex-start",
+                        left: wp("10%"),
                     }}
                 >
-                    <AntDesign
-                        name="arrowleft"
-                        size={24}
-                        color="black"
-                        style={{ marginRight: 8 }}
-                    />
-                    <Text>Back</Text>
-                </Pressable>
+                    <Pressable
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            width: "100%",
+                            height: "100%",
+                        }}
+                        onPress={() => {
+                            router.push({
+                                pathname: "/(auth)/screens/Welcome",
+                            });
+                        }}
+                    >
+                        <AntDesign
+                            name="arrowleft"
+                            size={24}
+                            color="black"
+                            style={{ marginRight: 8 }}
+                        />
+                        <Text>Back</Text>
+                    </Pressable>
+                </View>
             </View>
-        </View>
+            {/* </TouchableWithoutFeedback>
+        </KeyboardAvoidingView> */}
+        </>
     );
 };
 
@@ -175,8 +283,8 @@ export default SignUpForm;
 
 const styles = StyleSheet.create({
     authForm: {
-        backgroundColor: Colors.light.background,
-        borderColor: Colors.light.tabIconDefault,
+        // backgroundColor: Colors.light.background,
+        // borderColor: Colors.light.tabIconDefault,
         borderWidth: 1,
         height: hp("6%"),
         width: wp("84%"),

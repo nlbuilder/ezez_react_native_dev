@@ -4,12 +4,17 @@ import {
     View,
     FlatList,
     KeyboardAvoidingView,
-    Platform,
+    TouchableWithoutFeedback,
+    Keyboard,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { router, useNavigation } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 import { useGetBusinessInfoAPI } from "@/app/(authenticated)/components/profile/apis/getBusinessInfoAPI";
 import { useUpdateBusinessInfoAPI } from "@/app/(authenticated)/components/profile/apis/updateBusinessInfoAPI";
@@ -172,33 +177,38 @@ const EditBusinessInfo = () => {
     }, [navigation, colorScheme]);
 
     return (
-        <View
-            style={{
-                flex: 1,
-                backgroundColor: Colors[colorScheme ?? "light"].background,
-            }}
-        >
-            <KeyboardAvoidingView
-                style={{ flex: 1 }}
-                behavior={Platform.OS === "ios" ? "padding" : "height"} // adjust behavior based on platform
-                keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0} // adjust offset for iOS
-            >
-                <FlatList
-                    data={businessInfoData}
-                    keyExtractor={(item, index) => index.toString()}
-                    showsVerticalScrollIndicator={false}
-                    scrollEnabled={true}
-                    renderItem={({ item, index }) => (
-                        <EditBusinessInfoCard
-                            infoTitle={item.title}
-                            infoDetails={item.value}
-                            onChange={(value) => handleChange(index, value)}
+        <>
+            <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View
+                        style={{
+                            flex: 1,
+                            backgroundColor:
+                                Colors[colorScheme ?? "light"].background,
+                        }}
+                    >
+                        <FlatList
+                            data={businessInfoData}
+                            keyExtractor={(item, index) => index.toString()}
+                            showsVerticalScrollIndicator={false}
+                            scrollEnabled={true}
+                            keyboardShouldPersistTaps="handled"
+                            renderItem={({ item, index }) => (
+                                <EditBusinessInfoCard
+                                    infoTitle={item.title}
+                                    infoDetails={item.value}
+                                    onChange={(value) =>
+                                        handleChange(index, value)
+                                    }
+                                />
+                            )}
                         />
-                    )}
-                />
+                        <Toast />
+                        <View style={{ marginVertical: hp("5%") }}></View>
+                    </View>
+                </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
-            <Toast />
-        </View>
+        </>
     );
 };
 

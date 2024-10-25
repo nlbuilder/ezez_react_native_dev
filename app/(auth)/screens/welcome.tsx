@@ -1,4 +1,10 @@
-import { Pressable, StyleSheet } from "react-native";
+import {
+    Keyboard,
+    KeyboardAvoidingView,
+    Pressable,
+    StyleSheet,
+    TouchableWithoutFeedback,
+} from "react-native";
 import { Text, View } from "@/constants/styles/Themed";
 import React, { useEffect, useState } from "react";
 import * as WebBrowser from "expo-web-browser";
@@ -17,66 +23,70 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import Colors from "@/constants/styles/Colors";
 import { CalibriText } from "@/constants/styles/StyledText";
 import SignInForm from "../components/authComponents/SignInForm";
+import { StatusBar } from "expo-status-bar";
 
 // this line is to keep the web browser showing inside the app
 WebBrowser.maybeCompleteAuthSession();
 
 const Welcome = () => {
-    const email = "xfactor@yahoo.com";
-    const password = "123456";
-    const name = "Hello";
+    const [keyboardVisible, setKeyboardVisible] = useState(false);
 
-    const handleSignUpWithEmailPassword = async () => {
-        const auth = await signUpWithEmailPassword(email, password, name);
+    useEffect(() => {
+        const showSubscription = Keyboard.addListener("keyboardDidShow", () =>
+            setKeyboardVisible(true)
+        );
+        const hideSubscription = Keyboard.addListener("keyboardDidHide", () =>
+            setKeyboardVisible(false)
+        );
 
-        if (auth) {
-            router.push({
-                pathname: "/(auth)/screens/loading",
-                params: {
-                    businessId: auth.uid,
-                    name: auth.displayName,
-                    email: auth.email,
-                },
-            });
-        }
-    };
+        return () => {
+            showSubscription.remove();
+            hideSubscription.remove();
+        };
+    }, []);
 
     return (
         <>
-            <View
-                style={{
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flex: 1,
-                    backgroundColor: "rgba(189, 195, 199, .8)",
-                }}
-            >
-                <CalibriText
-                    style={{
-                        position: "absolute",
-                        bottom: hp("69%"),
-                        fontSize: 20,
-                        fontWeight: 500,
-                        alignSelf: "flex-start",
-                        left: wp("15%"),
-                    }}
-                >
-                    Welcome
-                </CalibriText>
+            <StatusBar hidden={keyboardVisible} />
 
-                <View
-                    style={{
-                        backgroundColor: Colors.light.background,
-                        width: wp("96%"),
-                        height: hp("68%"),
-                        position: "absolute",
-                        bottom: 0,
-                        borderRadius: 45,
-                    }}
-                ></View>
+            <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View
+                        style={{
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flex: 1,
+                            backgroundColor: "rgba(189, 195, 199, 1)",
+                        }}
+                    >
+                        <CalibriText
+                            style={{
+                                position: "absolute",
+                                bottom: hp("56%"),
+                                fontSize: 20,
+                                fontWeight: 500,
+                                alignSelf: "flex-start",
+                                left: wp("10%"),
+                            }}
+                        >
+                            Welcome
+                        </CalibriText>
 
-                <SignInForm />
-            </View>
+                        <View
+                            style={{
+                                backgroundColor: Colors.light.background,
+                                width: wp("96%"),
+                                height: hp("55%"),
+                                position: "absolute",
+                                bottom: 0,
+                                borderRadius: 45,
+                            }}
+                        >
+                            <SignInForm />
+                        </View>
+                    </View>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
         </>
     );
 };

@@ -43,6 +43,7 @@ export interface BusinessStaffInfoBrief {
 }
 
 export interface BusinessStaffInfoDetails {
+    length: number;
     businessStaffId?: string;
     businessId: string;
     firstName?: string;

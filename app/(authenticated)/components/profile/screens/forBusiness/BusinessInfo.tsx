@@ -122,17 +122,18 @@ const BusinessInfo = () => {
             >
                 <View
                     style={{
+                        borderTopColor:
+                            Colors[colorScheme ?? "light"].separator,
+                        borderTopWidth: 1,
                         backgroundColor:
                             Colors[colorScheme ?? "light"].background,
                         height: hp("10%"),
                         borderBottomColor:
-                            colorScheme === "dark"
-                                ? "white"
-                                : "rgba(189, 195, 199, 0.8)",
+                            Colors[colorScheme ?? "light"].separator,
                         borderBottomWidth: 1,
                         alignSelf: "center",
                         justifyContent: "center",
-                        width: wp("90%"),
+                        width: wp("100%"),
                     }}
                 >
                     <Text

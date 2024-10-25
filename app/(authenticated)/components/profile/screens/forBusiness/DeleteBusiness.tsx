@@ -22,6 +22,7 @@ import { useDeleteBusinessInfoAPI } from "../../apis/deleteBusinessInfoAPI";
 import dummyTermsAndCondition from "@/dummy/dummyTermsAndConditions.json";
 import { signOut } from "@/app/(auth)/utils/utils";
 import { useGetBusinessStaffInfoForBusinessAPI } from "../../apis/getBusinessStaffInfoForBusinessAPI";
+import NotificationModal from "@/app/(authenticated)/utils/modals/NotificationModal";
 
 const DeleteBusiness = () => {
     const navigation = useNavigation();
@@ -57,15 +58,31 @@ const DeleteBusiness = () => {
         });
     };
 
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const handleOnOK = () => {
+        setShowModal(false);
+
+        router.replace("/(authenticated)/(tabs)");
+    };
+
     // def a func to handle delete business
     const handleDeleteBusiness = async () => {
+        console.log(currentBusinessStaffInfoForBusiness);
+
         try {
-            if (currentBusinessStaffInfoForBusiness === null) {
+            if (
+                currentBusinessStaffInfoForBusiness &&
+                currentBusinessStaffInfoForBusiness.length > 0
+            ) {
+                showToast();
+
+                setShowModal(true);
+
+                return;
+            } else {
                 await deleteBusiness();
 
                 signOut();
-            } else {
-                showToast();
             }
         } catch (error) {
             console.log("Failed to delete business", error);
@@ -230,6 +247,13 @@ const DeleteBusiness = () => {
                     ) : null}
 
                     <Toast />
+                    <NotificationModal
+                        title={
+                            "Please check and delete all staff accounts before deleting the business account"
+                        }
+                        visible={showModal}
+                        onOK={handleOnOK}
+                    />
                 </View>
             </View>
         </>

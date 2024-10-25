@@ -42,7 +42,8 @@
     "react-native-screens": "3.31.1",
     "react-native-toast-message": "^2.2.1",
     "react-native-web": "^0.19.12",
-    "react-query": "^3.39.3"
+    "react-query": "^3.39.3",
+    "expo-local-authentication": "~14.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

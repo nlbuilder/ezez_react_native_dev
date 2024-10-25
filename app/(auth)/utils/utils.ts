@@ -9,7 +9,6 @@ import {
     createUserWithEmailAndPassword,
     sendEmailVerification,
     updateProfile,
-    getAuth,
     sendPasswordResetEmail,
 } from "firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";

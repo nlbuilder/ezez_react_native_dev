@@ -16,6 +16,8 @@ export const useDeleteBusinessInfoAPI = () => {
 
         const businessId = auth?.user?.uid;
 
+        console.log("businessId", businessId);
+
         // make a DELETE request to the backend
         const response = await fetch(`${BASE_URL}/auth/business`, {
             method: "DELETE",

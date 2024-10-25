@@ -38,11 +38,10 @@ const StaffInfoForBusinessCard: React.FC<StaffInfoForBusinessCardProps> = ({
         <View>
             <View
                 style={{
+                    borderTopColor: Colors[colorScheme ?? "light"].separator,
+                    borderTopWidth: 1,
                     backgroundColor: Colors[colorScheme ?? "light"].background,
-                    borderBottomColor:
-                        colorScheme === "dark"
-                            ? "white"
-                            : "rgba(189, 195, 199, 0.8)",
+                    borderBottomColor: Colors[colorScheme ?? "light"].separator,
                     borderBottomWidth: 1,
                     justifyContent: "space-between",
                     alignItems: "center",
@@ -84,9 +83,7 @@ const StaffInfoForBusinessCard: React.FC<StaffInfoForBusinessCardProps> = ({
                     <View
                         style={{
                             borderBottomColor:
-                                colorScheme === "dark"
-                                    ? "white"
-                                    : "rgba(189, 195, 199, 0.5)",
+                                Colors[colorScheme ?? "light"].separator,
                             borderBottomWidth: 1,
                             width: wp("50%"),
                             marginTop: hp("1%"),

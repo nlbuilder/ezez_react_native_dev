@@ -22,10 +22,7 @@ const BusinessInfoCard: React.FC<BusinessInfoCardProps> = ({
             <View
                 style={{
                     backgroundColor: Colors[colorScheme ?? "light"].background,
-                    borderBottomColor:
-                        colorScheme === "dark"
-                            ? "white"
-                            : "rgba(189, 195, 199, 0.8)",
+                    borderBottomColor: Colors[colorScheme ?? "light"].separator,
                     borderBottomWidth: 1,
                     justifyContent: "center",
                     alignSelf: "center",
@@ -47,9 +44,7 @@ const BusinessInfoCard: React.FC<BusinessInfoCardProps> = ({
                 <View
                     style={{
                         borderBottomColor:
-                            colorScheme === "dark"
-                                ? "white"
-                                : "rgba(189, 195, 199, 0.5)",
+                            Colors[colorScheme ?? "light"].separator,
                         borderBottomWidth: 1,
                         width: wp("50%"),
                         marginLeft: wp("10%"),

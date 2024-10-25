@@ -1,4 +1,11 @@
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+    FlatList,
+    Pressable,
+    StyleSheet,
+    Text,
+    useColorScheme,
+    View,
+} from "react-native";
 import Animated, {
     clamp,
     useAnimatedReaction,
@@ -14,6 +21,7 @@ import { AntDesign } from "@expo/vector-icons";
 
 import { AppointmentCardProps } from "../types/types";
 import AppointmentCardBody from "./AppointmentCardBody";
+import Colors from "@/constants/styles/Colors";
 
 const AppointmentCard = ({
     index,
@@ -23,6 +31,8 @@ const AppointmentCard = ({
     sumOfCustomerByTimeAndService,
     totalCapacity,
 }: AppointmentCardProps) => {
+    const colorScheme = useColorScheme();
+
     // code to handle the animation of the card
     const [cardHeight, setCardHeight] = useState(0);
 
@@ -64,9 +74,25 @@ const AppointmentCard = ({
                     },
                 ]}
             >
-                <View style={styles.appointmentCard}>
+                <View
+                    style={[
+                        styles.appointmentCard,
+                        {
+                            backgroundColor:
+                                Colors[colorScheme ?? "light"].background,
+                        },
+                    ]}
+                >
                     {/* header of the appointment card */}
-                    <View style={[styles.appointmentCardHeader]}>
+                    <View
+                        style={[
+                            styles.appointmentCardHeader,
+                            {
+                                borderColor:
+                                    Colors[colorScheme ?? "light"].separator,
+                            },
+                        ]}
+                    >
                         <Text style={styles.title}>{time}</Text>
                         <View style={styles.appointmentCapacityView}>
                             <Text style={styles.title}>
@@ -75,11 +101,59 @@ const AppointmentCard = ({
                             </Text>
 
                             <View style={{ alignItems: "center" }}>
-                                {/* <Text style={styles.lightText}>customer</Text> */}
-                                <Text style={styles.lightText}>total</Text>
-                                {/* <View style={styles.divider} /> */}
-                                <Text style={styles.lightText}>customers</Text>
-                                {/* <Text style={styles.lightText}>capacity</Text> */}
+                                {/* <Text style={[
+                                        styles.lightText,
+                                        {
+                                            color: Colors[
+                                                colorScheme ?? "light"
+                                            ].lightText,
+                                        },
+                                    ]}>customer</Text> */}
+                                <Text
+                                    style={[
+                                        styles.lightText,
+                                        {
+                                            color: Colors[
+                                                colorScheme ?? "light"
+                                            ].lightText,
+                                        },
+                                    ]}
+                                >
+                                    total
+                                </Text>
+
+                                {/* a divider */}
+                                {/* <View
+                                    style={[
+                                        styles.divider,
+                                        {
+                                            backgroundColor:
+                                                Colors[colorScheme ?? "light"]
+                                                    .separator,
+                                        },
+                                    ]}
+                                /> */}
+
+                                <Text
+                                    style={[
+                                        styles.lightText,
+                                        {
+                                            color: Colors[
+                                                colorScheme ?? "light"
+                                            ].lightText,
+                                        },
+                                    ]}
+                                >
+                                    customers
+                                </Text>
+                                {/* <Text style={[
+                                        styles.lightText,
+                                        {
+                                            color: Colors[
+                                                colorScheme ?? "light"
+                                            ].lightText,
+                                        },
+                                    ]}>capacity</Text> */}
                             </View>
                         </View>
 
@@ -146,7 +220,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     appointmentCard: {
-        backgroundColor: "rgba(246,255,255, 1)",
         borderRadius: hp("2.5%"),
         paddingBottom: hp("1%"),
         // move the card down a bit, to separate the top card from the Date Picker
@@ -164,7 +237,6 @@ const styles = StyleSheet.create({
         height: hp("4.5%"),
         borderWidth: 1,
         margin: 2.5,
-        borderColor: "rgba(0, 0, 0, .25)",
     },
     title: {
         paddingHorizontal: hp("2.5%"),
@@ -173,7 +245,6 @@ const styles = StyleSheet.create({
     },
     lightText: {
         fontSize: 12,
-        color: "rgba(0, 0, 0, .20)",
     },
     appointmentCapacityView: {
         flexDirection: "row",
@@ -183,7 +254,6 @@ const styles = StyleSheet.create({
     },
     divider: {
         height: 0.2,
-        backgroundColor: "rgba(0, 0, 0, .20)",
         width: 50,
     },
 });

@@ -1,51 +1,46 @@
 import { Alert } from "react-native";
 
-// Validation function for appointment creation
-export const validateAppointmentDetails = (
-    phoneNumber: string,
-    numberOfPeople: string,
-    note: string,
-    chosenService: string
-): { isValid: boolean; message: string } => {
-    const phoneNumberRegex = /^\d{10,15}$/;
-    // const nameRegex = /^[a-zA-Z\s]{2,50}$/;
-
-    if (!phoneNumberRegex.test(phoneNumber)) {
-        return {
-            isValid: false,
-            message: "Invalid Phone Number. Please check your input.",
-        };
-    }
-
-    const peopleCount = parseInt(numberOfPeople, 10);
-    if (isNaN(peopleCount) || peopleCount < 1 || peopleCount > 100) {
-        return {
-            isValid: false,
-            message: "Invalid Number of People. Please check your input.",
-        };
-    }
-
-    if (note.length > 100) {
-        return {
-            isValid: false,
-            message:
-                "Invalid Note. Note must be under 100 characters. Please check your input.",
-        };
-    }
-
-    if (!chosenService) {
-        return {
-            isValid: false,
-            message: "Invalid Service. Please check your input.",
-        };
-    }
-
-    return { isValid: true, message: "Appointment details are valid." };
-};
-
-export const validatePassword = (
+// def a function to validate sign in form
+export const validateSignInForm = (
+    email: string,
     password: string
 ): { isValid: boolean; message: string } => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+/;
+
+    if (!emailRegex.test(email)) {
+        return {
+            isValid: false,
+            message: "Invalid Email. Please check your input.",
+        };
+    }
+
+    if (password.length < 8) {
+        return {
+            isValid: false,
+            message: "Invalid Password. Please check your input.",
+        };
+    }
+
+    return { isValid: true, message: "Sign in form is valid." };
+};
+
+// def a function to validate sign up form
+export const validateSignUpForm = (
+    email: string,
+    password: string,
+    confirmPassword: string
+): { isValid: boolean; message: string } => {
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+/;
+
+    if (!emailRegex.test(email)) {
+        return {
+            isValid: false,
+            message: "Invalid Email. Please check your input.",
+        };
+    }
+
+    // Password validation
     const minLength = 8;
     const hasUppercase = /[A-Z]/.test(password);
     const hasLowercase = /[a-z]/.test(password);
@@ -96,9 +91,77 @@ export const validatePassword = (
         };
     }
 
+    // confirm password validation
+    if (password !== confirmPassword) {
+        return {
+            isValid: false,
+            message: "Passwords do not match. Please check your input.",
+        };
+    }
+
     return { isValid: true, message: "Password is valid." };
 };
 
+// def a function to validate reset password form
+export const validateResetForm = (
+    email: string
+): { isValid: boolean; message: string } => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+/;
+
+    if (!emailRegex.test(email)) {
+        return {
+            isValid: false,
+            message: "Invalid Email. Please check your input.",
+        };
+    }
+
+    return { isValid: true, message: "Reset form is valid." };
+};
+
+// def a function to validate appointment creation
+export const validateAppointmentDetails = (
+    phoneNumber: string,
+    numberOfPeople: string,
+    note: string,
+    chosenService: string
+): { isValid: boolean; message: string } => {
+    const phoneNumberRegex = /^\d{6,15}$/;
+    // const nameRegex = /^[a-zA-Z\s]{2,50}$/;
+
+    if (!phoneNumberRegex.test(phoneNumber)) {
+        return {
+            isValid: false,
+            message: "Invalid Phone Number. Please check your input.",
+        };
+    }
+
+    const peopleCount = parseInt(numberOfPeople, 10);
+    if (isNaN(peopleCount) || peopleCount < 1 || peopleCount > 100) {
+        return {
+            isValid: false,
+            message: "Invalid Number of People. Please check your input.",
+        };
+    }
+
+    if (note.length > 100) {
+        return {
+            isValid: false,
+            message:
+                "Invalid Note. Note must be under 100 characters. Please check your input.",
+        };
+    }
+
+    if (!chosenService) {
+        return {
+            isValid: false,
+            message: "Invalid Service. Please check your input.",
+        };
+    }
+
+    return { isValid: true, message: "Appointment details are valid." };
+};
+
+// def a function to validate service info creation
 export const validateServiceInfo = (
     serviceName: string,
     price: string,
@@ -134,6 +197,7 @@ export const validateServiceInfo = (
     return { isValid: true, message: "Service info is valid." };
 };
 
+// def a function to validate staff info creation
 export const validateStaffInfo = (
     firstName: string,
     phoneNumber: string,
