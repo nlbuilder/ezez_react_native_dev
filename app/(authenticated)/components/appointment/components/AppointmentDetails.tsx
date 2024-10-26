@@ -47,10 +47,15 @@ const AppointmentDetails = ({
 
     const pan = Gesture.Pan()
         .onChange((event) => {
+            // if swiped to the left, translate the content to the left
+            // there will be more code below to further control the translation
             if (event.translationX < 0) {
                 translateX.value = event.translationX;
-            } else if (event.translationX > 0) {
-                translateX.value = 0;
+            }
+            // if swiped to the right, translate the content to the right
+            // (i.e., moving back to the original position)
+            else if (event.translationX > 0) {
+                translateX.value = -event.translationX;
             }
         })
         .onEnd((event) => {
@@ -73,6 +78,16 @@ const AppointmentDetails = ({
                 showDeleteButton.value = false;
             }
         });
+
+    // handle the Tap Gesture for resetting translation when tapping outside
+    // const tap = Gesture.Tap().onEnd(() => {
+    //     // Reset translation to 0 on tap
+    //     translateX.value = withTiming(0, {
+    //         duration: 500,
+    //         easing: Easing.bezier(0.45, 0, 0.55, 1),
+    //     });
+    //     showDeleteButton.value = false;
+    // });
 
     // animated style to move the swipable content
     const animatedStyle = useAnimatedStyle(() => ({
@@ -149,10 +164,11 @@ const AppointmentDetails = ({
                     borderColor: Colors[colorScheme ?? "light"].tabIconDefault,
                     height: hp("10%"),
                     width: wp("96%"),
-                    marginBottom: hp("3.5%"),
+                    marginBottom: hp("5%"),
                 }}
             >
                 <GestureDetector gesture={pan}>
+                    {/* <GestureDetector gesture={Gesture.Exclusive(pan, tap)}> */}
                     <View>
                         {/* Edit and Delete buttons */}
                         <Animated.View

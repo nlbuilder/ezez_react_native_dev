@@ -205,7 +205,7 @@ export const validateStaffInfo = (
     role: string
 ): { isValid: boolean; message: string } => {
     const nameRegex = /^[a-zA-Z\s]{2,50}$/;
-    const phoneRegex = /^\d{10,15}$/;
+    const phoneRegex = /^\d{6,15}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!nameRegex.test(firstName)) {
@@ -219,8 +219,7 @@ export const validateStaffInfo = (
     if (!phoneRegex.test(phoneNumber)) {
         return {
             isValid: false,
-            message:
-                "Phone number must contain 10-15 digits. Please check your input.",
+            message: "Invalid Phone Number. Please check your input.",
         };
     }
 

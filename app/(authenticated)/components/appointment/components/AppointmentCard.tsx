@@ -37,8 +37,8 @@ const AppointmentCard = ({
     const [cardHeight, setCardHeight] = useState(0);
 
     // def a stackRate variable to control how much one card is stacked on top of the other
-    // (e.g., if stackRate = 1 => the ontop card fully covers the below cards)
-    const stackRate = 0.72;
+    // (e.g., if stackRate = 1 => the ontop card fully covers the below card)
+    const stackRate = 0.7;
 
     const translateY = useSharedValue(0);
 
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     },
     appointmentCard: {
         borderRadius: hp("2.5%"),
-        paddingBottom: hp("1%"),
+        // paddingBottom: hp("1%"),
         // move the card down a bit, to separate the top card from the Date Picker
         top: hp("1%"),
         height: hp("20%"),
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
 
         borderRadius: hp("2.5%"),
-        height: hp("4.5%"),
+        height: hp("5.5%"),
         borderWidth: 1,
         margin: 2.5,
     },

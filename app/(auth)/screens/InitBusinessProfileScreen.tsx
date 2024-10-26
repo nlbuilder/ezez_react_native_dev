@@ -7,6 +7,9 @@ import {
     View,
     Alert,
     TextInput,
+    TouchableWithoutFeedback,
+    KeyboardAvoidingView,
+    Keyboard,
 } from "react-native";
 import { router } from "expo-router";
 import {
@@ -239,78 +242,102 @@ const InitBusinessProfileScreen = () => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.content}>
-                {/* Title */}
-                <View style={styles.titleContainer}>
-                    <CalibriText style={styles.title}>
-                        Let's create your business profile
-                    </CalibriText>
-                </View>
+        <>
+            <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <SafeAreaView style={styles.container}>
+                        <View style={styles.content}>
+                            {/* Title */}
+                            <View style={styles.titleContainer}>
+                                <CalibriText style={styles.title}>
+                                    Let's create your business profile
+                                </CalibriText>
+                            </View>
 
-                {/* Business Name */}
-                <View style={styles.optionContainer}>
-                    <Text style={styles.subTitle}>
-                        What is the name of your business?
-                        <Text style={{ color: "red" }}> *</Text>
-                    </Text>
-                    <View style={styles.openningHourRow}>
-                        <TextInput
-                            placeholder="Enter business name"
-                            placeholderTextColor={"rgba(189, 195, 199, 0.8)"}
-                            style={{ color: "black", left: wp("5%") }}
-                            value={businessName}
-                            onChangeText={(value) => {
-                                setBusinessName(value);
-                            }}
-                        />
-                    </View>
-                </View>
+                            {/* Business Name */}
+                            <View style={styles.optionContainer}>
+                                <Text style={styles.subTitle}>
+                                    What is the name of your business?
+                                    <Text style={{ color: "red" }}> *</Text>
+                                </Text>
+                                <View style={styles.openningHourRow}>
+                                    <TextInput
+                                        placeholder="Enter business name"
+                                        placeholderTextColor={
+                                            "rgba(189, 195, 199, 0.8)"
+                                        }
+                                        style={{
+                                            color: "black",
+                                            left: wp("5%"),
+                                            height: "100%",
+                                            width: "100%",
+                                        }}
+                                        value={businessName}
+                                        onChangeText={(value) => {
+                                            setBusinessName(value);
+                                        }}
+                                    />
+                                </View>
+                            </View>
 
-                {/* Business Hour Options */}
-                <View style={styles.optionContainer}>
-                    <Text style={styles.subTitle}>
-                        What are your business's opening and closing hours?
-                        <Text style={{ color: "red" }}> *</Text>
-                    </Text>
+                            {/* Business Hour Options */}
+                            <View style={styles.optionContainer}>
+                                <Text style={styles.subTitle}>
+                                    What are your business's opening and closing
+                                    hours?
+                                    <Text style={{ color: "red" }}> *</Text>
+                                </Text>
 
-                    {initBusinessHour.map((item, index) => (
-                        <View key={index} style={styles.openningHourRow}>
-                            <Text style={styles.text}>
-                                {item.openingHour} - {item.closingHour}
-                            </Text>
-                            <Checkbox
-                                style={styles.checkboxBusinessHour}
-                                value={selectedBusinessHourIndex === index}
-                                onValueChange={() =>
-                                    handleBusinessHourChange(index)
-                                }
-                            />
+                                {initBusinessHour.map((item, index) => (
+                                    <View
+                                        key={index}
+                                        style={styles.openningHourRow}
+                                    >
+                                        <Text style={styles.text}>
+                                            {item.openingHour} -{" "}
+                                            {item.closingHour}
+                                        </Text>
+                                        <Checkbox
+                                            style={styles.checkboxBusinessHour}
+                                            value={
+                                                selectedBusinessHourIndex ===
+                                                index
+                                            }
+                                            onValueChange={() =>
+                                                handleBusinessHourChange(index)
+                                            }
+                                        />
+                                    </View>
+                                ))}
+                            </View>
+
+                            {/* Service Options */}
+                            <View style={[styles.optionContainer]}>
+                                <Text style={styles.subTitle}>
+                                    What services does your business offer?
+                                    <Text style={{ color: "red" }}> *</Text>
+                                </Text>
+
+                                {initServiceOptions.map((item, index) => (
+                                    <View key={index} style={styles.serviceRow}>
+                                        <Text style={styles.text}>
+                                            {item.option}
+                                        </Text>
+                                        <Checkbox
+                                            style={styles.checkboxService}
+                                            value={
+                                                selectedServiceIndex === index
+                                            }
+                                            onValueChange={() =>
+                                                handleServiceChange(index)
+                                            }
+                                        />
+                                    </View>
+                                ))}
+                            </View>
                         </View>
-                    ))}
-                </View>
 
-                {/* Service Options */}
-                <View style={[styles.optionContainer]}>
-                    <Text style={styles.subTitle}>
-                        What services does your business offer?
-                        <Text style={{ color: "red" }}> *</Text>
-                    </Text>
-
-                    {initServiceOptions.map((item, index) => (
-                        <View key={index} style={styles.serviceRow}>
-                            <Text style={styles.text}>{item.option}</Text>
-                            <Checkbox
-                                style={styles.checkboxService}
-                                value={selectedServiceIndex === index}
-                                onValueChange={() => handleServiceChange(index)}
-                            />
-                        </View>
-                    ))}
-                </View>
-            </View>
-
-            {/* 
+                        {/* 
             <View style={styles.optionContainer}>
                 <Text style={styles.subTitle}>
                     How many customers can your business serve at once?
@@ -329,19 +356,21 @@ const InitBusinessProfileScreen = () => {
                 </View>
             </View> */}
 
-            {/* create profile button */}
-            <View>
-                <Pressable
-                    style={styles.button}
-                    onPress={() => {
-                        handleCreateBusinessProfile();
-                    }}
-                >
-                    <Text style={styles.buttonText}>Create profile</Text>
-                </Pressable>
-            </View>
+                        {/* create profile button */}
+                        <View>
+                            <Pressable
+                                style={styles.button}
+                                onPress={() => {
+                                    handleCreateBusinessProfile();
+                                }}
+                            >
+                                <Text style={styles.buttonText}>
+                                    Create profile
+                                </Text>
+                            </Pressable>
+                        </View>
 
-            {/* <View>
+                        {/* <View>
                 <Pressable
                     onPress={() => {
                         // handleCreateBusinessProfile();
@@ -365,36 +394,39 @@ const InitBusinessProfileScreen = () => {
                 </Pressable>
             </View> */}
 
-            <View style={styles.skipButton}>
-                <Pressable
-                    onPress={() => {
-                        handleSkip();
-                    }}
-                >
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                        }}
-                    >
-                        <Text>Skip</Text>
-                        <Ionicons
-                            name="play-skip-forward-outline"
-                            size={24}
-                            color={Colors.light.text}
-                        />
-                    </View>
-                </Pressable>
-            </View>
+                        <View style={styles.skipButton}>
+                            <Pressable
+                                onPress={() => {
+                                    handleSkip();
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <Text>Skip</Text>
+                                    <Ionicons
+                                        name="play-skip-forward-outline"
+                                        size={24}
+                                        color={Colors.light.text}
+                                    />
+                                </View>
+                            </Pressable>
+                        </View>
 
-            <NotificationModal
-                title={
-                    "We initialized business name, business hours and services based on your inputs. You can always change them later in the settings."
-                }
-                visible={showModal}
-                onOK={handleOnOK}
-            />
-        </SafeAreaView>
+                        <NotificationModal
+                            title={
+                                "We initialized business name, business hours and services based on your inputs. You can always change them later in the settings."
+                            }
+                            visible={showModal}
+                            onOK={handleOnOK}
+                        />
+                    </SafeAreaView>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
+        </>
     );
 };
 
@@ -440,9 +472,10 @@ const styles = StyleSheet.create({
         borderColor: "grey",
         right: wp("5%"),
         borderWidth: 1,
-        width: 18,
-        height: 18,
+        width: 20,
+        height: 20,
         borderRadius: 15,
+        // padding: 10,
     },
     serviceRow: {
         flexDirection: "row",

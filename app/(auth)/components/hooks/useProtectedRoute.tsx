@@ -17,7 +17,7 @@ export function useProtectedRoute(user: User) {
             // work with Slot in the _layout.tsx file
             // basically, this will redirect to the welcome screen,
             // if the user is not authenticated
-            router.replace("/(auth)/screens/welcome");
+            router.replace("/(auth)/screens/Welcome");
             setHasNavigated(true);
         } else if (user.uid && inAuthGroup) {
             // work with Slot in the _layout.tsx file
