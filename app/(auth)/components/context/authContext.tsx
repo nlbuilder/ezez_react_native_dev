@@ -83,24 +83,17 @@
 //         </AuthContext.Provider>
 //     );
 // }
-
 import * as React from "react";
 import { router } from "expo-router";
-import {
-    onAuthStateChanged, // Listens for auth state changes (user login/logout).
-    onIdTokenChanged, // Listens for token changes (useful for refreshing tokens).
-    signOut,
-    User as FirebaseUser, // Type for Firebase User.
-} from "firebase/auth";
-import * as LocalAuthentication from "expo-local-authentication";
+import { onAuthStateChanged, onIdTokenChanged, signOut } from "firebase/auth";
 
 import { ContextInterface, User } from "../../types/types";
 import { useProtectedRoute } from "../hooks/useProtectedRoute";
 import { auth } from "@/firebase/firebaseConfig";
 
-// --- Initial state for user.
-const userInitialState = {
-    token: "", // This will store the latest Firebase ID token.
+// Initial state for the user
+const userInitialState: User = {
+    IdToken: "",
     uid: "",
     createdAt: "",
     displayName: "",
@@ -110,86 +103,101 @@ const userInitialState = {
     email: "",
 };
 
-// --- Initial context state to be provided to the app.
+// Initial context state
 const contextInitialState: ContextInterface = {
     user: userInitialState,
-    signIn: () => {}, // Dummy function for sign-in.
-    signOut: () => {}, // Dummy function for sign-out.
+    signIn: () => {},
+    signOut: () => {},
 };
 
-// --- Create the Authentication Context to share auth state across components.
+// Create the AuthContext
 export const AuthContext =
     React.createContext<ContextInterface>(contextInitialState);
 
-// --- Main AuthProvider component wrapping the entire app.
+/**
+ * Custom hook to refresh the token every 30 minutes.
+ */
+function useTokenRefresher(
+    setUser: React.Dispatch<React.SetStateAction<User>>
+) {
+    React.useEffect(() => {
+        let intervalId: NodeJS.Timeout | null = null;
+
+        const refreshToken = async () => {
+            try {
+                const newToken = await auth.currentUser?.getIdToken(true); // Force token refresh
+                console.log("ID Token refreshed:", newToken);
+
+                setUser((prevUser) => ({
+                    ...prevUser,
+                    token: newToken ?? prevUser.IdToken,
+                }));
+            } catch (error) {
+                console.error("Error refreshing token:", error);
+            }
+        };
+
+        intervalId = setInterval(refreshToken, 45 * 60 * 1000);
+
+        // Cleanup interval on unmount
+        return () => {
+            if (intervalId) clearInterval(intervalId);
+        };
+    }, [setUser]); // Run only once when the component mounts
+}
+
+/**
+ * AuthProvider component that wraps the app and provides authentication context.
+ */
 export function AuthProvider({ children }: React.PropsWithChildren) {
-    const [user, setUser] = React.useState<User>(userInitialState); // User state.
+    const [user, setUser] = React.useState<User>(userInitialState); // User state
 
-    useProtectedRoute(user); // Ensures user access to protected routes.
+    // Protect routes based on the user's authentication status
+    useProtectedRoute(user);
 
-    // --- Effect to monitor authentication state (login/logout).
+    // Use the token refresher hook
+    useTokenRefresher(setUser);
+
     React.useEffect(() => {
         const unsubscribeAuth = onAuthStateChanged(
             auth,
             async (firebaseUser) => {
                 if (firebaseUser) {
-                    // If the user is logged in, update user with the latest token.
-                    await updateUserWithToken(firebaseUser);
-                    router.replace("/(authenticated)/(tabs)"); // Redirect to authenticated tabs.
+                    const IdToken = await firebaseUser.getIdToken(); // Get initial token
+
+                    const authenticatedUserData: User = {
+                        IdToken: IdToken,
+                        uid: firebaseUser.uid,
+                        displayName:
+                            firebaseUser.providerData[0]?.displayName ?? "",
+                        photoURL: firebaseUser.providerData[0]?.photoURL ?? "",
+                        providerId:
+                            firebaseUser.providerData[0]?.providerId ?? "",
+                        email: firebaseUser.providerData[0]?.email ?? "",
+                        createdAt: firebaseUser.metadata.creationTime!,
+                        lastLoginAt: firebaseUser.metadata.lastSignInTime!,
+                    };
+
+                    setUser(authenticatedUserData);
+                    router.replace("/(authenticated)/(tabs)");
                 } else {
-                    // If no user is authenticated, redirect to welcome screen.
                     console.log("User is not authenticated");
                     router.replace("/(auth)/screens/Welcome");
                 }
             }
         );
 
-        return () => unsubscribeAuth(); // Cleanup listener on unmount.
-    }, []); // Runs only on component mount.
+        return () => unsubscribeAuth();
+    }, []);
 
-    // --- Effect to monitor and refresh tokens when they change.
-    React.useEffect(() => {
-        const unsubscribeToken = onIdTokenChanged(
-            auth,
-            async (firebaseUser) => {
-                if (firebaseUser) {
-                    // If the token changes, update the user with the new token.
-                    await updateUserWithToken(firebaseUser);
-                }
-            }
-        );
-
-        return () => unsubscribeToken(); // Cleanup listener on unmount.
-    }, []); // Runs only on component mount.
-
-    // --- Function to update user state with refreshed token.
-    const updateUserWithToken = async (firebaseUser: FirebaseUser) => {
-        const IdToken = await firebaseUser.getIdToken(true); // Force refresh the token.
-
-        const authenticatedUserData: User = {
-            IdToken, // Store the new token.
-            uid: firebaseUser.uid,
-            displayName: firebaseUser.providerData[0]?.displayName ?? "", // Optional chaining.
-            photoURL: firebaseUser.providerData[0]?.photoURL ?? "",
-            providerId: firebaseUser.providerData[0]?.providerId ?? "",
-            email: firebaseUser.providerData[0]?.email ?? "",
-            createdAt: firebaseUser.metadata.creationTime!, // Use non-null assertion.
-            lastLoginAt: firebaseUser.metadata.lastSignInTime!,
-        };
-
-        setUser(authenticatedUserData); // Update user state.
-    };
-
-    // --- Return the Auth Context Provider.
     return (
         <AuthContext.Provider
             value={{
-                user, // Provide the current user state.
-                signIn: setUser, // Sign-in function to update user.
+                user,
+                signIn: setUser,
                 signOut: async () => {
-                    setUser(userInitialState); // Reset user state on sign-out.
-                    await signOut(auth); // Perform Firebase sign-out.
-                    router.replace("/(auth)/screens/Welcome"); // Redirect to welcome screen.
+                    setUser(userInitialState);
+                    await signOut(auth);
                 },
             }}
         >
