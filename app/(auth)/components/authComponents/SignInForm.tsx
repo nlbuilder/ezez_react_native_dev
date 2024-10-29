@@ -42,6 +42,7 @@ const SignInForm = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
+    // def a function to sign in with email and password
     const handleSignInWithEmailPassword = async () => {
         const { isValid, message } = validateSignInForm(email, password);
 
@@ -54,6 +55,7 @@ const SignInForm = () => {
         await signInWithEmailPassword(email, password);
     };
 
+    // def a function to sign in with google
     const handleSignInWithGoogle = async () => {
         const auth = await signInWithGoogle();
 

@@ -1,30 +1,42 @@
 import { ActivityIndicator, View } from "react-native";
 import React, { useEffect } from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import { Wander } from "react-native-animated-spinkit";
 
 import { useCreateBusinessAPI } from "@/app/(authenticated)/components/profile/apis/createBusinessAPI";
 import { BusinessInfo } from "@/app/(authenticated)/components/profile/types/types";
 
 const loading = () => {
-    const { businessId, name, email } = useLocalSearchParams();
+    const {
+        businessId,
+        email,
+        // , name
+    } = useLocalSearchParams();
+
     const { createBusinessInfo, isLoading: isCreateBusinessInfoLoading } =
         useCreateBusinessAPI();
 
     useEffect(() => {
         const handleCreateBusiness = async () => {
-            if (businessId && name && email) {
+            if (
+                businessId &&
+                email
+                //  && name
+            ) {
                 try {
                     const businessInfo: BusinessInfo = {
                         businessId: Array.isArray(businessId)
                             ? businessId[0]
                             : businessId,
-                        name: Array.isArray(name) ? name[0] : name,
+                        // name: Array.isArray(name) ? name[0] : name,
                         email: Array.isArray(email) ? email[0] : email,
                     };
 
+                    console.log("Sending business info:", businessInfo);
+
                     // call the API to create the business
                     const business = await createBusinessInfo(businessInfo);
+
+                    console.log("business: ", business);
 
                     if (!business) {
                         console.error("Error creating business: ", business);
@@ -52,7 +64,11 @@ const loading = () => {
         };
 
         handleCreateBusiness();
-    }, [businessId, name, email, createBusinessInfo]);
+    }, [
+        businessId,
+        email,
+        //  name
+    ]);
 
     if (isCreateBusinessInfoLoading) {
         return (
@@ -72,8 +88,14 @@ const loading = () => {
 
     return (
         <>
-            <View>
-                <Wander size={48} color="blue" />
+            <View
+                style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <ActivityIndicator size="small" color="grey" />
             </View>
         </>
     );

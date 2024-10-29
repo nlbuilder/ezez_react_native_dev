@@ -22,6 +22,10 @@ import { ModalProps } from "../types/types";
 import { useGetAllAppointmentsAPI } from "../../appointment/apis/getAllAppointmentsInfoAPI";
 import { AppointmentDetailsProps } from "../../appointment/types/types";
 import { useNavigation } from "expo-router";
+import {
+    filterAppointmentsByDate,
+    formatDateToString,
+} from "@/app/(authenticated)/utils/utils";
 
 // Custom hook for debouncing
 function useDebouncedValue<T>(value: T, delay: number) {
@@ -73,6 +77,20 @@ const SearchModal = ({ visible, onClose }: ModalProps) => {
                   appointment.customerPhoneNumber.includes(query)
               )
             : [];
+
+        const today = new Date();
+        const todayString = formatDateToString(today.toString());
+
+        console.log("todayString", todayString);
+
+        console.log("filteredData", filteredData);
+        // const dateString = formatDateToString(new Date.toString());
+
+        // filter the appointments by date
+        // const filteredAppointmentsByDate = filterAppointmentsByDate(
+        //     filteredData,
+        //     dateString
+        // );
 
         setFilteredAppointment(filteredData);
         setIsAppointmentFound(filteredData.length > 0);

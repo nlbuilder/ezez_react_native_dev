@@ -49,12 +49,28 @@ const WarningModal = ({
                         {title}
                     </Text>
 
-                    <View style={[styles.separator]}></View>
+                    <View
+                        style={[
+                            styles.separator,
+                            {
+                                backgroundColor:
+                                    Colors[colorScheme ?? "light"].separator,
+                            },
+                        ]}
+                    ></View>
                     <Pressable style={styles.confirmButton} onPress={onConfirm}>
                         <Text style={styles.buttonConfirmText}>Delete</Text>
                     </Pressable>
 
-                    <View style={styles.separator}></View>
+                    <View
+                        style={[
+                            styles.separator,
+                            {
+                                backgroundColor:
+                                    Colors[colorScheme ?? "light"].separator,
+                            },
+                        ]}
+                    ></View>
                     <Pressable
                         style={[
                             styles.cancelButton,
@@ -93,25 +109,25 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     modalContent: {
-        width: wp("69%"),
+        width: wp("80%"),
         borderColor: "white",
         borderWidth: 1,
-        padding: 20,
+        padding: 25,
         borderRadius: 25,
         alignItems: "center",
     },
     modalText: {
         textAlign: "center",
-        paddingBottom: hp("1.5%"),
+        paddingBottom: hp("2%"),
+        paddingHorizontal: wp("5%"),
     },
     separator: {
         width: "100%",
         height: 1,
-        backgroundColor: "rgba(189, 195, 199, 0.5)",
     },
     confirmButton: {
         width: wp("69%"),
-        paddingVertical: hp("1%"),
+        paddingVertical: hp("2%"),
     },
     cancelButton: {
         paddingTop: hp("2%"),
@@ -120,7 +136,7 @@ const styles = StyleSheet.create({
         color: "blue",
         textAlign: "center",
         fontSize: 18,
-        fontWeight: 400,
+        fontWeight: 500,
     },
     buttonConfirmText: {
         color: "red",

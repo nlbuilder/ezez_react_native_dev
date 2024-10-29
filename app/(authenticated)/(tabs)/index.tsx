@@ -82,6 +82,7 @@ const AppointmentCardList = () => {
     // this is the code to handle the date from DateTimePicker
     // it provides the date to use in the filtering appointments by date
     const { date, setDate } = useDate();
+
     const dateString = formatDateToString(date.toISOString());
 
     const {

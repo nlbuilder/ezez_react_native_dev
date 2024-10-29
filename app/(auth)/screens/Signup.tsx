@@ -21,25 +21,25 @@ import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 
 const SignUp = () => {
-    const [keyboardVisible, setKeyboardVisible] = useState(false);
+    // const [keyboardVisible, setKeyboardVisible] = useState(false);
 
-    useEffect(() => {
-        const showSubscription = Keyboard.addListener("keyboardDidShow", () =>
-            setKeyboardVisible(true)
-        );
-        const hideSubscription = Keyboard.addListener("keyboardDidHide", () =>
-            setKeyboardVisible(false)
-        );
+    // useEffect(() => {
+    //     const showSubscription = Keyboard.addListener("keyboardDidShow", () =>
+    //         setKeyboardVisible(true)
+    //     );
+    //     const hideSubscription = Keyboard.addListener("keyboardDidHide", () =>
+    //         setKeyboardVisible(false)
+    //     );
 
-        return () => {
-            showSubscription.remove();
-            hideSubscription.remove();
-        };
-    }, []);
+    //     return () => {
+    //         showSubscription.remove();
+    //         hideSubscription.remove();
+    //     };
+    // }, []);
 
     return (
         <>
-            <StatusBar hidden={keyboardVisible} />
+            {/* <StatusBar hidden={keyboardVisible} /> */}
 
             <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

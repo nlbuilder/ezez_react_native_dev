@@ -22,20 +22,20 @@ export function onAuthStateChanged(callback: NextOrObserver<User>) {
 // def a function to sign up with email and password
 export const signUpWithEmailPassword = async (
     email: string,
-    password: string,
-    name: string
+    password: string
+    // name: string
 ) => {
     try {
         await createUserWithEmailAndPassword(auth, email, password);
 
-        // update the user's display name
-        if (auth.currentUser) {
-            await updateProfile(auth.currentUser, {
-                displayName: name,
-            }).catch((error) => console.log(error));
-        } else {
-            console.error("Error updating user profile: ", auth.currentUser);
-        }
+        // // update the user's display name
+        // if (auth.currentUser) {
+        //     await updateProfile(auth.currentUser, {
+        //         displayName: name,
+        //     }).catch((error) => console.log(error));
+        // } else {
+        //     console.error("Error updating user profile: ", auth.currentUser);
+        // }
 
         // send email verification
         if (auth.currentUser) {

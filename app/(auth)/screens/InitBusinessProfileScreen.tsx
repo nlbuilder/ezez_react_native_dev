@@ -43,11 +43,13 @@ const InitBusinessProfileScreen = () => {
         isLoading: isBusinessHourInfoLoading,
     } = useGetBusinessHourAPI();
 
+    // check if the business profile is already created
+    // => if yes, redirect to the tabs screen
     useEffect(() => {
         if (businessHourInfo) {
             router.replace("/(authenticated)/(tabs)");
         }
-    }, [businessHourInfo]);
+    }, []);
 
     const { currentBusinessInfo } = useGetBusinessInfoAPI();
     const { createBusinessHour } = useCreateBusinessHourAPI();

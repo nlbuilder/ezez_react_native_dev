@@ -67,8 +67,6 @@ const DeleteBusiness = () => {
 
     // def a func to handle delete business
     const handleDeleteBusiness = async () => {
-        console.log(currentBusinessStaffInfoForBusiness);
-
         try {
             if (
                 currentBusinessStaffInfoForBusiness &&
