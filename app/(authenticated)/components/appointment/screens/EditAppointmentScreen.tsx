@@ -434,7 +434,7 @@ export default function EditAppointmentScreen() {
                                         justifyContent: "center",
                                     }}
                                     onPress={() => {
-                                        // handleChangePassword();
+                                        handleEditAppointment();
                                     }}
                                 >
                                     <Text

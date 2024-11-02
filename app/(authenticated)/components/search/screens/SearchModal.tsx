@@ -292,7 +292,8 @@ const styles = StyleSheet.create({
         paddingVertical: hp("2%"),
     },
     card: {
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
+        backgroundColor: "rgba(234,230,222,.8)",
         width: wp("60%"),
         padding: 20,
         marginVertical: hp("1.5%"),
