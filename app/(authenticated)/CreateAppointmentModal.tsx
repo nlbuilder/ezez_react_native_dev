@@ -388,7 +388,7 @@ export default function CreateAppointmentModal() {
                                     justifyContent: "center",
                                 }}
                                 onPress={() => {
-                                    // handleChangePassword();
+                                    handleCreateAppointment();
                                 }}
                             >
                                 <Text

@@ -24,14 +24,11 @@ const loading = () => {
                             ? businessId[0]
                             : businessId,
                         email: Array.isArray(email) ? email[0] : email,
+                        role: "owner",
                     };
-
-                    console.log("Sending business info:", businessInfo);
 
                     // call the API to create the business
                     const business = await createBusinessInfo(businessInfo);
-
-                    console.log("business: ", business);
 
                     if (!business) {
                         console.error("Error creating business: ", business);

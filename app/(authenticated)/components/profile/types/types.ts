@@ -30,6 +30,7 @@ export interface BusinessInfo {
     managerName?: string[];
     listOfStaff?: BusinessStaffInfoBrief[];
     capacity?: number;
+    role?: string;
 }
 
 export interface BusinessStaffInfoBrief {
