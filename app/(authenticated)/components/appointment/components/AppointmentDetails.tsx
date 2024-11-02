@@ -1,3 +1,10 @@
+// The code in this file is to display the details of an appointment.
+// The appointmentDetails is passed from the AppointmentEachHourListScreen.tsx file
+// Therefor, the future me will need to read files in the order of:
+// 1. AppointmentEachHourListScreen.tsx
+// 2. AppointmentDetails.tsx
+// Don't get confused
+
 import {
     Pressable,
     StyleSheet,
@@ -31,10 +38,10 @@ import { useDeleteAppointmentAPI } from "../apis/deleteAppointmentAPI";
 
 const AppointmentDetails = ({
     appointmentDetails,
-    onDelete,
-}: {
+}: // onDelete,
+{
     appointmentDetails: AppointmentDetailsProps;
-    onDelete: (appointmentId: string) => void;
+    // onDelete: (appointmentId: string) => void;
 }) => {
     const colorScheme = useColorScheme();
 
@@ -55,7 +62,8 @@ const AppointmentDetails = ({
             // if swiped to the right, translate the content to the right
             // (i.e., moving back to the original position)
             else if (event.translationX > 0) {
-                translateX.value = -event.translationX;
+                // translateX.value = -event.translationX;
+                translateX.value = 0;
             }
         })
         .onEnd((event) => {
@@ -114,6 +122,7 @@ const AppointmentDetails = ({
 
     const handleDeletePress = () => {
         setModalVisible(true);
+
         translateX.value = withTiming(-screenWidth * 1, {
             duration: 500,
             easing: Easing.bezier(0.45, 0, 0.55, 1), // refer to easeInOutQuad in https://easings.net/#
@@ -123,8 +132,6 @@ const AppointmentDetails = ({
     };
 
     const confirmDelete = () => {
-        // console.log("delete confirmed");
-
         deleteAppointment(appointmentDetails.appointmentId);
 
         setModalVisible(false);
@@ -311,7 +318,7 @@ const AppointmentDetails = ({
                             >
                                 <View>
                                     <Text style={{ paddingBottom: hp("1.5%") }}>
-                                        {appointmentDetails.date
+                                        {appointmentDetails.dateString
                                             .split(" ")
                                             .slice(0, 3)
                                             .join(" ")}
@@ -341,7 +348,7 @@ const AppointmentDetails = ({
                                 <View>
                                     <Text style={{ paddingBottom: hp("1.5%") }}>
                                         {convertTo12HourFormat(
-                                            appointmentDetails.time
+                                            appointmentDetails.timeString
                                         )}
                                     </Text>
                                 </View>

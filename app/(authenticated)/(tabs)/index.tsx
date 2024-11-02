@@ -22,7 +22,7 @@ import AppointmentCard from "@/app/(authenticated)/components/appointment/compon
 import {
     generateTimeList,
     filterAppointmentsByDate,
-    formatDateToString,
+    // formatDateToString,
     groupCustomersByTimeAndService,
     groupCustomersByTime,
     transformData,
@@ -83,13 +83,16 @@ const AppointmentCardList = () => {
     // it provides the date to use in the filtering appointments by date
     const { date, setDate } = useDate();
 
-    const dateString = formatDateToString(date.toISOString());
+    // const dateString = formatDateToString(date.toISOString());
+    const dateString = date.toDateString();
 
     const {
         allAppointmentInfo,
         isLoading: isGetAllAppointmentsInfoLoading,
         refetch: refetchAllAppointmentsInfo,
     } = useGetAllAppointmentsAPI();
+
+    // console.log("allAppointmentInfo", allAppointmentInfo);
 
     // make sure allAppointmentInfo is an array
     const allAppointmentsArray = Array.isArray(allAppointmentInfo)
@@ -102,11 +105,16 @@ const AppointmentCardList = () => {
         dateString
     );
 
+    // console.log(dateString);
+    // console.log("filteredAppointmentsByDate", filteredAppointmentsByDate);
+
     // group the customers by rounded time (this function returns an object)
     const sumOfCustomerByTime = groupCustomersByTime(
         timeList,
         filteredAppointmentsByDate
     );
+
+    // console.log("sumOfCustomerByTime", sumOfCustomerByTime);
 
     // this is to convert the object to an array
     // so that it can be used in the AppointmentCard component properly

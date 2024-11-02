@@ -106,7 +106,7 @@ const StaffInfoDetails = () => {
     ];
 
     const photoUrl = filteredStaffInfo?.photoUrl || "";
-    const tempStaffPhoto = require("@/assets/images/icon.png");
+    const tempStaffPhoto = require("@/assets/images/staffImage.png");
 
     // handle the delete staff process
     // warning modal for delete confirmation or cancelation

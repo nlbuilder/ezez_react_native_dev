@@ -4,8 +4,8 @@ import React from "react";
 import Colors from "@/constants/styles/Colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import {
-    heightPercentageToDP,
-    widthPercentageToDP,
+    heightPercentageToDP as hp,
+    widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 
 const PlusButton = ({ onPress }: { onPress: () => void }) => {
@@ -37,9 +37,9 @@ export default PlusButton;
 
 const styles = StyleSheet.create({
     plusButton: {
-        bottom: heightPercentageToDP(3),
-        width: widthPercentageToDP(15.5),
-        height: heightPercentageToDP(6.9),
+        bottom: hp(3),
+        width: wp(15.5),
+        height: hp(6.9),
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 50,

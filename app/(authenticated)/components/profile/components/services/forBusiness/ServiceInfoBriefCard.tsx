@@ -22,7 +22,7 @@ const ServiceInfoBriefCard: React.FC<ServiceInfoBriefCardProps> = ({
     price,
 }) => {
     const colorScheme = useColorScheme();
-    const tempServicePhoto = require("@/assets/images/icon.png");
+    const tempServicePhoto = require("@/assets/images/serviceImage.png");
 
     const handleViewServiceInfoDetails = () => {
         router.navigate({

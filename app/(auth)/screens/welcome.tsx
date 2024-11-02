@@ -3,26 +3,21 @@ import {
     KeyboardAvoidingView,
     StyleSheet,
     TouchableWithoutFeedback,
+    Image,
 } from "react-native";
-import { Text, View } from "@/constants/styles/Themed";
+import { View } from "@/constants/styles/Themed";
 import React, { useEffect, useState } from "react";
 import * as WebBrowser from "expo-web-browser";
-import { router } from "expo-router";
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { StatusBar } from "expo-status-bar";
+import { LinearGradient } from "expo-linear-gradient";
 
-import {
-    signUpWithEmailPassword,
-    signInWithEmailPassword,
-    signInWithGoogle,
-} from "../utils/utils";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import Colors from "@/constants/styles/Colors";
 import { CalibriText } from "@/constants/styles/StyledText";
 import SignInForm from "../components/authComponents/SignInForm";
-import { StatusBar } from "expo-status-bar";
 
 // this line is to keep the web browser showing inside the app
 WebBrowser.maybeCompleteAuthSession();
@@ -55,9 +50,17 @@ const Welcome = () => {
                             alignItems: "center",
                             justifyContent: "center",
                             flex: 1,
-                            backgroundColor: "rgba(189, 195, 199, 1)",
                         }}
                     >
+                        <Image
+                            source={require("@/assets/images/backgroundImage.png")}
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                                resizeMode: "cover",
+                                position: "absolute",
+                            }}
+                        />
                         <CalibriText
                             style={{
                                 position: "absolute",
@@ -66,15 +69,19 @@ const Welcome = () => {
                                 fontWeight: 500,
                                 alignSelf: "flex-start",
                                 left: wp("10%"),
+                                color: "rgba(32, 3, 96, 1)",
                             }}
                         >
                             Welcome
                         </CalibriText>
 
-                        <View
+                        <LinearGradient
+                            colors={[
+                                "rgba(131, 100, 232, .8)",
+                                "rgba(69, 16, 106, 1)",
+                            ]}
                             style={{
-                                backgroundColor: Colors.light.background,
-                                width: wp("96%"),
+                                width: wp("98%"),
                                 height: hp("55%"),
                                 position: "absolute",
                                 bottom: 0,
@@ -82,7 +89,7 @@ const Welcome = () => {
                             }}
                         >
                             <SignInForm />
-                        </View>
+                        </LinearGradient>
                     </View>
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView>

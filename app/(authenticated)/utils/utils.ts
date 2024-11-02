@@ -195,7 +195,7 @@ export function filterAppointmentsByDate(
     targetDate: string
 ): any[] {
     return appointments.filter(
-        (appointment) => appointment.date === targetDate
+        (appointment) => appointment.dateString === targetDate
     );
 }
 

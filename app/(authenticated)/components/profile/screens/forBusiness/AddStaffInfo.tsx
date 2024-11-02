@@ -9,6 +9,7 @@ import {
     TouchableWithoutFeedback,
     useColorScheme,
     View,
+    StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
@@ -38,7 +39,7 @@ const AddStaffInfo = () => {
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
-    const defaultPassword = "123456";
+    const defaultPassword = "123455";
     const role = "staff";
 
     // def a function to handle createBusinessStaff
@@ -127,53 +128,50 @@ const AddStaffInfo = () => {
 
     return (
         <>
-            <KeyboardAvoidingView behavior="padding">
+            <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View
                         style={{
                             backgroundColor: "transparent",
+                            flex: 1,
                         }}
                     >
                         {/* first name */}
                         <View
-                            style={{
-                                backgroundColor:
-                                    Colors[colorScheme ?? "light"].background,
-                                borderBottomColor:
-                                    colorScheme === "dark"
-                                        ? "white"
-                                        : "rgba(189, 195, 199, 0.8)",
-                                // borderBottomWidth: 1,
-                                justifyContent: "center",
-                                alignSelf: "center",
-                                height: hp("10%"),
-                                width: wp("100%"),
-                            }}
+                            style={[
+                                styles.formContainer,
+                                {
+                                    backgroundColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .background,
+                                    borderColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .separator,
+                                },
+                            ]}
                         >
                             <Text
-                                style={{
-                                    color: Colors[colorScheme ?? "light"].text,
-                                    marginLeft: wp("12.5%"),
-                                    opacity: 0.8,
-                                }}
+                                style={[
+                                    styles.formTitle,
+                                    {
+                                        color: Colors[colorScheme ?? "light"]
+                                            .text,
+                                    },
+                                ]}
                             >
                                 First Name{" "}
                                 <Text style={{ color: "red" }}>*</Text>
                             </Text>
 
                             <View
-                                style={{
-                                    borderColor:
-                                        Colors[colorScheme ?? "light"]
-                                            .tabIconDefault,
-                                    borderWidth: 1.25,
-                                    width: wp("80%"),
-                                    height: hp("4.5%"),
-                                    borderRadius: 10,
-                                    alignSelf: "center",
-                                    justifyContent: "center",
-                                    marginTop: hp("1%"),
-                                }}
+                                style={[
+                                    styles.formContent,
+                                    {
+                                        borderColor:
+                                            Colors[colorScheme ?? "light"]
+                                                .separator,
+                                    },
+                                ]}
                             >
                                 <TextInput
                                     placeholder="Enter first name"
@@ -181,14 +179,14 @@ const AddStaffInfo = () => {
                                         Colors[colorScheme ?? "light"]
                                             .placeholder
                                     }
-                                    style={{
-                                        color: Colors[colorScheme ?? "light"]
-                                            .text,
-                                        marginLeft: wp("6%"),
-                                        fontWeight: "400",
-                                        width: "100%",
-                                        height: "100%",
-                                    }}
+                                    style={[
+                                        styles.formInput,
+                                        {
+                                            color: Colors[
+                                                colorScheme ?? "light"
+                                            ].text,
+                                        },
+                                    ]}
                                     value={firstName}
                                     onChangeText={(value) => {
                                         setFirstName(value);
@@ -199,43 +197,39 @@ const AddStaffInfo = () => {
 
                         {/* last name */}
                         <View
-                            style={{
-                                backgroundColor:
-                                    Colors[colorScheme ?? "light"].background,
-                                borderBottomColor:
-                                    colorScheme === "dark"
-                                        ? "white"
-                                        : "rgba(189, 195, 199, 0.8)",
-                                // borderBottomWidth: 1,
-                                justifyContent: "center",
-                                alignSelf: "center",
-                                height: hp("10%"),
-                                width: wp("100%"),
-                            }}
+                            style={[
+                                styles.formContainer,
+                                {
+                                    backgroundColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .background,
+                                    borderColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .separator,
+                                },
+                            ]}
                         >
                             <Text
-                                style={{
-                                    color: Colors[colorScheme ?? "light"].text,
-                                    marginLeft: wp("12.5%"),
-                                    opacity: 0.8,
-                                }}
+                                style={[
+                                    styles.formTitle,
+                                    {
+                                        color: Colors[colorScheme ?? "light"]
+                                            .text,
+                                    },
+                                ]}
                             >
                                 Last Name
                             </Text>
 
                             <View
-                                style={{
-                                    borderColor:
-                                        Colors[colorScheme ?? "light"]
-                                            .tabIconDefault,
-                                    borderWidth: 1.25,
-                                    width: wp("80%"),
-                                    height: hp("4.5%"),
-                                    borderRadius: 10,
-                                    alignSelf: "center",
-                                    justifyContent: "center",
-                                    marginTop: hp("1%"),
-                                }}
+                                style={[
+                                    styles.formContent,
+                                    {
+                                        borderColor:
+                                            Colors[colorScheme ?? "light"]
+                                                .separator,
+                                    },
+                                ]}
                             >
                                 <TextInput
                                     placeholder="Enter last name"
@@ -243,14 +237,14 @@ const AddStaffInfo = () => {
                                         Colors[colorScheme ?? "light"]
                                             .placeholder
                                     }
-                                    style={{
-                                        color: Colors[colorScheme ?? "light"]
-                                            .text,
-                                        marginLeft: wp("6%"),
-                                        fontWeight: "400",
-                                        width: "100%",
-                                        height: "100%",
-                                    }}
+                                    style={[
+                                        styles.formInput,
+                                        {
+                                            color: Colors[
+                                                colorScheme ?? "light"
+                                            ].text,
+                                        },
+                                    ]}
                                     value={lastName}
                                     onChangeText={(value) => {
                                         setLastName(value);
@@ -261,43 +255,39 @@ const AddStaffInfo = () => {
 
                         {/* email */}
                         <View
-                            style={{
-                                backgroundColor:
-                                    Colors[colorScheme ?? "light"].background,
-                                borderBottomColor:
-                                    colorScheme === "dark"
-                                        ? "white"
-                                        : "rgba(189, 195, 199, 0.8)",
-                                // borderBottomWidth: 1,
-                                justifyContent: "center",
-                                alignSelf: "center",
-                                height: hp("10%"),
-                                width: wp("100%"),
-                            }}
+                            style={[
+                                styles.formContainer,
+                                {
+                                    backgroundColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .background,
+                                    borderColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .separator,
+                                },
+                            ]}
                         >
                             <Text
-                                style={{
-                                    color: Colors[colorScheme ?? "light"].text,
-                                    marginLeft: wp("12.5%"),
-                                    opacity: 0.8,
-                                }}
+                                style={[
+                                    styles.formTitle,
+                                    {
+                                        color: Colors[colorScheme ?? "light"]
+                                            .text,
+                                    },
+                                ]}
                             >
                                 Email <Text style={{ color: "red" }}>*</Text>
                             </Text>
 
                             <View
-                                style={{
-                                    borderColor:
-                                        Colors[colorScheme ?? "light"]
-                                            .tabIconDefault,
-                                    borderWidth: 1.25,
-                                    width: wp("80%"),
-                                    height: hp("4.5%"),
-                                    borderRadius: 10,
-                                    alignSelf: "center",
-                                    justifyContent: "center",
-                                    marginTop: hp("1%"),
-                                }}
+                                style={[
+                                    styles.formContent,
+                                    {
+                                        borderColor:
+                                            Colors[colorScheme ?? "light"]
+                                                .separator,
+                                    },
+                                ]}
                             >
                                 <TextInput
                                     placeholder="Enter last name"
@@ -305,14 +295,14 @@ const AddStaffInfo = () => {
                                         Colors[colorScheme ?? "light"]
                                             .placeholder
                                     }
-                                    style={{
-                                        color: Colors[colorScheme ?? "light"]
-                                            .text,
-                                        marginLeft: wp("6%"),
-                                        fontWeight: "400",
-                                        width: "100%",
-                                        height: "100%",
-                                    }}
+                                    style={[
+                                        styles.formInput,
+                                        {
+                                            color: Colors[
+                                                colorScheme ?? "light"
+                                            ].text,
+                                        },
+                                    ]}
                                     value={email}
                                     onChangeText={(value) => {
                                         setEmail(value);
@@ -324,44 +314,40 @@ const AddStaffInfo = () => {
 
                         {/* phone number */}
                         <View
-                            style={{
-                                backgroundColor:
-                                    Colors[colorScheme ?? "light"].background,
-                                borderBottomColor:
-                                    colorScheme === "dark"
-                                        ? "white"
-                                        : "rgba(189, 195, 199, 0.8)",
-                                // borderBottomWidth: 1,
-                                justifyContent: "center",
-                                alignSelf: "center",
-                                height: hp("10%"),
-                                width: wp("100%"),
-                            }}
+                            style={[
+                                styles.formContainer,
+                                {
+                                    backgroundColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .background,
+                                    borderColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .separator,
+                                },
+                            ]}
                         >
                             <Text
-                                style={{
-                                    color: Colors[colorScheme ?? "light"].text,
-                                    marginLeft: wp("12.5%"),
-                                    opacity: 0.8,
-                                }}
+                                style={[
+                                    styles.formTitle,
+                                    {
+                                        color: Colors[colorScheme ?? "light"]
+                                            .text,
+                                    },
+                                ]}
                             >
                                 Phone Number{" "}
                                 <Text style={{ color: "red" }}>*</Text>
                             </Text>
 
                             <View
-                                style={{
-                                    borderColor:
-                                        Colors[colorScheme ?? "light"]
-                                            .tabIconDefault,
-                                    borderWidth: 1.25,
-                                    width: wp("80%"),
-                                    height: hp("4.5%"),
-                                    borderRadius: 10,
-                                    alignSelf: "center",
-                                    justifyContent: "center",
-                                    marginTop: hp("1%"),
-                                }}
+                                style={[
+                                    styles.formContent,
+                                    {
+                                        borderColor:
+                                            Colors[colorScheme ?? "light"]
+                                                .separator,
+                                    },
+                                ]}
                             >
                                 <TextInput
                                     placeholder="Enter last name"
@@ -369,14 +355,14 @@ const AddStaffInfo = () => {
                                         Colors[colorScheme ?? "light"]
                                             .placeholder
                                     }
-                                    style={{
-                                        color: Colors[colorScheme ?? "light"]
-                                            .text,
-                                        marginLeft: wp("6%"),
-                                        fontWeight: "400",
-                                        width: "100%",
-                                        height: "100%",
-                                    }}
+                                    style={[
+                                        styles.formInput,
+                                        {
+                                            color: Colors[
+                                                colorScheme ?? "light"
+                                            ].text,
+                                        },
+                                    ]}
                                     value={phoneNumber}
                                     onChangeText={(value) => {
                                         setPhoneNumber(value);
@@ -386,8 +372,55 @@ const AddStaffInfo = () => {
                             </View>
                         </View>
 
-                        {/* confirm button */}
+                        {/* Confirm button */}
                         <View
+                            style={{
+                                height: hp("10%"),
+                                backgroundColor:
+                                    Colors[colorScheme ?? "light"].background,
+                                borderBottomEndRadius: 35,
+                                borderBottomStartRadius: 35,
+                            }}
+                        >
+                            <View
+                                style={[
+                                    styles.confirmButton,
+                                    {
+                                        backgroundColor:
+                                            Colors[colorScheme ?? "light"]
+                                                .mainButtonBackgroundColor,
+                                        borderColor:
+                                            Colors[colorScheme ?? "light"]
+                                                .mainButtonBorderColor,
+                                    },
+                                ]}
+                            >
+                                <Pressable
+                                    style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        justifyContent: "center",
+                                    }}
+                                    onPress={() => {
+                                        handleCreateStaffInfo();
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: Colors[
+                                                colorScheme ?? "light"
+                                            ].textButtonColor,
+                                        }}
+                                    >
+                                        Confirm and Continue
+                                    </Text>
+                                </Pressable>
+                            </View>
+                        </View>
+
+                        {/* confirm button */}
+                        {/* <View
                             style={{
                                 backgroundColor:
                                     Colors[colorScheme ?? "light"].background,
@@ -434,7 +467,7 @@ const AddStaffInfo = () => {
                                     </View>
                                 </Pressable>
                             </View>
-                        </View>
+                        </View> */}
                     </View>
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
@@ -443,3 +476,38 @@ const AddStaffInfo = () => {
 };
 
 export default AddStaffInfo;
+
+const styles = StyleSheet.create({
+    formContainer: {
+        // borderBottomWidth: 1,
+        justifyContent: "center",
+        alignSelf: "center",
+        height: hp("9%"),
+        width: wp("100%"),
+    },
+    formTitle: {
+        marginLeft: wp("10%"),
+    },
+    formContent: {
+        borderWidth: 1.25,
+        width: wp("84%"),
+        height: hp("4.5%"),
+        borderRadius: 10,
+        alignSelf: "center",
+        justifyContent: "center",
+        marginTop: hp(".5%"),
+    },
+    formInput: {
+        marginLeft: wp("5%"),
+        width: "100%",
+        height: "100%",
+    },
+    confirmButton: {
+        alignSelf: "center",
+        borderWidth: 1,
+        height: hp("5%"),
+        width: wp("84%"),
+        borderRadius: 10,
+        marginTop: hp("2%"),
+    },
+});

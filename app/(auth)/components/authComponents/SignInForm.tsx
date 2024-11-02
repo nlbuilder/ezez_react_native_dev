@@ -179,11 +179,19 @@ const SignInForm = () => {
                             handleSignInWithEmailPassword();
                         }}
                     >
-                        <Text style={{ textAlign: "center" }}>Continue</Text>
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                color: Colors[colorScheme ?? "light"]
+                                    .textButtonColor,
+                            }}
+                        >
+                            Continue
+                        </Text>
                     </Pressable>
                 </View>
 
-                <Text style={{ marginVertical: 18 }}>or</Text>
+                <Text style={{ marginVertical: 18, color: "white" }}>or</Text>
 
                 {/* SignIn with Google */}
                 <View
@@ -195,7 +203,6 @@ const SignInForm = () => {
                             justifyContent: "center",
                             position: "relative", // ensure overlapping elements align properly
                             marginBottom: hp("2.5%"),
-
                             backgroundColor:
                                 Colors[colorScheme ?? "light"]
                                     .mainButtonBackgroundColor,
@@ -212,6 +219,7 @@ const SignInForm = () => {
                             position: "absolute",
                             left: 15,
                         }}
+                        color={Colors[colorScheme ?? "light"].textButtonColor}
                     />
                     <Pressable
                         style={{
@@ -224,7 +232,13 @@ const SignInForm = () => {
                             handleSignInWithGoogle();
                         }}
                     >
-                        <Text style={{ textAlign: "center" }}>
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                color: Colors[colorScheme ?? "light"]
+                                    .textButtonColor,
+                            }}
+                        >
                             Sign in with Google
                         </Text>
                     </Pressable>
@@ -232,13 +246,21 @@ const SignInForm = () => {
 
                 {/* Dont have an account */}
                 <View style={styles.promptTextComponent}>
-                    <Text>Don't have an account? </Text>
+                    <Text style={{ color: "white" }}>
+                        Don't have an account?{" "}
+                    </Text>
                     <Pressable
                         onPress={() => {
                             router.push("/(auth)/screens/SignUp");
                         }}
                     >
-                        <Text style={{ color: "blue", fontWeight: 500 }}>
+                        <Text
+                            style={{
+                                color: Colors[colorScheme ?? "light"]
+                                    .mainButtonBorderColor,
+                                fontWeight: 500,
+                            }}
+                        >
                             Sign up
                         </Text>
                     </Pressable>
@@ -246,13 +268,25 @@ const SignInForm = () => {
 
                 {/* Forgot your password */}
                 <View style={styles.promptTextComponent}>
-                    <Text>Forgot your password? </Text>
+                    <Text
+                        style={{
+                            color: Colors[colorScheme ?? "light"].background,
+                        }}
+                    >
+                        Forgot your password?{" "}
+                    </Text>
                     <Pressable
                         onPress={() => {
                             router.push("/(auth)/screens/Reset");
                         }}
                     >
-                        <Text style={{ color: "blue", fontWeight: 500 }}>
+                        <Text
+                            style={{
+                                color: Colors[colorScheme ?? "light"]
+                                    .mainButtonBorderColor,
+                                fontWeight: 500,
+                            }}
+                        >
                             Reset
                         </Text>
                     </Pressable>
@@ -270,7 +304,7 @@ const styles = StyleSheet.create({
     authForm: {
         borderWidth: 1,
         height: hp("6%"),
-        width: wp("84%"),
+        width: wp("82%"),
         borderRadius: 35,
         paddingLeft: 10,
         justifyContent: "space-between",
@@ -283,7 +317,7 @@ const styles = StyleSheet.create({
         // borderColor: Colors.light.tabIconDefault,
         borderWidth: 1,
         height: hp("6%"),
-        width: wp("84%"),
+        width: wp("82%"),
         borderRadius: 35,
     },
     promptTextComponent: {

@@ -23,7 +23,6 @@ import DateTimePicker, {
     DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
-import uuid from "react-native-uuid";
 
 import { useAuth } from "../(auth)/components/hooks/useAuth";
 import { useCreateAppointmentAPI } from "./components/appointment/apis/createAppointmentAPI";
@@ -102,14 +101,12 @@ export default function CreateAppointmentModal() {
         }
 
         const newAppointmentData = {
-            appointmentId: uuid.v4() as string,
+            appointmentId: new Date().getTime().toString(),
             businessId: businessId,
             customerId: "1",
             serviceId: "1",
-            dateString: date.toDateString(),
-            dateDate: date,
-            timeString: time.toTimeString(),
-            timeDate: time,
+            date: date.toDateString(),
+            time: time.toTimeString(),
             roundedTime: roundToPreviousHour(time),
             serviceName: chosenService,
             numberOfCustomers: Number(numberOfPeople),
@@ -151,7 +148,7 @@ export default function CreateAppointmentModal() {
                                 alignSelf: "flex-start",
                                 alignItems: "center",
                                 left: wp("5.5%"),
-                                marginTop: hp("1.5%"),
+                                marginTop: hp("2%"),
                             }}
                         >
                             <View
@@ -185,19 +182,16 @@ export default function CreateAppointmentModal() {
                                 alignItems: "center",
                                 justifyContent: "space-between",
                                 width: wp("84%"),
-                                marginTop: hp("1.5%"),
+                                marginTop: hp("2%"),
                             }}
                         >
                             <View style={{ alignItems: "center" }}>
                                 <Text
-                                    style={[
-                                        styles.formTitle,
-                                        {
-                                            color: Colors[
-                                                colorScheme ?? "light"
-                                            ].text,
-                                        },
-                                    ]}
+                                    style={{
+                                        marginBottom: hp(".5%"),
+                                        color: Colors[colorScheme ?? "light"]
+                                            .text,
+                                    }}
                                 >
                                     Phone number
                                 </Text>
@@ -223,14 +217,11 @@ export default function CreateAppointmentModal() {
                             </View>
                             <View style={{ alignItems: "center" }}>
                                 <Text
-                                    style={[
-                                        styles.formTitle,
-                                        {
-                                            color: Colors[
-                                                colorScheme ?? "light"
-                                            ].text,
-                                        },
-                                    ]}
+                                    style={{
+                                        marginBottom: hp(".5%"),
+                                        color: Colors[colorScheme ?? "light"]
+                                            .text,
+                                    }}
                                 >
                                     Customer's name
                                 </Text>
@@ -262,7 +253,7 @@ export default function CreateAppointmentModal() {
                                 alignItems: "center",
                                 justifyContent: "space-between",
                                 width: wp("84%"),
-                                marginTop: hp("1.5%"),
+                                marginTop: hp("2%"),
                             }}
                         >
                             <View
@@ -272,14 +263,11 @@ export default function CreateAppointmentModal() {
                                 }}
                             >
                                 <Text
-                                    style={[
-                                        styles.formTitle,
-                                        {
-                                            color: Colors[
-                                                colorScheme ?? "light"
-                                            ].text,
-                                        },
-                                    ]}
+                                    style={{
+                                        marginBottom: hp(".5%"),
+                                        color: Colors[colorScheme ?? "light"]
+                                            .text,
+                                    }}
                                 >
                                     Service
                                 </Text>
@@ -295,14 +283,11 @@ export default function CreateAppointmentModal() {
 
                             <View style={{ alignItems: "center" }}>
                                 <Text
-                                    style={[
-                                        styles.formTitle,
-                                        {
-                                            color: Colors[
-                                                colorScheme ?? "light"
-                                            ].text,
-                                        },
-                                    ]}
+                                    style={{
+                                        marginBottom: hp(".5%"),
+                                        color: Colors[colorScheme ?? "light"]
+                                            .text,
+                                    }}
                                 >
                                     Number of people
                                 </Text>
@@ -329,18 +314,35 @@ export default function CreateAppointmentModal() {
                             </View>
                         </View>
 
+                        <View
+                            style={{
+                                alignSelf: "flex-end",
+                                paddingHorizontal: wp("15%"),
+                                marginTop: hp("2%"),
+                            }}
+                        >
+                            <Pressable
+                                onPress={() => {
+                                    handleAddMoreService();
+                                }}
+                            >
+                                <AntDesign
+                                    name="pluscircleo"
+                                    size={24}
+                                    color={Colors[colorScheme ?? "light"].tint}
+                                />
+                            </Pressable>
+                        </View>
+
                         {/* note */}
                         <View style={{ width: wp("84%") }}>
                             <Text
-                                style={[
-                                    styles.formTitle,
-                                    {
-                                        color: Colors[colorScheme ?? "light"]
-                                            .text,
-                                        left: wp("2.5%"),
-                                        marginTop: hp("1.5%"),
-                                    },
-                                ]}
+                                style={{
+                                    marginBottom: hp(".5%"),
+                                    color: Colors[colorScheme ?? "light"].text,
+                                    // marginTop: hp("2%"),
+                                    left: wp("2%"),
+                                }}
                             >
                                 Request
                             </Text>
@@ -367,44 +369,8 @@ export default function CreateAppointmentModal() {
                             </View>
                         </View>
 
-                        {/* Confirm button */}
+                        {/* confirm and candel buttons */}
                         <View
-                            style={[
-                                styles.confirmButton,
-                                {
-                                    backgroundColor:
-                                        Colors[colorScheme ?? "light"]
-                                            .mainButtonBackgroundColor,
-                                    borderColor:
-                                        Colors[colorScheme ?? "light"]
-                                            .mainButtonBorderColor,
-                                },
-                            ]}
-                        >
-                            <Pressable
-                                style={{
-                                    width: "100%",
-                                    height: "100%",
-                                    justifyContent: "center",
-                                }}
-                                onPress={() => {
-                                    // handleChangePassword();
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        textAlign: "center",
-                                        color: Colors[colorScheme ?? "light"]
-                                            .textButtonColor,
-                                    }}
-                                >
-                                    Confirm and Continue
-                                </Text>
-                            </Pressable>
-                        </View>
-
-                        {/* confirm buttons */}
-                        {/* <View
                             style={{
                                 marginLeft: wp("50%"),
                                 marginTop: hp("2.5%"),
@@ -436,7 +402,7 @@ export default function CreateAppointmentModal() {
                                     style={{ marginRight: 10 }}
                                 />
                             </Pressable>
-                        </View> */}
+                        </View>
 
                         <StatusBar
                             style={Platform.OS === "ios" ? "light" : "auto"}
@@ -473,12 +439,5 @@ const styles = StyleSheet.create({
     },
     formTitle: {
         marginBottom: hp(".5%"),
-    },
-    confirmButton: {
-        borderWidth: 1,
-        height: hp("6%"),
-        width: wp("84%"),
-        borderRadius: 10,
-        marginTop: hp("2%"),
     },
 });

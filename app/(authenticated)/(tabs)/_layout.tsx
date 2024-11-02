@@ -52,6 +52,10 @@ export default function _layout() {
                     // to prevent a hydration error in React Navigation v6.
                     headerShown: useClientOnlyValue(false, true),
                     tabBarShowLabel: true,
+                    tabBarStyle: {
+                        borderTopColor: Colors[colorScheme ?? "light"].tint,
+                        borderTopWidth: 0.5,
+                    },
                 }}
             >
                 {/* home tab */}

@@ -13,18 +13,20 @@ import {
 } from "react-native-responsive-screen";
 
 import Colors from "@/constants/styles/Colors";
-import {
-    CalibriText,
-    FuzzyBubblesText,
-    TimesRegularText,
-} from "@/constants/styles/StyledText";
+import { Bodoni72Text, CalibriText } from "@/constants/styles/StyledText";
 import { router } from "expo-router";
 
 import { signOut } from "@/app/(auth)/utils/utils";
-import { AntDesign, Entypo, Feather, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useGetBusinessInfoAPI } from "../components/profile/apis/getBusinessInfoAPI";
 
 const Profile = () => {
     const colorScheme = useColorScheme();
+
+    const { currentBusinessInfo, isLoading, refetch } = useGetBusinessInfoAPI();
+
+    const businessName = currentBusinessInfo?.name;
 
     return (
         <>
@@ -32,48 +34,57 @@ const Profile = () => {
                 style={{
                     alignItems: "center",
                     flex: 1,
-                    backgroundColor: Colors[colorScheme ?? "light"].background,
+                    backgroundColor: Colors[colorScheme ?? "light"].separator,
                 }}
             >
-                <View
+                {/* header part */}
+                <LinearGradient
+                    colors={["rgba(131, 100, 232, .8)", "rgba(69, 16, 106, 1)"]}
+                    start={{ x: 1, y: 0 }}
+                    end={{ x: 1, y: 1 }}
                     style={{
-                        borderBottomColor:
-                            Colors[colorScheme ?? "light"].tabIconSelected,
-                        borderLeftColor: "transparent",
-                        borderRightColor:
-                            Colors[colorScheme ?? "light"].tabIconSelected,
-
                         borderWidth: 1.5,
                         width: wp("101%"),
                         height: hp("27.5%"),
                         marginTop: -1,
                         borderBottomEndRadius: 100,
                     }}
-                ></View>
+                ></LinearGradient>
                 <View
                     style={{
                         position: "absolute",
-                        marginVertical: hp("10%"),
+                        marginVertical: hp("9%"),
                         alignItems: "center",
                     }}
                 >
-                    <CalibriText
+                    <Bodoni72Text
                         style={{
-                            fontWeight: 500,
-                            fontSize: 38,
+                            fontSize: 36,
                             marginBottom: 10,
+                            color: Colors[colorScheme ?? "light"]
+                                .textButtonColor,
                         }}
                     >
-                        EzEz
-                    </CalibriText>
+                        Hi{" "}
+                        <Bodoni72Text
+                            style={{
+                                color: Colors[colorScheme ?? "light"]
+                                    .textButtonColor,
+                            }}
+                        >
+                            {businessName}
+                        </Bodoni72Text>
+                    </Bodoni72Text>
 
                     <CalibriText
                         style={{
-                            fontWeight: 400,
                             justifyContent: "center",
+                            color: Colors[colorScheme ?? "light"]
+                                .textButtonColor,
+                            // color: "rgba(32, 3, 96, 1)",
                         }}
                     >
-                        make your daily tasks easier
+                        We make your daily tasks easier
                     </CalibriText>
                 </View>
                 <View
@@ -88,6 +99,7 @@ const Profile = () => {
                                 Colors[colorScheme ?? "light"].tabIconSelected,
                             borderWidth: 1.5,
                             borderRadius: 100,
+                            resizeMode: "center",
                         }}
                     />
                 </View>
@@ -102,45 +114,31 @@ const Profile = () => {
                         }
                     >
                         <View
-                            style={{
-                                backgroundColor:
-                                    colorScheme === "dark"
-                                        ? "white"
-                                        : "transparent",
-                                borderColor:
-                                    Colors[colorScheme ?? "light"]
-                                        .tabIconSelected,
-                                borderWidth: 1.25,
-                                width: wp("80%"),
-                                height: hp("6.9%"),
-                                borderRadius: 35,
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                flexDirection: "row",
-                            }}
+                            style={[
+                                styles.buttonContainer,
+                                {
+                                    backgroundColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .background,
+                                    borderColor:
+                                        Colors[colorScheme ?? "light"].tint,
+                                },
+                            ]}
                         >
-                            <MaterialIcons
-                                name="business-center"
+                            <AntDesign
+                                name="profile"
                                 size={28}
-                                color={
-                                    colorScheme !== "dark"
-                                        ? "rgba(78,147,214,1)"
-                                        : "grey"
-                                }
+                                color={Colors[colorScheme ?? "light"].tint}
                                 style={{ marginLeft: wp("5%") }}
                             />
-                            <Text style={{ fontWeight: 400, fontSize: 16 }}>
+                            <Text style={{ fontSize: 16 }}>
                                 Business Information
                             </Text>
                             <AntDesign
-                                name="arrowright"
+                                name="rightcircleo"
                                 size={28}
-                                color={
-                                    colorScheme !== "dark"
-                                        ? "rgba(78,147,214,1)"
-                                        : "grey"
-                                }
-                                style={{ marginRight: wp("2.5%") }}
+                                color={Colors[colorScheme ?? "light"].tint}
+                                style={{ marginRight: wp("5%") }}
                             />
                         </View>
                     </Pressable>
@@ -156,45 +154,31 @@ const Profile = () => {
                         }
                     >
                         <View
-                            style={{
-                                backgroundColor:
-                                    colorScheme === "dark"
-                                        ? "white"
-                                        : "transparent",
-                                borderColor:
-                                    Colors[colorScheme ?? "light"]
-                                        .tabIconSelected,
-                                borderWidth: 1.25,
-                                width: wp("80%"),
-                                height: hp("6.9%"),
-                                borderRadius: 35,
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                flexDirection: "row",
-                            }}
+                            style={[
+                                styles.buttonContainer,
+                                {
+                                    backgroundColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .background,
+                                    borderColor:
+                                        Colors[colorScheme ?? "light"].tint,
+                                },
+                            ]}
                         >
                             <AntDesign
                                 name="team"
                                 size={28}
-                                color={
-                                    colorScheme !== "dark"
-                                        ? "rgba(78,147,214,1)"
-                                        : "grey"
-                                }
+                                color={Colors[colorScheme ?? "light"].tint}
                                 style={{ marginLeft: wp("5%") }}
                             />
-                            <Text style={{ fontWeight: 400, fontSize: 16 }}>
+                            <Text style={{ fontSize: 16 }}>
                                 Staff Information
                             </Text>
                             <AntDesign
-                                name="arrowright"
+                                name="rightcircleo"
                                 size={28}
-                                color={
-                                    colorScheme !== "dark"
-                                        ? "rgba(78,147,214,1)"
-                                        : "grey"
-                                }
-                                style={{ marginRight: wp("2.5%") }}
+                                color={Colors[colorScheme ?? "light"].tint}
+                                style={{ marginRight: wp("5%") }}
                             />
                         </View>
                     </Pressable>
@@ -210,45 +194,31 @@ const Profile = () => {
                         }
                     >
                         <View
-                            style={{
-                                backgroundColor:
-                                    colorScheme === "dark"
-                                        ? "white"
-                                        : "transparent",
-                                borderColor:
-                                    Colors[colorScheme ?? "light"]
-                                        .tabIconSelected,
-                                borderWidth: 1.25,
-                                width: wp("80%"),
-                                height: hp("6.9%"),
-                                borderRadius: 35,
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                flexDirection: "row",
-                            }}
+                            style={[
+                                styles.buttonContainer,
+                                {
+                                    backgroundColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .background,
+                                    borderColor:
+                                        Colors[colorScheme ?? "light"].tint,
+                                },
+                            ]}
                         >
                             <AntDesign
                                 name="star"
                                 size={28}
-                                color={
-                                    colorScheme !== "dark"
-                                        ? "rgba(78,147,214,1)"
-                                        : "grey"
-                                }
+                                color={Colors[colorScheme ?? "light"].tint}
                                 style={{ marginLeft: wp("5%") }}
                             />
-                            <Text style={{ fontWeight: 400, fontSize: 16 }}>
+                            <Text style={{ fontSize: 16 }}>
                                 Service Information
                             </Text>
                             <AntDesign
-                                name="arrowright"
+                                name="rightcircleo"
                                 size={28}
-                                color={
-                                    colorScheme !== "dark"
-                                        ? "rgba(78,147,214,1)"
-                                        : "grey"
-                                }
-                                style={{ marginRight: wp("2.5%") }}
+                                color={Colors[colorScheme ?? "light"].tint}
+                                style={{ marginRight: wp("5%") }}
                             />
                         </View>
                     </Pressable>
@@ -264,91 +234,91 @@ const Profile = () => {
                         }
                     >
                         <View
-                            style={{
-                                backgroundColor:
-                                    colorScheme === "dark"
-                                        ? "white"
-                                        : "transparent",
-                                borderColor:
-                                    Colors[colorScheme ?? "light"]
-                                        .tabIconSelected,
-                                borderWidth: 1.25,
-                                width: wp("80%"),
-                                height: hp("6.9%"),
-                                borderRadius: 35,
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                flexDirection: "row",
-                            }}
+                            style={[
+                                styles.buttonContainer,
+                                {
+                                    backgroundColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .background,
+                                    borderColor:
+                                        Colors[colorScheme ?? "light"].tint,
+                                },
+                            ]}
                         >
                             <AntDesign
                                 name="setting"
                                 size={28}
-                                color={
-                                    colorScheme !== "dark"
-                                        ? "rgba(78,147,214,1)"
-                                        : "grey"
-                                }
+                                color={Colors[colorScheme ?? "light"].tint}
                                 style={{ marginLeft: wp("5%") }}
                             />
-                            <Text style={{ fontWeight: 400, fontSize: 16 }}>
-                                Settings
-                            </Text>
+                            <Text style={{ fontSize: 16 }}>Settings</Text>
                             <AntDesign
-                                name="arrowright"
+                                name="rightcircleo"
                                 size={28}
-                                color={
-                                    colorScheme !== "dark"
-                                        ? "rgba(78,147,214,1)"
-                                        : "grey"
-                                }
-                                style={{ marginRight: wp("2.5%") }}
+                                color={Colors[colorScheme ?? "light"].tint}
+                                style={{ marginRight: wp("5%") }}
                             />
                         </View>
                     </Pressable>
                 </View>
 
                 {/* sign out */}
-                <View style={{ marginTop: hp("8%") }}>
-                    <View
-                        style={{
-                            backgroundColor:
-                                colorScheme !== "dark"
-                                    ? "white"
-                                    : "transparent",
-                            width: wp("80%"),
-                            marginTop: 15,
-                            alignItems: "center",
-                            flexDirection: "row",
-                        }}
+                <View
+                    style={{
+                        marginTop: hp("2%"),
+                    }}
+                >
+                    <Pressable
+                        onPress={() =>
+                            signOut().then(() => {
+                                router.replace("/(auth)/screens/Welcome");
+                            })
+                        }
                     >
-                        <Feather
-                            name="log-out"
-                            size={28}
-                            color={Colors[colorScheme ?? "light"].text}
-                            style={{
-                                marginLeft: 10,
-                                opacity: 0.8,
-                            }}
-                        />
-                        <Pressable
-                            onPress={() =>
-                                signOut().then(() => {
-                                    router.replace("/(auth)/screens/Welcome");
-                                })
-                            }
+                        <View
+                            style={[
+                                styles.buttonContainer,
+                                {
+                                    backgroundColor:
+                                        Colors[colorScheme ?? "light"].tint,
+                                    // borderColor:
+                                    //     Colors[colorScheme ?? "light"].tint,
+
+                                    borderColor: "transparent",
+                                },
+                            ]}
                         >
+                            <Feather
+                                name="log-out"
+                                size={28}
+                                color={
+                                    Colors[colorScheme ?? "light"]
+                                        .textButtonColor
+                                }
+                                style={{
+                                    marginLeft: wp("5%"),
+                                }}
+                            />
                             <Text
                                 style={{
-                                    fontSize: 14,
-                                    marginLeft: 10,
-                                    color: Colors[colorScheme ?? "light"].text,
+                                    fontSize: 16,
+                                    color: Colors[colorScheme ?? "dark"]
+                                        .textButtonColor,
                                 }}
                             >
                                 Sign Out
                             </Text>
-                        </Pressable>
-                    </View>
+                            <AntDesign
+                                name="rightcircleo"
+                                size={28}
+                                color={
+                                    Colors[colorScheme ?? "light"]
+                                        .textButtonColor
+                                }
+                                style={{ marginRight: wp("5%") }}
+                            />
+                        </View>
+                    </Pressable>
                 </View>
             </View>
         </>
@@ -358,20 +328,22 @@ const Profile = () => {
 export default Profile;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    buttonContainer: {
+        borderWidth: 1.25,
+        width: wp("90%"),
+        height: hp("6.9%"),
+        borderRadius: 15,
         alignItems: "center",
-        justifyContent: "center",
-        height: "20%",
-        width: "90%",
+        justifyContent: "space-between",
+        flexDirection: "row",
     },
-    title: {
-        fontSize: 20,
-        fontWeight: "bold",
-    },
-    separator: {
-        marginVertical: 30,
-        height: 1,
-        width: "80%",
-    },
+    // signOutButton: {
+    //     width: wp("60%"),
+    //     height: hp("6.9%"),
+    //     borderRadius: 45,
+    //     alignSelf: "flex-start",
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    //     flexDirection: "row",
+    // },
 });

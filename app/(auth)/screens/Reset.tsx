@@ -1,37 +1,23 @@
 import {
     Keyboard,
     KeyboardAvoidingView,
-    Pressable,
     StyleSheet,
     TouchableWithoutFeedback,
+    Image,
 } from "react-native";
-import { Text, View } from "@/constants/styles/Themed";
-import React, { useEffect, useState } from "react";
-import * as WebBrowser from "expo-web-browser";
-import { router, useNavigation } from "expo-router";
+import { View } from "@/constants/styles/Themed";
+import React from "react";
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { LinearGradient } from "expo-linear-gradient";
 
-import {
-    signUpWithEmailPassword,
-    signInWithEmailPassword,
-    signInWithGoogle,
-} from "../utils/utils";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import Colors from "@/constants/styles/Colors";
 import { CalibriText } from "@/constants/styles/StyledText";
-import SignInForm from "../components/authComponents/SignInForm";
-import SignUpForm from "../components/authComponents/SignUpForm";
 import ResetForm from "../components/authComponents/ResetForm";
+import BackgroundImage from "@/assets/images/backgroundImage.png";
 
 const Reset = () => {
-    const navigation = useNavigation();
-    const email = "xfactor@yahoo.com";
-    const password = "123456";
-    const name = "Hello";
-
     return (
         <>
             <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
@@ -44,6 +30,16 @@ const Reset = () => {
                             backgroundColor: "rgba(189, 195, 199, .8)",
                         }}
                     >
+                        <Image
+                            source={BackgroundImage}
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                                resizeMode: "cover",
+                                position: "absolute",
+                            }}
+                        />
+
                         <CalibriText
                             style={{
                                 position: "absolute",
@@ -52,15 +48,19 @@ const Reset = () => {
                                 fontWeight: 500,
                                 alignSelf: "flex-start",
                                 left: wp("15%"),
+                                color: "rgba(32, 3, 96, 1)",
                             }}
                         >
                             Reset
                         </CalibriText>
 
-                        <View
+                        <LinearGradient
+                            colors={[
+                                "rgba(131, 100, 232, .8)",
+                                "rgba(69, 16, 106, 1)",
+                            ]}
                             style={{
-                                backgroundColor: Colors.light.background,
-                                width: wp("96%"),
+                                width: wp("98%"),
                                 height: hp("55%"),
                                 position: "absolute",
                                 bottom: 0,
@@ -68,7 +68,7 @@ const Reset = () => {
                             }}
                         >
                             <ResetForm />
-                        </View>
+                        </LinearGradient>
                     </View>
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView>

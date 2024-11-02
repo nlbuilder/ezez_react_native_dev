@@ -44,7 +44,7 @@ export default function EditAppointmentScreen() {
         : {};
 
     // handle the Date picker
-    const [date, setDate] = useState(new Date(appointmentDetails.date));
+    const [date, setDate] = useState(new Date(appointmentDetails.dateString));
     const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
         if (selectedDate) {
             setDate(selectedDate);
@@ -52,10 +52,13 @@ export default function EditAppointmentScreen() {
         }
     };
 
+    console.log(appointmentDetails.timeString);
+
     // handle the Time picker
     const [time, setTime] = useState(
-        parseTimeStringToDate(appointmentDetails.time)
+        parseTimeStringToDate(appointmentDetails.timeString)
     );
+
     const onChangeTime = (event: DateTimePickerEvent, selectedTime?: Date) => {
         if (selectedTime) {
             setTime(selectedTime);
@@ -122,8 +125,10 @@ export default function EditAppointmentScreen() {
             businessId: appointmentDetails.businessId,
             customerId: "1",
             serviceId: "1",
-            date: date.toDateString(),
-            time: time.toTimeString(),
+            dateString: date.toDateString(),
+            dateDate: date,
+            timeString: time.toTimeString(),
+            timeDate: time,
             roundedTime: roundToPreviousHour(time),
             serviceName: chosenService,
             numberOfCustomers: Number(numberOfPeople),
@@ -180,7 +185,7 @@ export default function EditAppointmentScreen() {
                                     alignSelf: "flex-start",
                                     alignItems: "center",
                                     left: wp("5.5%"),
-                                    marginTop: hp("2%"),
+                                    marginTop: hp("1.5%"),
                                 }}
                             >
                                 <View
@@ -220,17 +225,19 @@ export default function EditAppointmentScreen() {
                                     alignItems: "center",
                                     justifyContent: "space-between",
                                     width: wp("84%"),
-                                    marginTop: hp("2%"),
+                                    marginTop: hp("1.5%"),
                                 }}
                             >
                                 <View style={{ alignItems: "center" }}>
                                     <Text
-                                        style={{
-                                            marginBottom: hp(".5%"),
-                                            color: Colors[
-                                                colorScheme ?? "light"
-                                            ].text,
-                                        }}
+                                        style={[
+                                            styles.formTitle,
+                                            {
+                                                color: Colors[
+                                                    colorScheme ?? "light"
+                                                ].text,
+                                            },
+                                        ]}
                                     >
                                         Phone number
                                     </Text>
@@ -258,12 +265,14 @@ export default function EditAppointmentScreen() {
                                 </View>
                                 <View style={{ alignItems: "center" }}>
                                     <Text
-                                        style={{
-                                            marginBottom: hp(".5%"),
-                                            color: Colors[
-                                                colorScheme ?? "light"
-                                            ].text,
-                                        }}
+                                        style={[
+                                            styles.formTitle,
+                                            {
+                                                color: Colors[
+                                                    colorScheme ?? "light"
+                                                ].text,
+                                            },
+                                        ]}
                                     >
                                         Customer's name
                                     </Text>
@@ -297,7 +306,7 @@ export default function EditAppointmentScreen() {
                                     alignItems: "center",
                                     justifyContent: "space-between",
                                     width: wp("84%"),
-                                    marginTop: hp("2%"),
+                                    marginTop: hp("1.5%"),
                                 }}
                             >
                                 <View
@@ -307,12 +316,14 @@ export default function EditAppointmentScreen() {
                                     }}
                                 >
                                     <Text
-                                        style={{
-                                            marginBottom: hp(".5%"),
-                                            color: Colors[
-                                                colorScheme ?? "light"
-                                            ].text,
-                                        }}
+                                        style={[
+                                            styles.formTitle,
+                                            {
+                                                color: Colors[
+                                                    colorScheme ?? "light"
+                                                ].text,
+                                            },
+                                        ]}
                                     >
                                         Service
                                     </Text>
@@ -330,12 +341,14 @@ export default function EditAppointmentScreen() {
 
                                 <View style={{ alignItems: "center" }}>
                                     <Text
-                                        style={{
-                                            marginBottom: hp(".5%"),
-                                            color: Colors[
-                                                colorScheme ?? "light"
-                                            ].text,
-                                        }}
+                                        style={[
+                                            styles.formTitle,
+                                            {
+                                                color: Colors[
+                                                    colorScheme ?? "light"
+                                                ].text,
+                                            },
+                                        ]}
                                     >
                                         Number of people
                                     </Text>
@@ -365,13 +378,16 @@ export default function EditAppointmentScreen() {
                             {/* note */}
                             <View style={{ width: wp("84%") }}>
                                 <Text
-                                    style={{
-                                        marginBottom: hp(".5%"),
-                                        color: Colors[colorScheme ?? "light"]
-                                            .text,
-                                        marginTop: hp("2%"),
-                                        left: wp("2%"),
-                                    }}
+                                    style={[
+                                        styles.formTitle,
+                                        {
+                                            color: Colors[
+                                                colorScheme ?? "light"
+                                            ].text,
+                                            left: wp("2.5%"),
+                                            marginTop: hp("1.5%"),
+                                        },
+                                    ]}
                                 >
                                     Request
                                 </Text>
@@ -397,8 +413,45 @@ export default function EditAppointmentScreen() {
                                 </View>
                             </View>
 
-                            {/* confirm and candel buttons */}
+                            {/* Confirm button */}
                             <View
+                                style={[
+                                    styles.confirmButton,
+                                    {
+                                        backgroundColor:
+                                            Colors[colorScheme ?? "light"]
+                                                .mainButtonBackgroundColor,
+                                        borderColor:
+                                            Colors[colorScheme ?? "light"]
+                                                .mainButtonBorderColor,
+                                    },
+                                ]}
+                            >
+                                <Pressable
+                                    style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        justifyContent: "center",
+                                    }}
+                                    onPress={() => {
+                                        // handleChangePassword();
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: Colors[
+                                                colorScheme ?? "light"
+                                            ].textButtonColor,
+                                        }}
+                                    >
+                                        Confirm and Continue
+                                    </Text>
+                                </Pressable>
+                            </View>
+
+                            {/* confirm and candel buttons */}
+                            {/* <View
                                 style={{
                                     marginLeft: wp("50%"),
                                     marginTop: hp("2.5%"),
@@ -433,7 +486,7 @@ export default function EditAppointmentScreen() {
                                         style={{ marginRight: 10 }}
                                     />
                                 </Pressable>
-                            </View>
+                            </View> */}
 
                             {/* <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} /> */}
                         </View>
@@ -480,5 +533,12 @@ const styles = StyleSheet.create({
     },
     formTitle: {
         marginBottom: hp(".5%"),
+    },
+    confirmButton: {
+        borderWidth: 1,
+        height: hp("6%"),
+        width: wp("84%"),
+        borderRadius: 10,
+        marginTop: hp("2%"),
     },
 });

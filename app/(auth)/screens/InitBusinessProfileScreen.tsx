@@ -10,6 +10,7 @@ import {
     TouchableWithoutFeedback,
     KeyboardAvoidingView,
     Keyboard,
+    useColorScheme,
 } from "react-native";
 import { router } from "expo-router";
 import {
@@ -37,6 +38,8 @@ import initBusinessHour from "@/init/initBusinessHours.json";
 import initServiceOptions from "@/init/initServiceOptions.json";
 
 const InitBusinessProfileScreen = () => {
+    const colorScheme = useColorScheme();
+
     const {
         businessHourInfo,
         refetch: refetchBusinessHourInfo,
@@ -247,7 +250,15 @@ const InitBusinessProfileScreen = () => {
         <>
             <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <SafeAreaView style={styles.container}>
+                    <SafeAreaView
+                        style={[
+                            styles.container,
+                            {
+                                backgroundColor:
+                                    Colors[colorScheme ?? "light"].background,
+                            },
+                        ]}
+                    >
                         <View style={styles.content}>
                             {/* Title */}
                             <View style={styles.titleContainer}>
@@ -361,12 +372,32 @@ const InitBusinessProfileScreen = () => {
                         {/* create profile button */}
                         <View>
                             <Pressable
-                                style={styles.button}
+                                style={[
+                                    styles.button,
+                                    {
+                                        borderColor:
+                                            Colors[colorScheme ?? "light"]
+                                                .mainButtonBackgroundColor,
+                                        borderWidth: 1,
+                                        backgroundColor:
+                                            Colors[colorScheme ?? "light"]
+                                                .mainButtonBackgroundColor,
+                                    },
+                                ]}
                                 onPress={() => {
                                     handleCreateBusinessProfile();
                                 }}
                             >
-                                <Text style={styles.buttonText}>
+                                <Text
+                                    style={[
+                                        styles.buttonText,
+                                        {
+                                            color: Colors[
+                                                colorScheme ?? "light"
+                                            ].background,
+                                        },
+                                    ]}
+                                >
                                     Create profile
                                 </Text>
                             </Pressable>
@@ -437,7 +468,6 @@ export default InitBusinessProfileScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
     },
     content: {
         justifyContent: "center",
@@ -501,15 +531,10 @@ const styles = StyleSheet.create({
         // borderRadius: 15,
     },
     button: {
-        // backgroundColor: "blue",
-        borderColor: "rgba(189, 195, 199, 0.8)",
-        borderWidth: 1,
-        // paddingHorizontal: wp("10%"),
         width: wp("45%"),
         height: hp("4.5%"),
         borderRadius: 25,
         marginVertical: hp("8%"),
-        // marginBottom: hp("10%"),
         alignSelf: "center",
         alignItems: "center",
         justifyContent: "center",

@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
         opacity: 1,
     },
     button: {
-        height: hp("6%"),
+        height: hp("6%"), // this should be equivalent to the height of the appointmentForm in CreateAppointmentModal.tsx
         justifyContent: "space-between",
         borderWidth: 1,
         backgroundColor: "#fff",

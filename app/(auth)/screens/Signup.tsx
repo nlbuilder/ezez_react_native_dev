@@ -1,26 +1,26 @@
 import {
     Keyboard,
     KeyboardAvoidingView,
-    Pressable,
     StyleSheet,
     TouchableWithoutFeedback,
-    Text,
-    StatusBar,
+    useColorScheme,
+    Image,
 } from "react-native";
 import { View } from "@/constants/styles/Themed";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { LinearGradient } from "expo-linear-gradient";
 
-import Colors from "@/constants/styles/Colors";
 import { CalibriText } from "@/constants/styles/StyledText";
 import SignUpForm from "../components/authComponents/SignUpForm";
-import { AntDesign } from "@expo/vector-icons";
-import { router } from "expo-router";
+import BackgroundImage from "@/assets/images/backgroundImage.png";
 
 const SignUp = () => {
+    const colorScheme = useColorScheme();
+
     // const [keyboardVisible, setKeyboardVisible] = useState(false);
 
     // useEffect(() => {
@@ -51,6 +51,15 @@ const SignUp = () => {
                             backgroundColor: "rgba(189, 195, 199, 1)",
                         }}
                     >
+                        <Image
+                            source={BackgroundImage}
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                                resizeMode: "cover",
+                                position: "absolute",
+                            }}
+                        />
                         <CalibriText
                             style={{
                                 position: "absolute",
@@ -59,15 +68,19 @@ const SignUp = () => {
                                 fontWeight: 500,
                                 alignSelf: "flex-start",
                                 left: wp("10%"),
+                                color: "rgba(32, 3, 96, 1)",
                             }}
                         >
                             SignUp
                         </CalibriText>
 
-                        <View
+                        <LinearGradient
+                            colors={[
+                                "rgba(131, 100, 232, .8)",
+                                "rgba(69, 16, 106, 1)",
+                            ]}
                             style={{
-                                backgroundColor: Colors.light.background,
-                                width: wp("96%"),
+                                width: wp("98%"),
                                 height: hp("55%"),
                                 position: "absolute",
                                 bottom: 0,
@@ -75,40 +88,8 @@ const SignUp = () => {
                             }}
                         >
                             <SignUpForm />
-                        </View>
+                        </LinearGradient>
                     </View>
-
-                    {/* Back button */}
-                    {/* <View
-                        style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            position: "absolute",
-                            // top: hp("28%"),
-                            alignSelf: "flex-start",
-                            left: wp("2.5%"),
-                        }}
-                    >
-                        <Pressable
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                            }}
-                            onPress={() => {
-                                router.push({
-                                    pathname: "/(auth)/screens/Welcome",
-                                });
-                            }}
-                        >
-                            <AntDesign
-                                name="arrowleft"
-                                size={24}
-                                color="black"
-                                style={{ marginRight: 8 }}
-                            />
-                            <Text>Back</Text>
-                        </Pressable>
-                    </View> */}
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
         </>

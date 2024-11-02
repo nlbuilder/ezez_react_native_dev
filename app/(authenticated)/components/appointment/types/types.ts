@@ -29,8 +29,10 @@ export interface AppointmentDetailsProps {
     businessId: string;
     customerId: string;
     serviceId: string;
-    date: string;
-    time: string;
+    dateString: string;
+    dateDate: Date;
+    timeString: string;
+    timeDate: Date;
     roundedTime: string;
     serviceName: string;
     numberOfCustomers: number;

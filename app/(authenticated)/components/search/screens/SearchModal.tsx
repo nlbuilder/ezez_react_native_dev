@@ -22,10 +22,6 @@ import { ModalProps } from "../types/types";
 import { useGetAllAppointmentsAPI } from "../../appointment/apis/getAllAppointmentsInfoAPI";
 import { AppointmentDetailsProps } from "../../appointment/types/types";
 import { useNavigation } from "expo-router";
-import {
-    filterAppointmentsByDate,
-    formatDateToString,
-} from "@/app/(authenticated)/utils/utils";
 
 // Custom hook for debouncing
 function useDebouncedValue<T>(value: T, delay: number) {
@@ -34,7 +30,7 @@ function useDebouncedValue<T>(value: T, delay: number) {
     useEffect(() => {
         const handler = setTimeout(() => setDebouncedValue(value), delay);
 
-        return () => clearTimeout(handler); // Cleanup timeout on unmount or when value changes
+        return () => clearTimeout(handler);
     }, [value, delay]);
 
     return debouncedValue;
@@ -59,38 +55,46 @@ const SearchModal = ({ visible, onClose }: ModalProps) => {
 
     const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
 
-    // Effect to handle search based on debounced input
+    const [isUpcoming, setIsUpcoming] = useState(true);
+
+    // Effect to handle search based on debounced input and toggle state
     useEffect(() => {
         handleSearch(debouncedSearchQuery);
-    }, [debouncedSearchQuery]);
+    }, [debouncedSearchQuery, isUpcoming]);
 
     const handleSearch = (query: string) => {
         if (!query.trim()) {
-            // Reset results if query is empty
             setFilteredAppointment([]);
             setIsAppointmentFound(false);
             return;
         }
 
-        const filteredData = Array.isArray(allAppointmentInfo)
-            ? allAppointmentInfo.filter((appointment) =>
-                  appointment.customerPhoneNumber.includes(query)
-              )
-            : [];
+        const todayString = new Date().toDateString();
+        let filteredData: AppointmentDetailsProps[] = [];
 
-        const today = new Date();
-        const todayString = formatDateToString(today.toString());
-
-        console.log("todayString", todayString);
-
-        console.log("filteredData", filteredData);
-        // const dateString = formatDateToString(new Date.toString());
-
-        // filter the appointments by date
-        // const filteredAppointmentsByDate = filterAppointmentsByDate(
-        //     filteredData,
-        //     dateString
-        // );
+        if (isUpcoming) {
+            const filteredDataByDate = Array.isArray(allAppointmentInfo)
+                ? allAppointmentInfo.filter((appointment) => {
+                      const appointmentDate = appointment.dateString as string;
+                      return appointmentDate >= todayString;
+                  })
+                : [];
+            filteredData = filteredDataByDate.filter((appointment) => {
+                const phoneNumber = appointment.customerPhoneNumber as string;
+                return phoneNumber.includes(query);
+            });
+        } else {
+            const filteredDataByDate = Array.isArray(allAppointmentInfo)
+                ? allAppointmentInfo.filter((appointment) => {
+                      const appointmentDate = appointment.dateString as string;
+                      return appointmentDate < todayString;
+                  })
+                : [];
+            filteredData = filteredDataByDate.filter((appointment) => {
+                const phoneNumber = appointment.customerPhoneNumber as string;
+                return phoneNumber.includes(query);
+            });
+        }
 
         setFilteredAppointment(filteredData);
         setIsAppointmentFound(filteredData.length > 0);
@@ -103,19 +107,19 @@ const SearchModal = ({ visible, onClose }: ModalProps) => {
     }) => (
         <View style={styles.card}>
             <Text style={styles.detailsAppointmentInfo}>
-                📅 Date: {item.date}
+                📅 Date: {item.dateString}
             </Text>
             <Text style={styles.detailsAppointmentInfo}>
                 ⏰ Time: {item.roundedTime.toString()}
             </Text>
             <Text style={styles.detailsAppointmentInfo}>
-                💼 Service: {item.serviceName}
+                Service: {item.serviceName}
             </Text>
             <Text style={styles.detailsAppointmentInfo}>
-                👥 Customers: {item.numberOfCustomers} people
+                Customers: {item.numberOfCustomers} people
             </Text>
             <Text style={styles.detailsAppointmentInfo}>
-                🙍‍♂️ Name: {item.customerName}
+                Name: {item.customerName}
             </Text>
             <Text style={styles.detailsAppointmentInfo}>
                 📞 Phone: {item.customerPhoneNumber}
@@ -142,11 +146,7 @@ const SearchModal = ({ visible, onClose }: ModalProps) => {
                         ]}
                     >
                         {/* Header */}
-                        <View
-                            style={{
-                                marginVertical: hp("1.5%"),
-                            }}
-                        >
+                        <View style={{ marginVertical: hp("1.5%") }}>
                             <Text style={{ fontSize: 18, fontWeight: "500" }}>
                                 Search Appointment
                             </Text>
@@ -158,12 +158,14 @@ const SearchModal = ({ visible, onClose }: ModalProps) => {
                                 onPress={() => {
                                     onClose();
                                     setSearchQuery("");
+                                    setIsUpcoming(true);
                                 }}
                             >
                                 <AntDesign
                                     name="left"
                                     size={28}
                                     color={Colors[colorScheme ?? "light"].tint}
+                                    style={{ marginRight: wp("1.5%") }}
                                 />
                             </Pressable>
                             <TextInput
@@ -173,15 +175,74 @@ const SearchModal = ({ visible, onClose }: ModalProps) => {
                                 onChangeText={setSearchQuery}
                                 keyboardType="phone-pad"
                             />
+                        </View>
+
+                        {/* Toggle Between Past and Upcoming */}
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                borderRadius: 20,
+                                backgroundColor: Colors.light.tabIconDefault,
+                                width: wp("48%"),
+                                height: hp("4%"),
+                                alignSelf: "flex-end",
+                                marginHorizontal: wp("10%"),
+                            }}
+                        >
                             <Pressable
-                                onPress={() => handleSearch(searchQuery)}
+                                onPress={() => setIsUpcoming(false)}
+                                style={{
+                                    flex: 1,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    paddingVertical: hp("1%"),
+                                    backgroundColor: !isUpcoming
+                                        ? Colors.light.tint
+                                        : "transparent",
+                                    borderRadius: 20,
+                                }}
                             >
-                                <AntDesign
-                                    name="rightcircle"
-                                    size={28}
-                                    color={Colors[colorScheme ?? "light"].tint}
-                                    style={{ marginLeft: wp("2%") }}
-                                />
+                                <Text
+                                    style={{
+                                        color: !isUpcoming
+                                            ? Colors.light.background
+                                            : Colors.light.text,
+                                        fontWeight: !isUpcoming
+                                            ? "bold"
+                                            : "normal",
+                                    }}
+                                >
+                                    Past
+                                </Text>
+                            </Pressable>
+
+                            <Pressable
+                                onPress={() => setIsUpcoming(true)}
+                                style={{
+                                    flex: 1,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    paddingVertical: hp("1%"),
+                                    backgroundColor: isUpcoming
+                                        ? Colors.light.tint
+                                        : "transparent",
+                                    borderRadius: 20,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: isUpcoming
+                                            ? Colors.light.background
+                                            : Colors.light.text,
+                                        fontWeight: isUpcoming
+                                            ? "bold"
+                                            : "normal",
+                                    }}
+                                >
+                                    Upcoming
+                                </Text>
                             </Pressable>
                         </View>
 
@@ -213,9 +274,10 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        width: wp("72.5%"),
-        height: hp("4.5%"),
+        width: wp("80%"),
+        height: hp("5%"),
         marginBottom: hp("2.5%"),
+        right: wp("2.5%"),
     },
     input: {
         width: "100%",

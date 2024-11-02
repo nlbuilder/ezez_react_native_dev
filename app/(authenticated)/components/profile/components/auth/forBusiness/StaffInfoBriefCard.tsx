@@ -22,7 +22,7 @@ const StaffInfoForBusinessCard: React.FC<StaffInfoForBusinessCardProps> = ({
     phoneNumber,
 }) => {
     const colorScheme = useColorScheme();
-    const tempStaffPhoto = require("@/assets/images/icon.png");
+    const tempStaffPhoto = require("@/assets/images/staffImage.png");
 
     const handleViewStaffInfoDetails = () => {
         router.navigate({

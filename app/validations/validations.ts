@@ -103,7 +103,7 @@ export const validateSignUpForm = (
 };
 
 // def a function to validate reset password form
-export const validateResetForm = (
+export const validateEmailFormat = (
     email: string
 ): { isValid: boolean; message: string } => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+/;

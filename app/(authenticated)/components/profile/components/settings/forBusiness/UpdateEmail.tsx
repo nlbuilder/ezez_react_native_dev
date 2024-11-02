@@ -1,35 +1,50 @@
 import {
+    Alert,
+    Keyboard,
+    KeyboardAvoidingView,
+    Pressable,
     StyleSheet,
     Text,
-    View,
     TextInput,
-    Pressable,
-    useColorScheme,
-    Alert,
     TouchableWithoutFeedback,
-    KeyboardAvoidingView,
-    Keyboard,
+    useColorScheme,
+    View,
 } from "react-native";
-import React, { useState } from "react";
-import Colors from "@/constants/styles/Colors";
+import React, { useLayoutEffect, useState } from "react";
+import { useNavigation } from "expo-router";
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { router } from "expo-router";
-import { AntDesign } from "@expo/vector-icons";
+import { updateEmail } from "firebase/auth";
 
-import { resetPassword } from "../../utils/utils";
+import Colors from "@/constants/styles/Colors";
+import { useAuth } from "@/app/(auth)/components/hooks/useAuth";
 import NotificationModal from "@/app/(authenticated)/utils/modals/NotificationModal";
 import { validateEmailFormat } from "@/app/validations/validations";
 
-const ResetForm = () => {
+const UpdateEmail = () => {
+    const navigation = useNavigation();
     const colorScheme = useColorScheme();
+    const { user } = useAuth() as any;
+
+    // handle the header when this screen is rendered
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: "Update Email",
+            headerBackTitle: "Back",
+            presentation: "card",
+        });
+    }, [navigation]);
+
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const handleOnOK = () => {
+        setShowModal(false);
+    };
 
     const [email, setEmail] = useState<string>("");
-    const [showModal, setShowModal] = useState<boolean>(false);
 
-    const handleResetPassword = async () => {
+    const handleUpdateEmail = async () => {
         const { isValid, message } = validateEmailFormat(email);
 
         if (!isValid) {
@@ -38,21 +53,22 @@ const ResetForm = () => {
             return;
         }
 
-        if (email) {
-            try {
-                await resetPassword(email);
-                setShowModal(true);
-            } catch (error) {
-                console.error("Error when resetting password: ", error);
-            }
-        }
-    };
+        try {
+            if (email === user?.email) {
+                return;
+            } else {
+                if (user) {
+                    await updateEmail(user, email);
+                }
 
-    const handleOnOK = () => {
-        setShowModal(false);
-        router.push({
-            pathname: "/(auth)/screens/Welcome",
-        });
+                setShowModal(true);
+            }
+        } catch (error) {
+            console.log(
+                "Error in handleUpdateEmail: [frontend error message]",
+                error
+            );
+        }
     };
 
     return (
@@ -61,9 +77,10 @@ const ResetForm = () => {
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View
                         style={{
+                            // flex: 1,
+                            paddingTop: hp("5%"),
                             alignItems: "center",
                             justifyContent: "center",
-                            top: hp("2.5%"),
                         }}
                     >
                         {/* Email */}
@@ -94,10 +111,11 @@ const ResetForm = () => {
                                 }}
                                 value={email}
                                 onChangeText={(value) => setEmail(value)}
+                                keyboardType="email-address"
                             />
                         </View>
 
-                        {/* Agree And Continue button */}
+                        {/* Continue button */}
                         <View
                             style={[
                                 styles.authButton,
@@ -118,7 +136,7 @@ const ResetForm = () => {
                                     justifyContent: "center",
                                 }}
                                 onPress={() => {
-                                    handleResetPassword();
+                                    handleUpdateEmail();
                                 }}
                             >
                                 <Text
@@ -128,81 +146,37 @@ const ResetForm = () => {
                                             .textButtonColor,
                                     }}
                                 >
-                                    Reset
+                                    Confirm and Continue
                                 </Text>
                             </Pressable>
                         </View>
-
-                        {/* Back button */}
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                position: "absolute",
-                                top: hp("44%"),
-                                alignSelf: "flex-start",
-                                left: wp("5%"),
-                            }}
-                        >
-                            <Pressable
-                                style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    paddingHorizontal: wp("2.5%"),
-                                }}
-                                onPress={() => {
-                                    router.push({
-                                        pathname: "/(auth)/screens/Welcome",
-                                    });
-                                }}
-                            >
-                                <AntDesign
-                                    name="arrowleft"
-                                    size={24}
-                                    color={
-                                        Colors[colorScheme ?? "light"]
-                                            .textButtonColor
-                                    }
-                                    style={{ marginRight: 8 }}
-                                />
-                                <Text
-                                    style={{
-                                        color: Colors[colorScheme ?? "light"]
-                                            .textButtonColor,
-                                    }}
-                                >
-                                    Back
-                                </Text>
-                            </Pressable>
-                        </View>
-
-                        {/* Notification modal */}
-                        <NotificationModal
-                            title={
-                                "A password reset email has been sent to your inbox. Please check your email and follow the instructions to reset your password."
-                            }
-                            visible={showModal}
-                            onOK={handleOnOK}
-                        />
                     </View>
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
+
+            <NotificationModal
+                title={
+                    "We have sent a verification email to your new email address. Please verify your email address to continue."
+                }
+                visible={showModal}
+                onOK={handleOnOK}
+            />
         </>
     );
 };
 
-export default ResetForm;
+export default UpdateEmail;
 
 const styles = StyleSheet.create({
     authForm: {
-        backgroundColor: Colors.light.background,
-        borderColor: Colors.light.tabIconDefault,
         borderWidth: 1,
         height: hp("6%"),
         width: wp("84%"),
         borderRadius: 35,
         paddingLeft: 10,
-        justifyContent: "center",
+        justifyContent: "space-between",
+        flexDirection: "row",
+        alignItems: "center",
         marginBottom: hp("1.5%"),
     },
     authButton: {
@@ -213,13 +187,5 @@ const styles = StyleSheet.create({
         width: wp("84%"),
         borderRadius: 35,
         top: hp("1.5%"),
-    },
-    promptTextComponent: {
-        flexDirection: "row",
-        alignSelf: "flex-start",
-        justifyContent: "center",
-        alignItems: "center",
-        marginVertical: 10,
-        left: 15,
     },
 });

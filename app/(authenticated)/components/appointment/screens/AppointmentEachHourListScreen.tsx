@@ -15,7 +15,7 @@ import { ModalProps } from "../types/types";
 import { useGetAllAppointmentsAPI } from "../apis/getAllAppointmentsInfoAPI";
 import {
     filterAppointmentsByDate,
-    formatDateToString,
+    // formatDateToString,
     generateTimeList,
     groupCustomersByTime,
     groupCustomersByTimeAndService,
@@ -66,7 +66,9 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
         : [];
 
     const { date } = useDate();
-    const dateString = formatDateToString(date.toISOString());
+    // const dateString = formatDateToString(date.toISOString());
+
+    const dateString = date.toDateString();
 
     // filter the appointments by date
     const filteredAppointmentsByDate = filterAppointmentsByDate(
@@ -261,7 +263,7 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
                         renderItem={({ item }) => (
                             <AppointmentDetails
                                 appointmentDetails={item}
-                                onDelete={handleDeleteAppointment}
+                                // onDelete={handleDeleteAppointment}
                             />
                         )}
                     />

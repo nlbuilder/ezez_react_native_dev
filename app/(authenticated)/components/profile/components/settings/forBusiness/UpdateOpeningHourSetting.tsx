@@ -5,8 +5,7 @@ import {
     useColorScheme,
     View,
 } from "react-native";
-import React, { useEffect, useLayoutEffect, useState } from "react";
-import { AntDesign } from "@expo/vector-icons";
+import React, { useLayoutEffect, useState } from "react";
 
 import {
     widthPercentageToDP as wp,
@@ -16,7 +15,7 @@ import DateTimePicker, {
     DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import Colors from "@/constants/styles/Colors";
-import { router, useNavigation } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 
 import {
     getTimeZoneName,
@@ -24,7 +23,6 @@ import {
     parseTimeToDate,
 } from "@/app/(authenticated)/utils/utils";
 import { useUpdateBusinessHourAPI } from "../../../apis/updateBusinessHourAPI";
-import { useGetBusinessHourAPI } from "../../../apis/getBusinessHourAPI";
 import { useAuth } from "@/app/(auth)/components/hooks/useAuth";
 
 const OpeningHourSetting = () => {
@@ -38,29 +36,28 @@ const OpeningHourSetting = () => {
         navigation.setOptions({
             headerTitle: "Edit Opening Hours",
             headerBackTitle: "Back",
-            // presentation: "modal",
+            presentation: "card",
         });
     }, [navigation]);
+
+    const localParams = useLocalSearchParams();
+
+    const startTime0 = Array.isArray(localParams.startTime)
+        ? localParams.startTime[0]
+        : localParams.startTime;
+    const finishTime0 = Array.isArray(localParams.finishTime)
+        ? localParams.finishTime[0]
+        : localParams.finishTime;
 
     // get the time zone of the device
     const timeZoneName = getTimeZoneName();
 
-    // make use of the getBusinessHour API
-    const { businessHourInfo, refetch: refetchGetBusinessHourInfo } =
-        useGetBusinessHourAPI();
+    const startTimeDate = parseTimeToDate(startTime0, timeZoneName);
 
-    const openingTime = parseTimeToDate(
-        (businessHourInfo?.startTime as string) || "10:00",
-        timeZoneName
-    );
-
-    const closingTime = parseTimeToDate(
-        (businessHourInfo?.finishTime as string) || "19:00",
-        timeZoneName
-    );
+    const closingTime = parseTimeToDate(finishTime0, timeZoneName);
 
     // handlde the Time picker
-    const [timeStart, setTimeStart] = useState(openingTime);
+    const [timeStart, setTimeStart] = useState(startTimeDate);
     const onChangeTimeStart = (
         event: DateTimePickerEvent,
         selectedTime?: Date
@@ -118,66 +115,35 @@ const OpeningHourSetting = () => {
         }
     };
 
-    useEffect(() => {
-        refetchGetBusinessHourInfo();
-    }, [timeStart, timeFinish]);
+    // useEffect(() => {
+    //     refetchGetBusinessHourInfo();
+    // }, [timeStart, timeFinish]);
 
     return (
         <View
-            style={{
-                // flex: 1,
-                borderTopColor: Colors[colorScheme ?? "light"].separator,
-                borderTopWidth: 1,
-                backgroundColor: Colors[colorScheme ?? "light"].background,
-
-                height: hp("36%"),
-                borderBottomLeftRadius: 30,
-                borderBottomRightRadius: 30,
-            }}
+            style={[
+                styles.container,
+                {
+                    flex: 1,
+                    borderTopColor: Colors[colorScheme ?? "light"].separator,
+                    borderTopWidth: 1,
+                    // backgroundColor: Colors[colorScheme ?? "light"].separator,
+                    backgroundColor: "rgba(189, 195, 199, 0.25)",
+                },
+            ]}
         >
-            {/* Opening hours setting */}
             <View
-                style={{
-                    marginTop: wp("5%"),
-                    marginBottom: 5,
-                    marginHorizontal: wp("10%"),
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                }}
-            >
-                <Text
-                    style={{
-                        color: Colors[colorScheme ?? "light"].text,
-                        fontSize: 16,
-                        fontWeight: 400,
-                        paddingVertical: wp("5%"),
-                    }}
-                >
-                    Opening Hours
-                </Text>
-            </View>
-            <View
-                style={{
-                    width: wp("86%"),
-                    height: hp("15%"),
-                    borderColor: "rgba(189, 195, 199, 0.8)",
-                    borderWidth: 1,
-                    borderRadius: 15,
-                    alignSelf: "center",
-                    justifyContent: "center",
-                }}
+                style={[
+                    styles.content,
+                    {
+                        borderColor: Colors[colorScheme ?? "light"].separator,
+                        backgroundColor:
+                            Colors[colorScheme ?? "light"].background,
+                    },
+                ]}
             >
                 {/* set timeStart */}
-                <View
-                    style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        paddingVertical: wp("2.5%"),
-                        paddingTop: wp("2.5%"),
-                        paddingLeft: wp("2%"),
-                    }}
-                >
+                <View style={[styles.Picker]}>
                     <DateTimePicker
                         value={timeStart}
                         mode={"time"}
@@ -188,15 +154,7 @@ const OpeningHourSetting = () => {
                     <Text style={{ left: wp("10%") }}>Set Opening Time</Text>
                 </View>
 
-                <View
-                    style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "flex-start",
-                        paddingVertical: wp("2.5%"),
-                        paddingLeft: wp("2.5%"),
-                    }}
-                >
+                <View style={[styles.Picker]}>
                     <DateTimePicker
                         value={timeFinish}
                         mode={"time"}
@@ -208,8 +166,45 @@ const OpeningHourSetting = () => {
                 </View>
             </View>
 
-            {/* confirm button */}
+            {/* Confirm button */}
+
             <View
+                style={[
+                    styles.confirmButton,
+                    {
+                        backgroundColor:
+                            Colors[colorScheme ?? "light"]
+                                .mainButtonBackgroundColor,
+                        borderColor:
+                            Colors[colorScheme ?? "light"]
+                                .mainButtonBorderColor,
+                    },
+                ]}
+            >
+                <Pressable
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                        justifyContent: "center",
+                    }}
+                    onPress={() => {
+                        handleSubmit();
+                    }}
+                >
+                    <Text
+                        style={{
+                            textAlign: "center",
+                            color: Colors[colorScheme ?? "light"]
+                                .textButtonColor,
+                        }}
+                    >
+                        Confirm and Continue
+                    </Text>
+                </Pressable>
+            </View>
+
+            {/* confirm button */}
+            {/* <View
                 style={{
                     paddingVertical: wp("5%"),
                     flexDirection: "row",
@@ -231,11 +226,40 @@ const OpeningHourSetting = () => {
                         color={Colors[colorScheme ?? "light"].tint}
                     />
                 </Pressable>
-            </View>
+            </View> */}
         </View>
     );
 };
 
 export default OpeningHourSetting;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    container: {
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
+    },
+    content: {
+        marginTop: hp("5%"),
+        width: wp("84%"),
+        height: hp("15%"),
+        borderWidth: 1,
+        borderRadius: 15,
+        alignSelf: "center",
+        justifyContent: "center",
+    },
+    Picker: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingVertical: wp("2.5%"),
+        paddingTop: wp("2.5%"),
+        paddingLeft: wp("5%"),
+    },
+    confirmButton: {
+        alignSelf: "center",
+        borderWidth: 1,
+        height: hp("6%"),
+        width: wp("84%"),
+        borderRadius: 10,
+        marginTop: hp("2.5%"),
+    },
+});

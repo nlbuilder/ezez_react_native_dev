@@ -33,8 +33,8 @@ SplashScreen.preventAutoHideAsync();
 // define the root layout
 export default function RootLayout() {
     const [loaded, error] = useFonts({
+        Bodoni72: require("../assets/fonts/bodoni-72-oldstyle-book.ttf"),
         Calibri: require("../assets/fonts/calibri.ttf"),
-        FuzzyBubbles: require("../assets/fonts/Fuzzy Bubbles Regular.ttf"),
         TimesRegular: require("../assets/fonts/Times Regular.ttf"),
         ...FontAwesome.font,
     });

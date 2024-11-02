@@ -1,4 +1,4 @@
-const tintColorLight = "#2f95dc";
+const tintColorLight = "rgba(131, 100, 232, 1)";
 // const tintColorLight = "rgba(0, 0, 0, .6)";
 const tintColorDark = "#fff";
 
@@ -13,9 +13,11 @@ export default {
         tabIconSelected: tintColorLight,
         separator: "rgba(189, 195, 199, 0.8)",
         placeholder: "rgba(189, 195, 199, 0.8)",
-        mainButtonBackgroundColor: "#fff",
-        mainButtonBorderColor: "#ccc",
+        mainButtonBackgroundColor: "rgba(90, 182, 122, 1)",
+        mainButtonBorderColor: "rgba(90, 182, 122, 1)",
+        textButtonColor: "#fff",
     },
+
     dark: {
         text: "#000",
         lightText: "rgba(0, 0, 0, .20)",
@@ -26,8 +28,9 @@ export default {
         tabIconSelected: tintColorLight,
         separator: "rgba(189, 195, 199, 0.8)",
         placeholder: "rgba(189, 195, 199, 0.8)",
-        mainButtonBackgroundColor: "#fff",
-        mainButtonBorderColor: "#ccc",
+        mainButtonBackgroundColor: "rgba(90, 182, 122, 1)",
+        mainButtonBorderColor: "rgba(90, 182, 122, 1)",
+        textButtonColor: "#fff",
     },
 
     // dark: {

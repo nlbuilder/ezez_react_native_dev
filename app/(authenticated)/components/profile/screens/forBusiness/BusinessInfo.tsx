@@ -12,6 +12,7 @@ import { useToast } from "@/app/(authenticated)/utils/toasts/toastContext";
 import { useGetBusinessInfoAPI } from "@/app/(authenticated)/components/profile/apis/getBusinessInfoAPI";
 import Colors from "@/constants/styles/Colors";
 import BusinessInfoCard from "@/app/(authenticated)/components/profile/components/auth/forBusiness/BusinessInfoCard";
+import { Bodoni72Text } from "@/constants/styles/StyledText";
 
 const BusinessInfo = () => {
     const navigation = useNavigation();
@@ -136,16 +137,16 @@ const BusinessInfo = () => {
                         width: wp("100%"),
                     }}
                 >
-                    <Text
+                    <Bodoni72Text
                         style={{
                             color: Colors[colorScheme ?? "light"].text,
-                            marginLeft: wp("10%"),
-                            fontSize: 18,
+                            marginLeft: wp("15%"),
+                            fontSize: 28,
                             fontWeight: "500",
                         }}
                     >
                         {currentBusinessInfo?.name}
-                    </Text>
+                    </Bodoni72Text>
                 </View>
 
                 {/* handle the Flastlist */}

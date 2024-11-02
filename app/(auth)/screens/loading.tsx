@@ -6,11 +6,7 @@ import { useCreateBusinessAPI } from "@/app/(authenticated)/components/profile/a
 import { BusinessInfo } from "@/app/(authenticated)/components/profile/types/types";
 
 const loading = () => {
-    const {
-        businessId,
-        email,
-        // , name
-    } = useLocalSearchParams();
+    const { businessId, email } = useLocalSearchParams();
 
     const { createBusinessInfo, isLoading: isCreateBusinessInfoLoading } =
         useCreateBusinessAPI();
@@ -27,7 +23,6 @@ const loading = () => {
                         businessId: Array.isArray(businessId)
                             ? businessId[0]
                             : businessId,
-                        // name: Array.isArray(name) ? name[0] : name,
                         email: Array.isArray(email) ? email[0] : email,
                     };
 
@@ -43,13 +38,6 @@ const loading = () => {
                     }
 
                     if (business) {
-                        // Navigate to authenticated tabs if successful
-                        // deciding between InitBusinessProfile screens
-
-                        // router.replace(
-                        //     "/(authenticated)/components/profile/screens/forBusiness/InitBusinessProfile"
-                        // );
-
                         router.replace(
                             "/(auth)/screens/InitBusinessProfileScreen"
                         );
@@ -64,11 +52,7 @@ const loading = () => {
         };
 
         handleCreateBusiness();
-    }, [
-        businessId,
-        email,
-        //  name
-    ]);
+    }, [businessId, email]);
 
     if (isCreateBusinessInfoLoading) {
         return (

@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     modalContent: {
-        width: wp("69%"),
+        width: wp("89%"),
         borderColor: "white",
         borderWidth: 1,
         padding: 20,
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
         color: "#007AFF",
         textAlign: "center",
         fontSize: 16,
-        fontWeight: 500,
+        fontWeight: "600",
         top: 9,
     },
 });

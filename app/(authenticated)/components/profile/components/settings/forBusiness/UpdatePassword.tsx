@@ -1,64 +1,48 @@
 import {
+    Keyboard,
+    KeyboardAvoidingView,
+    Pressable,
     StyleSheet,
     Text,
-    View,
     TextInput,
-    Pressable,
-    useColorScheme,
-    Alert,
-    KeyboardAvoidingView,
     TouchableWithoutFeedback,
-    Keyboard,
+    useColorScheme,
+    View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
+import { router, useNavigation } from "expo-router";
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { Link, router } from "expo-router";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import {
+    getAuth,
+    updatePassword,
+    EmailAuthProvider,
+    reauthenticateWithCredential,
+} from "firebase/auth";
 
 import Colors from "@/constants/styles/Colors";
-import { signUpWithEmailPassword } from "../../utils/utils";
-import { validateSignUpForm } from "@/app/validations/validations";
+import NotificationModal from "@/app/(authenticated)/utils/modals/NotificationModal";
 
-const SignUpForm = () => {
+const UpdatePassword = () => {
+    const navigation = useNavigation();
     const colorScheme = useColorScheme();
+    const auth = getAuth();
 
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [confirmPassword, setConfirmPassword] = useState<string>("");
+    // handle the header when this screen is rendered
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: "Update Password",
+            headerBackTitle: "Back",
+            presentation: "card",
+        });
+    }, [navigation]);
 
-    const handleSignUpWithEmailPassword = async () => {
-        const { isValid, message } = validateSignUpForm(
-            email,
-            password,
-            confirmPassword
-        );
-
-        if (!isValid) {
-            Alert.alert("Invalid Password", message);
-
-            return;
-        }
-
-        const auth = await signUpWithEmailPassword(
-            email,
-            password
-            // name
-        );
-
-        if (auth) {
-            router.push({
-                pathname: "/(auth)/screens/loading",
-                params: {
-                    businessId: auth.uid,
-                    // name: "auth.displayName",
-                    email: auth.email,
-                },
-            });
-        }
-    };
+    const [email, setEmail] = useState<string>(auth.currentUser?.email ?? "");
+    const [currentPassword, setCurrentPassword] = useState<string>("");
+    const [newPassword, setNewPassword] = useState<string>("");
 
     const [isPasswordVisible0, setIsPasswordVisible0] =
         useState<boolean>(false);
@@ -72,6 +56,39 @@ const SignUpForm = () => {
         setIsPasswordVisible1(!isPasswordVisible1);
     };
 
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const handleOnOK = () => {
+        setShowModal(false);
+    };
+
+    const handleChangePassword = async () => {
+        if (auth.currentUser) {
+            try {
+                // Re-authenticate the user
+                const credential = EmailAuthProvider.credential(
+                    auth.currentUser.email ?? "",
+                    currentPassword
+                );
+                await reauthenticateWithCredential(
+                    auth.currentUser,
+                    credential
+                );
+
+                // Proceed to update the password
+                await updatePassword(auth.currentUser, newPassword);
+
+                setShowModal(true);
+            } catch (error) {
+                console.log(
+                    "Error during re-authentication or password update:",
+                    error
+                );
+            }
+        } else {
+            console.log("No user is currently signed in.");
+        }
+    };
+
     return (
         <>
             <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
@@ -79,7 +96,7 @@ const SignUpForm = () => {
                     <View
                         style={{
                             // flex: 1,
-                            top: hp("2.5%"),
+                            paddingTop: hp("5%"),
                             alignItems: "center",
                             justifyContent: "center",
                         }}
@@ -91,16 +108,16 @@ const SignUpForm = () => {
                                 {
                                     width: wp("84%"),
                                     backgroundColor:
-                                        Colors[colorScheme ?? "light"]
-                                            .background,
-                                    borderColor:
-                                        Colors[colorScheme ?? "light"]
-                                            .formBorder,
+                                        "rgba(189, 195, 199, 0.25)",
+                                    borderColor: "transparent",
+                                    // borderColor:
+                                    //     Colors[colorScheme ?? "light"]
+                                    //         .formBorder,
                                 },
                             ]}
                         >
                             <TextInput
-                                placeholder="Email"
+                                placeholder={email}
                                 placeholderTextColor={
                                     Colors[colorScheme ?? "light"].placeholder
                                 }
@@ -113,6 +130,7 @@ const SignUpForm = () => {
                                 value={email}
                                 onChangeText={(value) => setEmail(value)}
                                 keyboardType="email-address"
+                                editable={false}
                             />
                         </View>
 
@@ -132,7 +150,7 @@ const SignUpForm = () => {
                             ]}
                         >
                             <TextInput
-                                placeholder="Password"
+                                placeholder="Current Password"
                                 placeholderTextColor={
                                     Colors[colorScheme ?? "light"].placeholder
                                 }
@@ -142,8 +160,10 @@ const SignUpForm = () => {
                                     color: "black",
                                     paddingLeft: 10,
                                 }}
-                                value={password}
-                                onChangeText={(value) => setPassword(value)}
+                                value={currentPassword}
+                                onChangeText={(value) =>
+                                    setCurrentPassword(value)
+                                }
                                 secureTextEntry={
                                     isPasswordVisible0 ? false : true
                                 }
@@ -162,7 +182,7 @@ const SignUpForm = () => {
                             </Pressable>
                         </View>
 
-                        {/* Confirm Password */}
+                        {/* New Password */}
                         <View
                             style={[
                                 styles.authForm,
@@ -178,7 +198,7 @@ const SignUpForm = () => {
                             ]}
                         >
                             <TextInput
-                                placeholder="Confirm password"
+                                placeholder="New Password"
                                 placeholderTextColor={
                                     Colors[colorScheme ?? "light"].placeholder
                                 }
@@ -188,10 +208,8 @@ const SignUpForm = () => {
                                     color: "black",
                                     paddingLeft: 10,
                                 }}
-                                value={confirmPassword}
-                                onChangeText={(value) =>
-                                    setConfirmPassword(value)
-                                }
+                                value={newPassword}
+                                onChangeText={(value) => setNewPassword(value)}
                                 secureTextEntry={
                                     isPasswordVisible1 ? false : true
                                 }
@@ -210,34 +228,10 @@ const SignUpForm = () => {
                             </Pressable>
                         </View>
 
-                        <View style={{ width: wp("80%"), marginVertical: 10 }}>
-                            <Text
-                                style={{
-                                    color: "white",
-                                    fontWeight: "thin",
-                                }}
-                            >
-                                By selecting Agree and Continue below, I agree
-                                to{" "}
-                                <Link href="https://example.com" asChild>
-                                    <Text
-                                        style={{
-                                            color: Colors[
-                                                colorScheme ?? "light"
-                                            ].mainButtonBackgroundColor,
-                                            fontWeight: 600,
-                                        }}
-                                    >
-                                        Terms of Service and Privacy Policy
-                                    </Text>
-                                </Link>
-                            </Text>
-                        </View>
-
-                        {/* Agree And Continue button */}
+                        {/* Continue button */}
                         <View
                             style={[
-                                styles.authButton,
+                                styles.confirmButton,
                                 {
                                     backgroundColor:
                                         Colors[colorScheme ?? "light"]
@@ -255,7 +249,7 @@ const SignUpForm = () => {
                                     justifyContent: "center",
                                 }}
                                 onPress={() => {
-                                    handleSignUpWithEmailPassword();
+                                    handleChangePassword();
                                 }}
                             >
                                 <Text
@@ -265,61 +259,24 @@ const SignUpForm = () => {
                                             .textButtonColor,
                                     }}
                                 >
-                                    Agree and Continue
-                                </Text>
-                            </Pressable>
-                        </View>
-
-                        {/* Back button */}
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                position: "absolute",
-                                top: hp("44%"),
-                                alignSelf: "flex-start",
-                                left: wp("5%"),
-                            }}
-                        >
-                            <Pressable
-                                style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    paddingHorizontal: wp("2.5%"),
-                                }}
-                                onPress={() => {
-                                    router.push({
-                                        pathname: "/(auth)/screens/Welcome",
-                                    });
-                                }}
-                            >
-                                <AntDesign
-                                    name="arrowleft"
-                                    size={24}
-                                    color={
-                                        Colors[colorScheme ?? "light"]
-                                            .textButtonColor
-                                    }
-                                    style={{ marginRight: 8 }}
-                                />
-                                <Text
-                                    style={{
-                                        color: Colors[colorScheme ?? "light"]
-                                            .textButtonColor,
-                                    }}
-                                >
-                                    Back
+                                    Confirm and Continue
                                 </Text>
                             </Pressable>
                         </View>
                     </View>
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
+
+            <NotificationModal
+                title={"Password Updated Successfully"}
+                visible={showModal}
+                onOK={handleOnOK}
+            />
         </>
     );
 };
 
-export default SignUpForm;
+export default UpdatePassword;
 
 const styles = StyleSheet.create({
     authForm: {
@@ -333,7 +290,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginBottom: hp("1.5%"),
     },
-    authButton: {
+    confirmButton: {
         backgroundColor: Colors.light.background,
         borderColor: Colors.light.tabIconDefault,
         borderWidth: 1,

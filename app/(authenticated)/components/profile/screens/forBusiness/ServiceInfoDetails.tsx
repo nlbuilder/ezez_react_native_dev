@@ -64,7 +64,7 @@ const ServiceInfoDetails = () => {
     ];
 
     const photoUrl = filteredServiceInfo?.photoUrl || "";
-    const tempServicePhoto = require("@/assets/images/icon.png");
+    const tempServicePhoto = require("@/assets/images/serviceImage.png");
 
     // handle the delete staff process
     // warning modal for delete confirmation or cancelation
@@ -181,7 +181,7 @@ const ServiceInfoDetails = () => {
                             borderColor:
                                 Colors[colorScheme ?? "light"].tabIconDefault,
                             borderWidth: 1,
-                            borderRadius: 25,
+                            borderRadius: 20,
                         }}
                     />
                 </View>

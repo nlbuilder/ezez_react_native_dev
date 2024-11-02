@@ -9,6 +9,7 @@ import {
     TouchableWithoutFeedback,
     useColorScheme,
     View,
+    StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
@@ -134,43 +135,39 @@ const AddService = () => {
                     <View style={{ backgroundColor: "transparent" }}>
                         {/* service name */}
                         <View
-                            style={{
-                                backgroundColor:
-                                    Colors[colorScheme ?? "light"].background,
-                                borderBottomColor:
-                                    colorScheme === "dark"
-                                        ? "white"
-                                        : "rgba(189, 195, 199, 0.8)",
-                                // borderBottomWidth: 1,
-                                justifyContent: "center",
-                                alignSelf: "center",
-                                height: hp("10%"),
-                                width: wp("100%"),
-                            }}
+                            style={[
+                                styles.formContainer,
+                                {
+                                    backgroundColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .background,
+                                    borderBottomColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .separator,
+                                },
+                            ]}
                         >
                             <Text
-                                style={{
-                                    color: Colors[colorScheme ?? "light"].text,
-                                    marginLeft: wp("12.5%"),
-                                    opacity: 0.8,
-                                }}
+                                style={[
+                                    styles.formTitle,
+                                    {
+                                        color: Colors[colorScheme ?? "light"]
+                                            .text,
+                                    },
+                                ]}
                             >
                                 Title <Text style={{ color: "red" }}>*</Text>
                             </Text>
 
                             <View
-                                style={{
-                                    borderColor:
-                                        Colors[colorScheme ?? "light"]
-                                            .tabIconDefault,
-                                    borderWidth: 1.25,
-                                    width: wp("80%"),
-                                    height: hp("4.5%"),
-                                    borderRadius: 10,
-                                    alignSelf: "center",
-                                    justifyContent: "center",
-                                    marginTop: hp("1%"),
-                                }}
+                                style={[
+                                    styles.formContent,
+                                    {
+                                        borderColor:
+                                            Colors[colorScheme ?? "light"]
+                                                .separator,
+                                    },
+                                ]}
                             >
                                 <TextInput
                                     placeholder="Enter service title"
@@ -178,14 +175,14 @@ const AddService = () => {
                                         Colors[colorScheme ?? "light"]
                                             .placeholder
                                     }
-                                    style={{
-                                        color: Colors[colorScheme ?? "light"]
-                                            .text,
-                                        marginLeft: wp("6%"),
-                                        fontWeight: "400",
-                                        height: "100%",
-                                        width: "100%",
-                                    }}
+                                    style={[
+                                        styles.formInput,
+                                        {
+                                            color: Colors[
+                                                colorScheme ?? "light"
+                                            ].text,
+                                        },
+                                    ]}
                                     value={serviceName}
                                     onChangeText={(value) => {
                                         setServiceName(value);
@@ -196,120 +193,108 @@ const AddService = () => {
 
                         {/* price */}
                         <View
-                            style={{
-                                backgroundColor:
-                                    Colors[colorScheme ?? "light"].background,
-                                borderBottomColor:
-                                    colorScheme === "dark"
-                                        ? "white"
-                                        : "rgba(189, 195, 199, 0.8)",
-                                // borderBottomWidth: 1,
-                                justifyContent: "center",
-                                alignSelf: "center",
-                                height: hp("10%"),
-                                width: wp("100%"),
-                            }}
+                            style={[
+                                styles.formContainer,
+                                {
+                                    backgroundColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .background,
+                                    borderBottomColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .separator,
+                                },
+                            ]}
                         >
                             <Text
-                                style={{
-                                    color: Colors[colorScheme ?? "light"].text,
-                                    marginLeft: wp("12.5%"),
-                                    opacity: 0.8,
-                                }}
+                                style={[
+                                    styles.formTitle,
+                                    {
+                                        color: Colors[colorScheme ?? "light"]
+                                            .text,
+                                    },
+                                ]}
                             >
                                 Price <Text style={{ color: "red" }}>*</Text>
                             </Text>
 
                             <View
-                                style={{
-                                    width: wp("80%"),
-                                    height: hp("4.5%"),
-                                    alignSelf: "center",
-                                    marginTop: hp("1%"),
-                                }}
-                            >
-                                <View
-                                    style={{
-                                        flexDirection: "row",
+                                style={[
+                                    styles.formContent,
+                                    {
                                         borderColor:
                                             Colors[colorScheme ?? "light"]
-                                                .tabIconDefault,
-                                        borderWidth: 1.25,
-                                        width: wp("80%"),
-                                        height: hp("4.5%"),
-                                        borderRadius: 10,
+                                                .separator,
+                                        flexDirection: "row",
                                         justifyContent: "space-between",
                                         alignItems: "center",
-                                        paddingHorizontal: wp("4%"),
-                                    }}
-                                >
-                                    <TextInput
-                                        placeholder="Enter price"
-                                        placeholderTextColor={
-                                            Colors[colorScheme ?? "light"]
-                                                .placeholder
-                                        }
-                                        style={{
+                                        paddingHorizontal: wp("5%"),
+                                    },
+                                ]}
+                            >
+                                <TextInput
+                                    placeholder="Enter price"
+                                    placeholderTextColor={
+                                        Colors[colorScheme ?? "light"]
+                                            .placeholder
+                                    }
+                                    style={[
+                                        styles.formInput,
+                                        {
                                             color: Colors[
                                                 colorScheme ?? "light"
                                             ].text,
-                                            flex: 1, // Take available space
-                                            fontWeight: "400",
-                                            height: "100%",
-                                            width: "100%",
-                                        }}
-                                        value={price.toString()}
-                                        onChangeText={(value) => {
-                                            setPrice(Number(value));
-                                        }}
-                                        keyboardType="numeric" // Ensure numeric keyboard for price input
-                                    />
-                                    <Text style={{ marginLeft: wp("2%") }}>
-                                        dollars
-                                    </Text>
-                                </View>
+                                            flex: 1,
+                                        },
+                                    ]}
+                                    value={price.toString()}
+                                    onChangeText={(value) => {
+                                        setPrice(Number(value));
+                                    }}
+                                    keyboardType="numeric" // Ensure numeric keyboard for price input
+                                />
+                                <Text style={{ marginLeft: wp("2%") }}>
+                                    dollars
+                                </Text>
                             </View>
                         </View>
 
                         {/* note */}
                         <View
-                            style={{
-                                backgroundColor:
-                                    Colors[colorScheme ?? "light"].background,
-                                borderBottomColor:
-                                    colorScheme === "dark"
-                                        ? "white"
-                                        : "rgba(189, 195, 199, 0.8)",
-                                // borderBottomWidth: 1,
-                                justifyContent: "center",
-                                alignSelf: "center",
-                                height: hp("15%"),
-                                width: wp("100%"),
-                            }}
+                            style={[
+                                styles.formContainer,
+                                {
+                                    backgroundColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .background,
+                                    borderBottomColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .separator,
+                                    height: hp("14%"),
+                                },
+                            ]}
                         >
                             <Text
-                                style={{
-                                    color: Colors[colorScheme ?? "light"].text,
-                                    marginLeft: wp("12.5%"),
-                                    opacity: 0.8,
-                                }}
+                                style={[
+                                    styles.formTitle,
+                                    {
+                                        color: Colors[colorScheme ?? "light"]
+                                            .text,
+                                    },
+                                ]}
                             >
                                 Note
                             </Text>
 
                             <View
-                                style={{
-                                    borderColor:
-                                        Colors[colorScheme ?? "light"]
-                                            .tabIconDefault,
-                                    borderWidth: 1.25,
-                                    width: wp("80%"),
-                                    height: hp("10%"),
-                                    borderRadius: 10,
-                                    alignSelf: "center",
-                                    // justifyContent: "center",
-                                    marginTop: hp("1%"),
-                                }}
+                                style={[
+                                    styles.formContent,
+                                    {
+                                        borderColor:
+                                            Colors[colorScheme ?? "light"]
+                                                .separator,
+                                        height: hp("10%"),
+                                    },
+                                ]}
                             >
                                 <TextInput
                                     placeholder="Enter note or description"
@@ -317,15 +302,14 @@ const AddService = () => {
                                         Colors[colorScheme ?? "light"]
                                             .placeholder
                                     }
-                                    style={{
-                                        color: Colors[colorScheme ?? "light"]
-                                            .text,
-                                        marginLeft: wp("6%"),
-                                        fontWeight: "400",
-                                        paddingVertical: hp("1.5%"),
-                                        height: "100%",
-                                        width: "100%",
-                                    }}
+                                    style={[
+                                        styles.formInput,
+                                        {
+                                            color: Colors[
+                                                colorScheme ?? "light"
+                                            ].text,
+                                        },
+                                    ]}
                                     value={note}
                                     onChangeText={(value) => {
                                         setNote(value);
@@ -336,8 +320,55 @@ const AddService = () => {
                             </View>
                         </View>
 
-                        {/* confirm button */}
+                        {/* Confirm button */}
                         <View
+                            style={{
+                                height: hp("10%"),
+                                backgroundColor:
+                                    Colors[colorScheme ?? "light"].background,
+                                borderBottomEndRadius: 35,
+                                borderBottomStartRadius: 35,
+                            }}
+                        >
+                            <View
+                                style={[
+                                    styles.confirmButton,
+                                    {
+                                        backgroundColor:
+                                            Colors[colorScheme ?? "light"]
+                                                .mainButtonBackgroundColor,
+                                        borderColor:
+                                            Colors[colorScheme ?? "light"]
+                                                .mainButtonBorderColor,
+                                    },
+                                ]}
+                            >
+                                <Pressable
+                                    style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        justifyContent: "center",
+                                    }}
+                                    onPress={() => {
+                                        handleAddService();
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: Colors[
+                                                colorScheme ?? "light"
+                                            ].textButtonColor,
+                                        }}
+                                    >
+                                        Confirm and Continue
+                                    </Text>
+                                </Pressable>
+                            </View>
+                        </View>
+
+                        {/* confirm button */}
+                        {/* <View
                             style={{
                                 backgroundColor:
                                     Colors[colorScheme ?? "light"].background,
@@ -384,7 +415,7 @@ const AddService = () => {
                                     </View>
                                 </Pressable>
                             </View>
-                        </View>
+                        </View> */}
                     </View>
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
@@ -393,3 +424,37 @@ const AddService = () => {
 };
 
 export default AddService;
+
+const styles = StyleSheet.create({
+    formContainer: {
+        justifyContent: "center",
+        alignSelf: "center",
+        height: hp("9%"),
+        width: wp("100%"),
+    },
+    formTitle: {
+        marginLeft: wp("10%"),
+    },
+    formContent: {
+        borderWidth: 1,
+        width: wp("84%"),
+        height: hp("4.5%"),
+        borderRadius: 10,
+        alignSelf: "center",
+        justifyContent: "center",
+        marginTop: hp(".5%"),
+    },
+    formInput: {
+        marginLeft: wp("5%"),
+        height: "100%",
+        width: "100%",
+    },
+    confirmButton: {
+        alignSelf: "center",
+        borderWidth: 1,
+        height: hp("6%"),
+        width: wp("84%"),
+        borderRadius: 10,
+        marginTop: hp("1.5%"),
+    },
+});
