@@ -1,4 +1,9 @@
 import { Alert } from "react-native";
+import { useGetBusinessHourAPI } from "../(authenticated)/components/profile/apis/getBusinessHourAPI";
+import {
+    convertToLocalTime,
+    getTimeZoneName,
+} from "../(authenticated)/utils/utils";
 
 // def a function to validate sign in form
 export const validateSignInForm = (
@@ -118,13 +123,55 @@ export const validateEmailFormat = (
     return { isValid: true, message: "Reset form is valid." };
 };
 
+function isTimeWithinRange(
+    timeString: string,
+    startTime: string,
+    endTime: string
+): boolean {
+    // Convert times to Date objects on the same day for comparison
+    const [today] = new Date().toISOString().split("T"); // Get today's date in "YYYY-MM-DD" format
+
+    const timeStart = new Date(`${today} ${startTime}`);
+    const timeFinish = new Date(`${today} ${endTime}`);
+    const appointmentTime = new Date(`${today} ${timeString}`);
+
+    // Compare times
+    return appointmentTime >= timeStart && appointmentTime <= timeFinish;
+}
+
 // def a function to validate appointment creation
 export const validateAppointmentDetails = (
+    dateString: string,
+    timeString: string,
+    startTime: string,
+    finishTime: string,
     phoneNumber: string,
     numberOfPeople: string,
     note: string,
     chosenService: string
 ): { isValid: boolean; message: string } => {
+    // check if the date is in the past
+    const todayString = new Date().toDateString();
+    const appointmentDateString = dateString;
+
+    if (appointmentDateString < todayString) {
+        return {
+            isValid: false,
+            message:
+                "Invalid Date. Date must not be in the past. Please check your input.",
+        };
+    }
+
+    const result = isTimeWithinRange(timeString, startTime, finishTime);
+
+    if (!result) {
+        return {
+            isValid: false,
+            message:
+                "Invalid Time. Time must be within the business hours. Please check your input.",
+        };
+    }
+
     const phoneNumberRegex = /^\d{6,15}$/;
     // const nameRegex = /^[a-zA-Z\s]{2,50}$/;
 
@@ -136,7 +183,9 @@ export const validateAppointmentDetails = (
     }
 
     const peopleCount = parseInt(numberOfPeople, 10);
-    if (isNaN(peopleCount) || peopleCount < 1 || peopleCount > 100) {
+    console.log(peopleCount);
+
+    if (isNaN(peopleCount) || peopleCount < 1 || peopleCount > 50) {
         return {
             isValid: false,
             message: "Invalid Number of People. Please check your input.",

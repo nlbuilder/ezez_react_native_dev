@@ -9,6 +9,7 @@ import {
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
     Keyboard,
+    Alert,
 } from "react-native";
 import {
     widthPercentageToDP as wp,
@@ -28,8 +29,14 @@ import uuid from "react-native-uuid";
 import { useAuth } from "../(auth)/components/hooks/useAuth";
 import { useCreateAppointmentAPI } from "./components/appointment/apis/createAppointmentAPI";
 import { useGetAllServicesAPI } from "./components/profile/apis/getAllServicesAPI";
-import { getTimeZoneName, roundToPreviousHour } from "./utils/utils";
+import {
+    convertTo12HourFormat,
+    convertToLocalTime,
+    getTimeZoneName,
+    roundToPreviousHour,
+} from "./utils/utils";
 import { validateAppointmentDetails } from "../validations/validations";
+import { useGetBusinessHourAPI } from "./components/profile/apis/getBusinessHourAPI";
 
 export default function CreateAppointmentModal() {
     const colorScheme = useColorScheme();
@@ -69,7 +76,7 @@ export default function CreateAppointmentModal() {
     const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
         if (selectedDate) {
             setDate(selectedDate);
-            console.log("Date changed to: ", selectedDate);
+            // console.log("Date changed to: ", selectedDate);
         }
     };
 
@@ -78,7 +85,7 @@ export default function CreateAppointmentModal() {
     const onChangeTime = (event: DateTimePickerEvent, selectedTime?: Date) => {
         if (selectedTime) {
             setTime(selectedTime);
-            console.log("Time changed to: ", selectedTime);
+            // console.log("Time changed to: ", selectedTime);
         }
     };
 
@@ -88,8 +95,25 @@ export default function CreateAppointmentModal() {
     // set the theme variant for the date and time pickers
     const themeVariantDateTimePicker = "light";
 
+    // get the businessHour info
+    const { businessHourInfo, refetch: refetchBusinessHourInfo } =
+        useGetBusinessHourAPI();
+
+    const startTime =
+        (Array.isArray(businessHourInfo) && businessHourInfo[0]?.startTime) ||
+        "10:00 AM";
+    const finishTime =
+        (Array.isArray(businessHourInfo) && businessHourInfo[0]?.finishTime) ||
+        "7:00 PM";
+
+    const appointmentTime = convertTo12HourFormat(time.toTimeString());
+
     const handleCreateAppointment = async () => {
-        const isValid = validateAppointmentDetails(
+        const { isValid, message } = validateAppointmentDetails(
+            date.toDateString(),
+            appointmentTime,
+            startTime,
+            finishTime,
             phoneNumber,
             customerName,
             numberOfPeople,
@@ -98,6 +122,7 @@ export default function CreateAppointmentModal() {
         );
 
         if (!isValid) {
+            Alert.alert("Invalid input", message);
             return;
         }
 

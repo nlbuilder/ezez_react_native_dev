@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     },
     appointmentCard: {
         borderRadius: hp("2.5%"),
-        // paddingBottom: hp("1%"),
+        // paddingBottom: hp("2%"),
         // move the card down a bit, to separate the top card from the Date Picker
         top: hp("1%"),
         height: hp("20%"),

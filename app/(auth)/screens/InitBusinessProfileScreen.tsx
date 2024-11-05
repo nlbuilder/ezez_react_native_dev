@@ -221,24 +221,6 @@ const InitBusinessProfileScreen = () => {
         }
     };
 
-    // const handlePushToNextScreen = () => {
-    //     if (businessName === "" || selectedBusinessHourIndex === null) {
-    //         Alert.alert(
-    //             "",
-    //             "Please enter the business name and select an option for the business hour. Otherwise, skip to create a default business profile."
-    //         );
-    //         return;
-    //     } else {
-    //         router.push({
-    //             pathname: "/(auth)/screens/InitBusinessProfileScreen1",
-    //             params: {
-    //                 businessName: businessName,
-    //                 selectedBusinessHourIndex: selectedBusinessHourIndex,
-    //             },
-    //         });
-    //     }
-    // };
-
     const [showModal, setShowModal] = useState<boolean>(false);
     const handleOnOK = () => {
         setShowModal(false);
@@ -350,25 +332,6 @@ const InitBusinessProfileScreen = () => {
                             </View>
                         </View>
 
-                        {/* 
-            <View style={styles.optionContainer}>
-                <Text style={styles.subTitle}>
-                    How many customers can your business serve at once?
-                    <Text style={{ color: "red" }}> *</Text>
-                </Text>
-                <View style={styles.serviceRow}>
-                    <TextInput
-                        placeholder="0"
-                        placeholderTextColor={"rgba(189, 195, 199, 0.8)"}
-                        style={{ color: "black", left: wp("5%") }}
-                        value={numberOfPeople.toString()}
-                        onChangeText={(value) => {
-                            setNumberOfPeople(value);
-                        }}
-                    />
-                </View>
-            </View> */}
-
                         {/* create profile button */}
                         <View>
                             <Pressable
@@ -402,30 +365,6 @@ const InitBusinessProfileScreen = () => {
                                 </Text>
                             </Pressable>
                         </View>
-
-                        {/* <View>
-                <Pressable
-                    onPress={() => {
-                        // handleCreateBusinessProfile();
-                        handlePushToNextScreen();
-                    }}
-                >
-                    <View style={styles.button}>
-                        <AntDesign
-                            name="arrowright"
-                            size={24}
-                            color="transparent"
-                        />
-                        <Text>Continue</Text>
-                        <AntDesign
-                            name="arrowright"
-                            size={24}
-                            color={Colors.light.text}
-                            style={{ right: wp("1.5%") }}
-                        />
-                    </View>
-                </Pressable>
-            </View> */}
 
                         <View style={styles.skipButton}>
                             <Pressable
@@ -498,7 +437,8 @@ const styles = StyleSheet.create({
         borderColor: "rgba(189, 195, 199, 0.8)",
         borderWidth: 1,
         borderRadius: 25,
-        paddingVertical: 10,
+        paddingVertical: hp("1%"),
+        marginVertical: hp(".5%"),
     },
     checkboxBusinessHour: {
         borderColor: "grey",
@@ -507,7 +447,7 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         borderRadius: 15,
-        // padding: 10,
+        padding: 10,
     },
     serviceRow: {
         flexDirection: "row",
@@ -516,7 +456,8 @@ const styles = StyleSheet.create({
         borderColor: "rgba(189, 195, 199, 0.8)",
         borderWidth: 1,
         borderRadius: 10,
-        paddingVertical: 10,
+        paddingVertical: hp("1%"),
+        marginVertical: hp(".5%"),
     },
     text: {
         flex: 1,
@@ -526,15 +467,16 @@ const styles = StyleSheet.create({
         borderColor: "grey",
         right: wp("5%"),
         borderWidth: 1,
-        width: 15,
-        height: 15,
+        width: 20,
+        height: 20,
+        padding: 10,
         // borderRadius: 15,
     },
     button: {
         width: wp("45%"),
         height: hp("4.5%"),
         borderRadius: 25,
-        marginVertical: hp("8%"),
+        marginVertical: hp("6%"),
         alignSelf: "center",
         alignItems: "center",
         justifyContent: "center",

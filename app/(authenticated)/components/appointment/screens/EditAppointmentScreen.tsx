@@ -24,6 +24,7 @@ import DateTimePicker, {
 // import dummyServiceData from "@/dummy/dummyServiceData.json";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import {
+    convertTo12HourFormat,
     getTimeZoneName,
     parseTimeStringToDate,
     roundToPreviousHour,
@@ -31,6 +32,7 @@ import {
 import { useGetAllServicesAPI } from "../../profile/apis/getAllServicesAPI";
 import { useUpdateAppointmentAPI } from "../apis/updateAppointmentInfoAPI";
 import { validateAppointmentDetails } from "@/app/validations/validations";
+import { useGetBusinessHourAPI } from "../../profile/apis/getBusinessHourAPI";
 
 export default function EditAppointmentScreen() {
     const navigation = useNavigation();
@@ -105,8 +107,24 @@ export default function EditAppointmentScreen() {
         appointmentDetails.serviceName
     );
 
+    // get the businessHour info
+    const { businessHourInfo, refetch: refetchBusinessHourInfo } =
+        useGetBusinessHourAPI();
+
+    const startTime =
+        (Array.isArray(businessHourInfo) && businessHourInfo[0]?.startTime) ||
+        "10:00 AM";
+    const finishTime =
+        (Array.isArray(businessHourInfo) && businessHourInfo[0]?.finishTime) ||
+        "7:00 PM";
+    const appointmentTime = convertTo12HourFormat(time.toTimeString());
+
     const handleEditAppointment = async () => {
-        const isValid = validateAppointmentDetails(
+        const { isValid, message } = validateAppointmentDetails(
+            date.toDateString(),
+            appointmentTime,
+            startTime,
+            finishTime,
             phoneNumber,
             customerName,
             numberOfPeople,
