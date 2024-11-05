@@ -25,32 +25,71 @@ const BusinessInfo = () => {
         isLoading: isGetBusinessInfoLoading,
     } = useGetBusinessInfoAPI();
 
+    const businessBranchName = "primary";
+    const businessBranchCode = "001";
+
+    // filter the business branch info
+    const currentBusinessBranchInfo =
+        currentBusinessInfo?.businessBranchInfos?.find(
+            (branch) => branch.businessBranchCode === businessBranchCode
+        );
+
     const businessInfoData = [
         { title: "Email", value: currentBusinessInfo?.email || "" },
         {
             title: "Phone Number",
-            value: currentBusinessInfo?.phoneNumber || "",
+            value: currentBusinessBranchInfo?.phoneNumber || "",
         },
         {
             title: "Manager Name",
-            value: Array.isArray(currentBusinessInfo?.managerName)
-                ? currentBusinessInfo.managerName.join(", ")
+            value: Array.isArray(currentBusinessBranchInfo?.managerName)
+                ? currentBusinessBranchInfo.managerName.join(", ")
                 : "",
         },
         {
             title: "Address Line 1",
-            value: currentBusinessInfo?.addressLine1 || "",
+            value: currentBusinessBranchInfo?.addressLine1 || "",
         },
         {
             title: "Address Line 2",
-            value: currentBusinessInfo?.addressLine2 || "",
+            value: currentBusinessBranchInfo?.addressLine2 || "",
         },
-        { title: "City", value: currentBusinessInfo?.city || "" },
-        { title: "State", value: currentBusinessInfo?.state || "" },
-        { title: "Zip Code", value: currentBusinessInfo?.zip || "" },
-        { title: "Country", value: currentBusinessInfo?.country || "" },
-        { title: "Description", value: currentBusinessInfo?.description || "" },
+        { title: "City", value: currentBusinessBranchInfo?.city || "" },
+        { title: "State", value: currentBusinessBranchInfo?.state || "" },
+        { title: "Zip Code", value: currentBusinessBranchInfo?.zip || "" },
+        { title: "Country", value: currentBusinessBranchInfo?.country || "" },
+        {
+            title: "Description",
+            value: currentBusinessBranchInfo?.description || "",
+        },
     ];
+
+    // const businessInfoData = [
+    //     { title: "Email", value: currentBusinessInfo?.email || "" },
+    //     {
+    //         title: "Phone Number",
+    //         value: currentBusinessInfo?.phoneNumber || "",
+    //     },
+    //     {
+    //         title: "Manager Name",
+    //         value: Array.isArray(currentBusinessInfo?.managerName)
+    //             ? currentBusinessInfo.managerName.join(", ")
+    //             : "",
+    //     },
+    //     {
+    //         title: "Address Line 1",
+    //         value: currentBusinessInfo?.addressLine1 || "",
+    //     },
+    //     {
+    //         title: "Address Line 2",
+    //         value: currentBusinessInfo?.addressLine2 || "",
+    //     },
+    //     { title: "City", value: currentBusinessInfo?.city || "" },
+    //     { title: "State", value: currentBusinessInfo?.state || "" },
+    //     { title: "Zip Code", value: currentBusinessInfo?.zip || "" },
+    //     { title: "Country", value: currentBusinessInfo?.country || "" },
+    //     { title: "Description", value: currentBusinessInfo?.description || "" },
+    // ];
 
     // handle the header when this screen is rendered
     useEffect(() => {

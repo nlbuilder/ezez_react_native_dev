@@ -176,18 +176,18 @@ export const getTimeZoneName = () => {
     return timeZone;
 };
 
-// def a function to format a date to string
-export function formatDateToString(dateString: string): string {
-    const date = new Date(dateString);
+// // def a function to format a date to string
+// export function formatDateToString(dateString: string): string {
+//     const date = new Date(dateString);
 
-    const weekday = date.toLocaleString("en-US", { weekday: "short" }); // "Tue"
-    const month = date.toLocaleString("en-US", { month: "short" }); // "Oct"
-    const day = date.getDate(); // "15"
-    const year = date.getFullYear(); // "2024"
+//     const weekday = date.toLocaleString("en-US", { weekday: "short" }); // "Tue"
+//     const month = date.toLocaleString("en-US", { month: "short" }); // "Oct"
+//     const day = date.getDate(); // "15"
+//     const year = date.getFullYear(); // "2024"
 
-    // Construct the desired format
-    return `${weekday} ${month} ${day} ${year}`;
-}
+//     // Construct the desired format
+//     return `${weekday} ${month} ${day} ${year}`;
+// }
 
 // def a function to filter appointments by date
 export function filterAppointmentsByDate(

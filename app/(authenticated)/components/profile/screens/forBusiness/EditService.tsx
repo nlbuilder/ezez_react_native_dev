@@ -48,10 +48,15 @@ const EditService = () => {
     const [price, setPrice] = useState(priceParam ? Number(priceParam) : 0);
     const [note, setNote] = useState(noteParam);
 
+    const businessBranchName = "primary";
+    const businessBranchCode = "001";
+
     // def a function to handle createBusinessStaff
     const handleEditService = async () => {
         const editServiceInfo = {
             businessId: businessId,
+            businessBranchName: businessBranchName,
+            businessBranchCode: businessBranchCode,
             serviceId: serviceId,
             serviceName: serviceName,
             photoUrl: "",

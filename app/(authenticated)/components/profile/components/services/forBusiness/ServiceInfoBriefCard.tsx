@@ -1,3 +1,18 @@
+// The order to follow is:
+// 1. read the ServiceInfo.tsx file in the screens folder
+// 2. read this ServiceInfoBriefCard.tsx file
+// 3. read the ServiceInfoDetails.tsx file in the screens folder
+// 4. read the ServiceInfoDetailsCard.tsx file
+
+// the serviceId, serviceName, photoUrl, and price are the props that are passed
+// from the ServiceInfo.tsx file to this ServiceInfoBriefCard.tsx file
+
+// the serviceId in this file is passed to the ServiceInfoDetails.tsx file (in the screens folder)
+// when the user clicks on the info circle icon
+// the serviceId is a unique identifier for each service
+
+// So, the future me, don't get confused!
+
 import { Text, useColorScheme, View, Image, Pressable } from "react-native";
 import React from "react";
 import {

@@ -22,7 +22,7 @@ import {
     transformData,
 } from "@/app/(authenticated)/utils/utils";
 import { useDate } from "../context/DateContext";
-import dummyServiceData from "@/dummy/dummyServiceData.json";
+// import dummyServiceData from "@/dummy/dummyServiceData.json";
 import { useGetBusinessHourAPI } from "../../profile/apis/getBusinessHourAPI";
 import { useGetAllServicesAPI } from "../../profile/apis/getAllServicesAPI";
 
@@ -75,6 +75,15 @@ const AppointmentEachHourListScreen = ({ visible, onClose }: ModalProps) => {
         allAppointmentsArray,
         dateString
     );
+
+    const businessBranchName = "primary";
+    const businessBranchCode = "001";
+
+    // filter the filteredAppointmentsByDate by businessBranchCode
+    const filteredAppointmentsByDateByBranchCode =
+        filteredAppointmentsByDate.filter(
+            (item) => item.businessBranchCode === businessBranchCode
+        );
 
     // group the customers by rounded time (this function returns an object)
     const sumOfCustomerByTime = groupCustomersByTime(

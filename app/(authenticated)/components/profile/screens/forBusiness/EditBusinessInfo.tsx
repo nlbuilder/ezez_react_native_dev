@@ -40,6 +40,15 @@ const EditBusinessInfo = () => {
         isLoading: isGetBusinessInfoLoading,
     } = useGetBusinessInfoAPI();
 
+    const businessBranchName = "primary";
+    const businessBranchCode = "001";
+
+    // filter the business branch info
+    const currentBusinessBranchInfo =
+        currentBusinessInfo?.businessBranchInfos?.find(
+            (branch) => branch.businessBranchCode === businessBranchCode
+        );
+
     // filter out the properties we don't want to compare
     // between the currentBusinessInfo and the updatedBusinessInfo
     const filteredCurrentBusinessInfo = currentBusinessInfo
@@ -56,29 +65,34 @@ const EditBusinessInfo = () => {
     // Create a local state to store updated business info
     const [businessInfoData, setBusinessInfoData] = useState([
         { title: "Business Title", value: currentBusinessInfo?.name || "" },
+        { title: "businessBranchName", value: businessBranchName || "" },
+        { title: "businessBranchCode", value: businessBranchCode || "" },
         {
             title: "Phone Number",
-            value: currentBusinessInfo?.phoneNumber || "",
+            value: currentBusinessBranchInfo?.phoneNumber || "",
         },
         {
             title: "Manager Name",
-            value: Array.isArray(currentBusinessInfo?.managerName)
-                ? currentBusinessInfo.managerName.join(", ")
+            value: Array.isArray(currentBusinessBranchInfo?.managerName)
+                ? currentBusinessBranchInfo.managerName.join(", ")
                 : "",
         },
         {
             title: "Address Line 1",
-            value: currentBusinessInfo?.addressLine1 || "",
+            value: currentBusinessBranchInfo?.addressLine1 || "",
         },
         {
             title: "Address Line 2",
-            value: currentBusinessInfo?.addressLine2 || "",
+            value: currentBusinessBranchInfo?.addressLine2 || "",
         },
-        { title: "City", value: currentBusinessInfo?.city || "" },
-        { title: "State", value: currentBusinessInfo?.state || "" },
-        { title: "Zip Code", value: currentBusinessInfo?.zip || "" },
-        { title: "Country", value: currentBusinessInfo?.country || "" },
-        { title: "Description", value: currentBusinessInfo?.description || "" },
+        { title: "City", value: currentBusinessBranchInfo?.city || "" },
+        { title: "State", value: currentBusinessBranchInfo?.state || "" },
+        { title: "Zip Code", value: currentBusinessBranchInfo?.zip || "" },
+        { title: "Country", value: currentBusinessBranchInfo?.country || "" },
+        {
+            title: "Description",
+            value: currentBusinessBranchInfo?.description || "",
+        },
     ]);
 
     // Update the local state when a user makes changes

@@ -16,8 +16,10 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import uuid from "react-native-uuid";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
+
 import Colors from "@/constants/styles/Colors";
 
 import { useCreateServiceAPI } from "../../apis/createServiceAPI";
@@ -45,11 +47,17 @@ const AddService = () => {
     const [price, setPrice] = useState(0);
     const [note, setNote] = useState("");
 
+    const businessBranchName = "primary";
+    const businessBranchCode = "001";
+
     // def a function to handle createBusinessStaff
     const handleAddService = async () => {
         const newServiceInfo = {
             businessId: businessId,
-            serviceId: new Date().getTime().toString(),
+            businessBranchName: businessBranchName,
+            businessBranchCode: businessBranchCode,
+
+            serviceId: uuid.v4() as string,
             serviceName: serviceName,
             photoUrl: "",
             price: price,

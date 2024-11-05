@@ -1,3 +1,13 @@
+// The order to follow is:
+// 1. read this StaffInfo.tsx file
+// 2. read the StaffInfoBriefCard.tsx file
+// 3. read the StaffInfoDetails.tsx file
+
+// The businessStaffId, photoURL, name, phoneNumber are the props that are passed
+// from this StaffInfo.tsx file to the StaffInfoBriefCard.tsx file
+
+// So, the future me, don't get confused!
+
 import {
     Pressable,
     useColorScheme,
@@ -31,8 +41,23 @@ const StaffInfo = () => {
         isLoading: isGetBusinessInfoLoading,
     } = useGetBusinessInfoAPI();
 
-    const staffDataBrief = Array.isArray(currentBusinessInfo?.listOfStaff)
-        ? currentBusinessInfo?.listOfStaff.map((item) => ({
+    // const { businessBranchCode } = useBusinessBranchCode();
+
+    const businessBranchCode = "001";
+
+    // filter the currentBusinessInfo based on businessBranchCode
+    const filteredBusinessInfoByBranchCode =
+        currentBusinessInfo?.businessBranchInfos?.some(
+            (branch) => branch.businessBranchCode === businessBranchCode
+        )
+            ? currentBusinessInfo
+            : null;
+
+    // access listOfStaff from currentBusinessInfo if a matching branch is found
+    const staffDataBrief = Array.isArray(
+        filteredBusinessInfoByBranchCode?.listOfStaff
+    )
+        ? filteredBusinessInfoByBranchCode.listOfStaff.map((item) => ({
               businessStaffId: item.businessStaffId,
               photoURL: item.photoURL,
               name: item.name,
@@ -41,6 +66,17 @@ const StaffInfo = () => {
               role: item.role,
           }))
         : [];
+
+    // const staffDataBrief = Array.isArray(currentBusinessInfo?.listOfStaff)
+    //     ? currentBusinessInfo?.listOfStaff.map((item) => ({
+    //           businessStaffId: item.businessStaffId,
+    //           photoURL: item.photoURL,
+    //           name: item.name,
+    //           phoneNumber: item.phoneNumber,
+    //           email: item.email,
+    //           role: item.role,
+    //       }))
+    //     : [];
 
     // handle the header when this screen is rendered
     useEffect(() => {

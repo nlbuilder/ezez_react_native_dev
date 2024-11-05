@@ -1,12 +1,27 @@
+// The order to follow is:
+// 1. read the StaffInfo.tsx file in the screens folder
+// 2. read this StaffInfoBriefCard.tsx file
+// 3. read the StaffInfoDetails.tsx file
+
+// The businessStaffId, photoUrl, name, and phoneNumber are the props that are passed
+// from the StaffInfo.tsx file to this StaffInfoBriefCard.tsx file
+
+// The businessStaffId in this file is passed to the StaffInfoDetails.tsx file (in the screens folder)
+// when the user clicks on the info circle icon
+// The busisnessStaffId is a unique identifier for each staff member
+
+// So, the future me, don't get confused!
+
 import { Text, useColorScheme, View, Image, Pressable } from "react-native";
 import React from "react";
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import Colors from "@/constants/styles/Colors";
 import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
+
+import Colors from "@/constants/styles/Colors";
 
 interface StaffInfoForBusinessCardProps {
     businessStaffId: string;
@@ -29,7 +44,7 @@ const StaffInfoForBusinessCard: React.FC<StaffInfoForBusinessCardProps> = ({
             pathname:
                 "/(authenticated)/components/profile/screens/forBusiness/StaffInfoDetails",
             params: {
-                staffId: businessStaffId,
+                businessStaffId: businessStaffId,
             },
         });
     };

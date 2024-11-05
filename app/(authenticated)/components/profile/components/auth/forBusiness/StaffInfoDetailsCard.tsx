@@ -1,9 +1,19 @@
+// The order to follow is:
+// 1. read the StaffInfoDetails.tsx file in the screens folder
+// 2. read this StaffInfoDetailsCard.tsx file
+
+// the infoTitle and infoDetails are the props that are passed
+// from the StaffInfoDetails.tsx file to this StaffInfoDetailsCard.tsx file
+
+// So, the future me, don't get confused!
+
 import { Text, useColorScheme, View } from "react-native";
 import React from "react";
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+
 import Colors from "@/constants/styles/Colors";
 
 interface StaffInfoDetailsCardProps {

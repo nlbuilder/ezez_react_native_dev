@@ -11,6 +11,9 @@ const loading = () => {
     const { createBusinessInfo, isLoading: isCreateBusinessInfoLoading } =
         useCreateBusinessAPI();
 
+    const businessBranchName = "primary";
+    const businessBranchCode = "001";
+
     useEffect(() => {
         const handleCreateBusiness = async () => {
             if (
@@ -25,6 +28,13 @@ const loading = () => {
                             : businessId,
                         email: Array.isArray(email) ? email[0] : email,
                         role: "owner",
+
+                        businessBranchInfos: [
+                            {
+                                businessBranchName: businessBranchName,
+                                businessBranchCode: businessBranchCode,
+                            },
+                        ],
                     };
 
                     // call the API to create the business

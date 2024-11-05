@@ -1,8 +1,11 @@
 // The code in this file is to display the details of an appointment.
-// The appointmentDetails is passed from the AppointmentEachHourListScreen.tsx file
-// Therefor, the future me will need to read files in the order of:
+// The data of appointmentDetails is passed
+// from the AppointmentEachHourListScreen.tsx file to this AppointmentDetails.tsx file.
+
+// Therefore, the future me will need to read files in the order of:
 // 1. AppointmentEachHourListScreen.tsx
 // 2. AppointmentDetails.tsx
+
 // Don't get confused
 
 import {
@@ -86,6 +89,10 @@ const AppointmentDetails = ({
                 showDeleteButton.value = false;
             }
         });
+
+    // Currently, I'm not a big fan of the tap gesture feature for this component
+    // Therefore, I'm commenting it out
+    // I might change my mind in the future. Who knows?
 
     // handle the Tap Gesture for resetting translation when tapping outside
     // const tap = Gesture.Tap().onEnd(() => {

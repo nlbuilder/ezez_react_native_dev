@@ -37,7 +37,6 @@ function useDebouncedValue<T>(value: T, delay: number) {
 }
 
 const SearchModal = ({ visible, onClose }: ModalProps) => {
-    const navigation = useNavigation();
     const colorScheme = useColorScheme();
 
     const {
@@ -61,6 +60,16 @@ const SearchModal = ({ visible, onClose }: ModalProps) => {
     useEffect(() => {
         handleSearch(debouncedSearchQuery);
     }, [debouncedSearchQuery, isUpcoming]);
+
+    const businessBranchCode = "001";
+
+    // filter the allAppointmentInfo based on businessBranchCode
+    const filteredAppointmentsByBranchCode = Array.isArray(allAppointmentInfo)
+        ? allAppointmentInfo.filter(
+              (appointment: AppointmentDetailsProps) =>
+                  appointment.businessBranchCode === businessBranchCode
+          )
+        : [];
 
     const handleSearch = (query: string) => {
         if (!query.trim()) {

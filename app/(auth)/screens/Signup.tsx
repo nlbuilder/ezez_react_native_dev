@@ -5,9 +5,10 @@ import {
     TouchableWithoutFeedback,
     useColorScheme,
     Image,
+    StatusBar,
 } from "react-native";
 import { View } from "@/constants/styles/Themed";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -21,25 +22,25 @@ import BackgroundImage from "@/assets/images/backgroundImage.png";
 const SignUp = () => {
     const colorScheme = useColorScheme();
 
-    // const [keyboardVisible, setKeyboardVisible] = useState(false);
+    const [keyboardVisible, setKeyboardVisible] = useState(false);
 
-    // useEffect(() => {
-    //     const showSubscription = Keyboard.addListener("keyboardDidShow", () =>
-    //         setKeyboardVisible(true)
-    //     );
-    //     const hideSubscription = Keyboard.addListener("keyboardDidHide", () =>
-    //         setKeyboardVisible(false)
-    //     );
+    useEffect(() => {
+        const showSubscription = Keyboard.addListener("keyboardDidShow", () =>
+            setKeyboardVisible(true)
+        );
+        const hideSubscription = Keyboard.addListener("keyboardDidHide", () =>
+            setKeyboardVisible(false)
+        );
 
-    //     return () => {
-    //         showSubscription.remove();
-    //         hideSubscription.remove();
-    //     };
-    // }, []);
+        return () => {
+            showSubscription.remove();
+            hideSubscription.remove();
+        };
+    }, []);
 
     return (
         <>
-            {/* <StatusBar hidden={keyboardVisible} /> */}
+            <StatusBar hidden={keyboardVisible} />
 
             <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -52,7 +53,7 @@ const SignUp = () => {
                         }}
                     >
                         <Image
-                            source={BackgroundImage}
+                            source={require("@/assets/images/backgroundImage.png")}
                             style={{
                                 width: "100%",
                                 height: "100%",

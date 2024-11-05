@@ -78,222 +78,234 @@ const SignInForm = () => {
 
     return (
         <>
-            {/* <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}> */}
-            {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
-            <View
-                style={{
-                    // flex: 1,
-                    top: hp("2.5%"),
-                    alignItems: "center",
-                    justifyContent: "center",
-                }}
-            >
-                {/* Email */}
-                <View
-                    style={[
-                        styles.authForm,
-                        {
-                            backgroundColor:
-                                Colors[colorScheme ?? "light"].background,
-                            borderColor:
-                                Colors[colorScheme ?? "light"].formBorder,
-                        },
-                    ]}
-                >
-                    <TextInput
-                        placeholder="Email"
-                        placeholderTextColor={
-                            Colors[colorScheme ?? "light"].placeholder
-                        }
+            <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View
                         style={{
-                            height: "100%",
-                            width: "100%",
-                            color: "black",
-                            paddingLeft: 10,
-                        }}
-                        value={email}
-                        onChangeText={(value) => setEmail(value)}
-                    />
-                </View>
-
-                {/* Password */}
-                <View
-                    style={[
-                        styles.authForm,
-                        {
-                            backgroundColor:
-                                Colors[colorScheme ?? "light"].background,
-                            borderColor:
-                                Colors[colorScheme ?? "light"].formBorder,
-                        },
-                    ]}
-                >
-                    <TextInput
-                        placeholder="Password"
-                        placeholderTextColor={
-                            Colors[colorScheme ?? "light"].placeholder
-                        }
-                        style={{
-                            height: "100%",
-                            width: "100%",
-                            color: "black",
-                            paddingLeft: 10,
-                        }}
-                        value={password}
-                        onChangeText={(value) => setPassword(value)}
-                        secureTextEntry={isPasswordVisible ? false : true}
-                    />
-                    <Pressable
-                        onPress={togglePasswordVisibility}
-                        style={{ right: wp("10%") }}
-                    >
-                        <Ionicons
-                            name={isPasswordVisible ? "eye-off" : "eye"}
-                            size={24}
-                            color={Colors.light.tabIconDefault}
-                        />
-                    </Pressable>
-                </View>
-
-                {/* Continue button */}
-                <View
-                    style={[
-                        styles.authButton,
-                        {
-                            backgroundColor:
-                                Colors[colorScheme ?? "light"]
-                                    .mainButtonBackgroundColor,
-                            borderColor:
-                                Colors[colorScheme ?? "light"]
-                                    .mainButtonBorderColor,
-                        },
-                    ]}
-                >
-                    <Pressable
-                        style={{
-                            width: wp("84%"),
-                            height: "100%",
-                            justifyContent: "center",
-                        }}
-                        onPress={() => {
-                            handleSignInWithEmailPassword();
-                        }}
-                    >
-                        <Text
-                            style={{
-                                textAlign: "center",
-                                color: Colors[colorScheme ?? "light"]
-                                    .textButtonColor,
-                            }}
-                        >
-                            Continue
-                        </Text>
-                    </Pressable>
-                </View>
-
-                <Text style={{ marginVertical: 18, color: "white" }}>or</Text>
-
-                {/* SignIn with Google */}
-                <View
-                    style={[
-                        styles.authButton,
-                        {
-                            flexDirection: "row",
+                            // flex: 1,
+                            top: hp("2.5%"),
                             alignItems: "center",
                             justifyContent: "center",
-                            position: "relative", // ensure overlapping elements align properly
-                            marginBottom: hp("2.5%"),
-                            backgroundColor:
-                                Colors[colorScheme ?? "light"]
-                                    .mainButtonBackgroundColor,
-                            borderColor:
-                                Colors[colorScheme ?? "light"]
-                                    .mainButtonBorderColor,
-                        },
-                    ]}
-                >
-                    <AntDesign
-                        name="google"
-                        size={24}
-                        style={{
-                            position: "absolute",
-                            left: 15,
-                        }}
-                        color={Colors[colorScheme ?? "light"].textButtonColor}
-                    />
-                    <Pressable
-                        style={{
-                            width: "100%",
-                            height: "100%",
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}
-                        onPress={() => {
-                            handleSignInWithGoogle();
                         }}
                     >
-                        <Text
-                            style={{
-                                textAlign: "center",
-                                color: Colors[colorScheme ?? "light"]
-                                    .textButtonColor,
-                            }}
+                        {/* Email */}
+                        <View
+                            style={[
+                                styles.authForm,
+                                {
+                                    backgroundColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .background,
+                                    borderColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .formBorder,
+                                },
+                            ]}
                         >
-                            Sign in with Google
-                        </Text>
-                    </Pressable>
-                </View>
+                            <TextInput
+                                placeholder="Email"
+                                placeholderTextColor={
+                                    Colors[colorScheme ?? "light"].placeholder
+                                }
+                                style={{
+                                    height: "100%",
+                                    width: "100%",
+                                    color: "black",
+                                    paddingLeft: 10,
+                                }}
+                                value={email}
+                                onChangeText={(value) => setEmail(value)}
+                            />
+                        </View>
 
-                {/* Dont have an account */}
-                <View style={styles.promptTextComponent}>
-                    <Text style={{ color: "white" }}>
-                        Don't have an account?{" "}
-                    </Text>
-                    <Pressable
-                        onPress={() => {
-                            router.push("/(auth)/screens/SignUp");
-                        }}
-                    >
-                        <Text
-                            style={{
-                                color: Colors[colorScheme ?? "light"]
-                                    .mainButtonBorderColor,
-                                fontWeight: 500,
-                            }}
+                        {/* Password */}
+                        <View
+                            style={[
+                                styles.authForm,
+                                {
+                                    backgroundColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .background,
+                                    borderColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .formBorder,
+                                },
+                            ]}
                         >
-                            Sign up
-                        </Text>
-                    </Pressable>
-                </View>
+                            <TextInput
+                                placeholder="Password"
+                                placeholderTextColor={
+                                    Colors[colorScheme ?? "light"].placeholder
+                                }
+                                style={{
+                                    height: "100%",
+                                    width: "100%",
+                                    color: "black",
+                                    paddingLeft: 10,
+                                }}
+                                value={password}
+                                onChangeText={(value) => setPassword(value)}
+                                secureTextEntry={
+                                    isPasswordVisible ? false : true
+                                }
+                            />
+                            <Pressable
+                                onPress={togglePasswordVisibility}
+                                style={{ right: wp("10%") }}
+                            >
+                                <Ionicons
+                                    name={isPasswordVisible ? "eye-off" : "eye"}
+                                    size={24}
+                                    color={Colors.light.tabIconDefault}
+                                />
+                            </Pressable>
+                        </View>
 
-                {/* Forgot your password */}
-                <View style={styles.promptTextComponent}>
-                    <Text
-                        style={{
-                            color: Colors[colorScheme ?? "light"].background,
-                        }}
-                    >
-                        Forgot your password?{" "}
-                    </Text>
-                    <Pressable
-                        onPress={() => {
-                            router.push("/(auth)/screens/Reset");
-                        }}
-                    >
-                        <Text
-                            style={{
-                                color: Colors[colorScheme ?? "light"]
-                                    .mainButtonBorderColor,
-                                fontWeight: 500,
-                            }}
+                        {/* Continue button */}
+                        <View
+                            style={[
+                                styles.authButton,
+                                {
+                                    backgroundColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .mainButtonBackgroundColor,
+                                    borderColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .mainButtonBorderColor,
+                                },
+                            ]}
                         >
-                            Reset
+                            <Pressable
+                                style={{
+                                    width: wp("84%"),
+                                    height: "100%",
+                                    justifyContent: "center",
+                                }}
+                                onPress={() => {
+                                    handleSignInWithEmailPassword();
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        textAlign: "center",
+                                        color: Colors[colorScheme ?? "light"]
+                                            .textButtonColor,
+                                    }}
+                                >
+                                    Continue
+                                </Text>
+                            </Pressable>
+                        </View>
+
+                        <Text style={{ marginVertical: 18, color: "white" }}>
+                            or
                         </Text>
-                    </Pressable>
-                </View>
-            </View>
-            {/* </TouchableWithoutFeedback> */}
-            {/* </KeyboardAvoidingView> */}
+
+                        {/* SignIn with Google */}
+                        <View
+                            style={[
+                                styles.authButton,
+                                {
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    position: "relative", // ensure overlapping elements align properly
+                                    marginBottom: hp("2.5%"),
+                                    backgroundColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .mainButtonBackgroundColor,
+                                    borderColor:
+                                        Colors[colorScheme ?? "light"]
+                                            .mainButtonBorderColor,
+                                },
+                            ]}
+                        >
+                            <AntDesign
+                                name="google"
+                                size={24}
+                                style={{
+                                    position: "absolute",
+                                    left: 15,
+                                }}
+                                color={
+                                    Colors[colorScheme ?? "light"]
+                                        .textButtonColor
+                                }
+                            />
+                            <Pressable
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                }}
+                                onPress={() => {
+                                    handleSignInWithGoogle();
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        textAlign: "center",
+                                        color: Colors[colorScheme ?? "light"]
+                                            .textButtonColor,
+                                    }}
+                                >
+                                    Sign in with Google
+                                </Text>
+                            </Pressable>
+                        </View>
+
+                        {/* Dont have an account */}
+                        <View style={styles.promptTextComponent}>
+                            <Text style={{ color: "white" }}>
+                                Don't have an account?{" "}
+                            </Text>
+                            <Pressable
+                                onPress={() => {
+                                    router.push("/(auth)/screens/SignUp");
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: Colors[colorScheme ?? "light"]
+                                            .mainButtonBorderColor,
+                                        fontWeight: 500,
+                                    }}
+                                >
+                                    Sign up
+                                </Text>
+                            </Pressable>
+                        </View>
+
+                        {/* Forgot your password */}
+                        <View style={styles.promptTextComponent}>
+                            <Text
+                                style={{
+                                    color: Colors[colorScheme ?? "light"]
+                                        .background,
+                                }}
+                            >
+                                Forgot your password?{" "}
+                            </Text>
+                            <Pressable
+                                onPress={() => {
+                                    router.push("/(auth)/screens/Reset");
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: Colors[colorScheme ?? "light"]
+                                            .mainButtonBorderColor,
+                                        fontWeight: 500,
+                                    }}
+                                >
+                                    Reset
+                                </Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
         </>
     );
 };

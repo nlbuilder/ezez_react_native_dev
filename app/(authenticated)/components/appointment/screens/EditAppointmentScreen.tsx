@@ -54,7 +54,7 @@ export default function EditAppointmentScreen() {
         }
     };
 
-    console.log(appointmentDetails.timeString);
+    // console.log(appointmentDetails.timeString);
 
     // handle the Time picker
     const [time, setTime] = useState(
@@ -138,11 +138,22 @@ export default function EditAppointmentScreen() {
             return;
         }
 
+        // filter serviceId from the allServicesInfo using the chosenService
+        const serviceId = Array.isArray(allServicesInfo)
+            ? allServicesInfo.filter(
+                  (service) => service.serviceName === chosenService
+              )[0]?.serviceId
+            : undefined;
+
+        // console.log("Service ID: ", serviceId);
+
         const updateAppointmentData = {
             appointmentId: appointmentDetails.appointmentId,
             businessId: appointmentDetails.businessId,
+            businessBranchName: appointmentDetails.businessBranchName,
+            businessBranchCode: appointmentDetails.businessBranchCode,
             customerId: "1",
-            serviceId: "1",
+            serviceId: serviceId,
             dateString: date.toDateString(),
             dateDate: date,
             timeString: time.toTimeString(),

@@ -18,6 +18,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import Colors from "@/constants/styles/Colors";
 import { CalibriText } from "@/constants/styles/StyledText";
 import SignInForm from "../components/authComponents/SignInForm";
+import BackgroundImage from "@/assets/images/backgroundImage.png";
 
 // this line is to keep the web browser showing inside the app
 WebBrowser.maybeCompleteAuthSession();

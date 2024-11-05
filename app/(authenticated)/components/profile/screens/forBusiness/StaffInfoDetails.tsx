@@ -1,3 +1,14 @@
+// The order to follow is:
+// 1. read this StaffInfoDetails.tsx file
+// 2. read the StaffInfoDetailsCard.tsx file
+
+// The businessStaffId in this file is passed from the StaffInfoBriefCard.tsx file
+
+// Also, note that the infoTitle and infoDetails are the props that are passed
+// from this StaffInfoDetails.tsx file to the StaffInfoDetailsCard.tsx file
+
+// So, the future me, don't get confused!
+
 import {
     Pressable,
     useColorScheme,

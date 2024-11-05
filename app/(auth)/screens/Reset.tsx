@@ -31,7 +31,7 @@ const Reset = () => {
                         }}
                     >
                         <Image
-                            source={BackgroundImage}
+                            source={require("@/assets/images/backgroundImage.png")}
                             style={{
                                 width: "100%",
                                 height: "100%",

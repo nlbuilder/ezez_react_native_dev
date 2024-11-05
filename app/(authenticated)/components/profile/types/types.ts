@@ -1,22 +1,33 @@
-// export interface User {
-//     IdToken?: string;
-//     uid: string;
-//     displayName: string;
-//     photoURL: string;
-//     providerId: string;
-//     createdAt: string;
-//     lastLoginAt: string;
-//     email: string;
-// }
-
 export interface initServiceInfo {
     businessId: string;
     chosenOption: string;
+    businessBranchName: string;
+    businessBranchCode: string;
 }
 
 export interface BusinessInfo {
     businessId: string;
     name?: string;
+    businessBranchInfos?: businessBranchInfo[];
+    // addressLine1?: string;
+    // addressLine2?: string;
+    // city?: string;
+    // state?: string;
+    // zip?: string;
+    // country?: string;
+    // phoneNumber?: string;
+    email: string;
+    // logoURL?: string;
+    // description?: string;
+    // managerName?: string[];
+    // capacity?: number;
+    role?: string;
+    listOfStaff?: BusinessStaffInfoBrief[];
+}
+
+export interface businessBranchInfo {
+    businessBranchName: string;
+    businessBranchCode: string;
     addressLine1?: string;
     addressLine2?: string;
     city?: string;
@@ -24,16 +35,16 @@ export interface BusinessInfo {
     zip?: string;
     country?: string;
     phoneNumber?: string;
-    email: string;
+    email?: string;
     logoURL?: string;
     description?: string;
     managerName?: string[];
-    listOfStaff?: BusinessStaffInfoBrief[];
     capacity?: number;
-    role?: string;
 }
 
 export interface BusinessStaffInfoBrief {
+    businessBranchName: string;
+    businessBranchCode: string;
     businessStaffId: string;
     name: string;
     phoneNumber: string;
@@ -44,9 +55,10 @@ export interface BusinessStaffInfoBrief {
 }
 
 export interface BusinessStaffInfoDetails {
-    length: number;
     businessStaffId?: string;
     businessId: string;
+    businessBranchName: string;
+    businessBranchCode: string;
     firstName?: string;
     lastName?: string;
     DOB?: Date;
@@ -59,12 +71,14 @@ export interface BusinessStaffInfoDetails {
     country?: string;
     phoneNumber: string;
     email: string;
-    role: string;
     photoUrl?: string;
+    role: string;
 }
 
 export interface ServiceInfo {
     businessId: string;
+    businessBranchName: string;
+    businessBranchCode: string;
     serviceId: string;
     serviceName: string;
     photoURL?: string;
@@ -74,6 +88,8 @@ export interface ServiceInfo {
 
 export interface BusinessHourInfo {
     businessId: string;
+    businessBranchName: string;
+    businessBranchCode: string;
     startTime: string;
     finishTime: string;
 }

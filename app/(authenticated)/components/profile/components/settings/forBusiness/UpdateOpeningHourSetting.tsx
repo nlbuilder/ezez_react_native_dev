@@ -89,10 +89,16 @@ const OpeningHourSetting = () => {
     // make use of the updateBusinessHour API
     const { updateBusinessHourInfo } = useUpdateBusinessHourAPI();
 
+    const businessBranchName = "primary";
+    const businessBranchCode = "001";
+
     // def a function to handle the submit button
     const handleSubmit = async () => {
         const updatedBusinessHourInfo = {
             businessId: businessId,
+            businessBranchName: businessBranchName,
+            businessBranchCode: businessBranchCode,
+
             startTime: startTime,
             finishTime: finishTime,
         };

@@ -1,3 +1,13 @@
+// The order to follow is:
+// 1. read the BusinessInfo.tsx file in the screens folder
+// 2. read this BusinessInfoCard.tsx file
+// 3. read the EditBusinessInfoCard.tsx file
+
+// The infoTitle and infoDetails are the props that are passed
+// from the BusinessInfo.tsx file to this BusinessInfoCard.tsx file
+
+// So, the future me, don't get confused!
+
 import {
     Keyboard,
     KeyboardAvoidingView,

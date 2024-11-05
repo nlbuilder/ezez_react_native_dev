@@ -1,3 +1,14 @@
+// The order to follow is:
+// 1. read the ServiceInfo.tsx file in the screens folder
+// 2. read this ServiceInfoBriefCard.tsx file
+// 3. read the ServiceInfoDetails.tsx file in the screens folder
+// 4. read the ServiceInfoDetailsCard.tsx file
+
+// The infoTitle and infoDetails are the props that are passed
+// from the ServiceInfoDetails.tsx file in the screens folder to this ServiceInfoDetailsCard.tsx file
+
+// So, the future me, don't get confused!
+
 import { Text, useColorScheme, View } from "react-native";
 import React from "react";
 import {

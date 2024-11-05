@@ -16,7 +16,7 @@ export const useUpdateAppointmentAPI = () => {
         // get the access token from auth
         const accessToken = auth?.user?.IdToken;
 
-        const businessId = auth?.user?.uid;
+        // const businessId = auth?.user?.uid;
 
         // make a GET request to the backend to get the appointment info
         const response = await fetch(`${BASE_URL}/appointment`, {

@@ -108,6 +108,15 @@ const AppointmentCardList = () => {
     // console.log(dateString);
     // console.log("filteredAppointmentsByDate", filteredAppointmentsByDate);
 
+    const businessBranchName = "primary";
+    const businessBranchCode = "001";
+
+    // filter the filteredAppointmentsByDate by businessBranchCode
+    const filteredAppointmentsByDateByBranchCode =
+        filteredAppointmentsByDate.filter(
+            (item) => item.businessBranchCode === businessBranchCode
+        );
+
     // group the customers by rounded time (this function returns an object)
     const sumOfCustomerByTime = groupCustomersByTime(
         timeList,
@@ -149,6 +158,10 @@ const AppointmentCardList = () => {
         sumOfCustomerByTimeAndService
     );
 
+    // I might need to come back to this part to see if I can optimize it
+    // currently, refreshing all of the
+    // allAppointmentInfo, date, sumOfCustomerByTimeArray, transformedSumOfCustomerByTimeAndService, startTime, finishTime, timeList
+    // seems to be a bit too much
     useEffect(() => {
         refetchAllAppointmentsInfo();
         refetchBusinessHourInfo();

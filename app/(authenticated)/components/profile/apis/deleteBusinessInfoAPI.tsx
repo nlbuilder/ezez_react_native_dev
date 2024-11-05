@@ -1,6 +1,5 @@
 import { useMutation } from "react-query";
 
-// import { BASE_URL } from "@/app/(auth)/utils/utils";
 import { useAuth } from "@/app/(auth)/components/hooks/useAuth";
 
 // def a hook to delete business info

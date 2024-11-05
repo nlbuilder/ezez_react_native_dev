@@ -61,6 +61,9 @@ const InitBusinessProfileScreen = () => {
     const businessId = currentBusinessInfo?.businessId as string;
     const email = currentBusinessInfo?.email as string;
 
+    const businessBranchName = "primary";
+    const businessBranchCode = "001";
+
     const { updateBusinessInfo } = useUpdateBusinessInfoAPI();
 
     const [businessName, setBusinessName] = useState("");
@@ -74,6 +77,9 @@ const InitBusinessProfileScreen = () => {
                         : businessId,
                     name: businessName,
                     email: email,
+
+                    businessBranchName: businessBranchName,
+                    businessBranchCode: businessBranchCode,
                 };
 
                 await updateBusinessInfo(businessInfo);
@@ -118,6 +124,10 @@ const InitBusinessProfileScreen = () => {
                 businessId: Array.isArray(businessId)
                     ? businessId[0]
                     : businessId,
+
+                businessBranchName: businessBranchName,
+                businessBranchCode: businessBranchCode,
+
                 startTime: openingHour,
                 finishTime: closingHour,
             };
@@ -146,6 +156,9 @@ const InitBusinessProfileScreen = () => {
                         ? businessId[0]
                         : businessId,
                     chosenOption: chosenOption?.option || "default",
+
+                    businessBranchName: businessBranchName,
+                    businessBranchCode: businessBranchCode,
                 };
 
                 const service = await createInitServices(initServiceInfo);
@@ -200,6 +213,10 @@ const InitBusinessProfileScreen = () => {
                     businessId: Array.isArray(businessId)
                         ? businessId[0]
                         : businessId,
+
+                    businessBranchName: businessBranchName,
+                    businessBranchCode: businessBranchCode,
+
                     startTime: openingHour,
                     finishTime: closingHour,
                 };
@@ -210,6 +227,10 @@ const InitBusinessProfileScreen = () => {
                     businessId: Array.isArray(businessId)
                         ? businessId[0]
                         : businessId,
+
+                    businessBranchName: businessBranchName,
+                    businessBranchCode: businessBranchCode,
+
                     chosenOption: "option0",
                 };
                 await createInitServices(initServiceInfo);
@@ -491,48 +512,3 @@ const styles = StyleSheet.create({
         // marginTop: hp("2.5%"),
     },
 });
-
-// const handleCreateBusinessHour = async () => {
-//     if (businessId) {
-//         try {
-//             const selectedHours = dummyBusinessHour.filter(
-//                 (_, index) => checkboxStates[index]
-//             );
-
-//             if (selectedHours.length === 0) {
-//                 Alert.alert(
-//                     "Error",
-//                     "Please select at least one time slot."
-//                 );
-//                 return;
-//             }
-
-//             for (const { openingHour, closingHour } of selectedHours) {
-//                 const businessHourInfo: BusinessHourInfo = {
-//                     businessId: Array.isArray(businessId)
-//                         ? businessId[0]
-//                         : businessId,
-//                     startTime: openingHour,
-//                     finishTime: closingHour,
-//                 };
-
-//                 const businessHour = await createBusinessHour(
-//                     businessHourInfo
-//                 );
-
-//                 console.log("businessHour: ", businessHour);
-//                 if (!businessHour) {
-//                     console.error(
-//                         "Error creating business hour:",
-//                         businessHour
-//                     );
-//                 }
-//             }
-
-//             router.replace("/(authenticated)/(tabs)");
-//         } catch (error) {
-//             console.error("Error creating business hour:", error);
-//             setError("Failed to create business hour.");
-//         }
-//     }
-// };

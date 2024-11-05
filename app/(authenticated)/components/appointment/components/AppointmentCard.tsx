@@ -1,3 +1,12 @@
+// The order to follow is:
+// 1. read the AppointmentCard.tsx file
+// 2. read the AppointmentCardBody.tsx file
+
+// The data of {index, scrollY, time, sumOfCustomerByTime, sumOfCustomerByTimeAndService, totalCapacity}
+// is passed from index.tsx in the tabs folder to this AppointmentCard.tsx file.
+
+// So, the future me, don't get confused!
+
 import {
     FlatList,
     Pressable,
@@ -15,7 +24,7 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { router } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 

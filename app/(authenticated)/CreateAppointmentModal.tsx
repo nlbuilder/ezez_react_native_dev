@@ -16,7 +16,7 @@ import {
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import Colors from "@/constants/styles/Colors";
-import { AntDesign } from "@expo/vector-icons";
+// import { AntDesign } from "@expo/vector-icons";
 import { useState } from "react";
 import { TextInput } from "react-native-gesture-handler";
 import DropDownPickerModal from "./utils/modals/DropDownPickerModal";
@@ -95,6 +95,9 @@ export default function CreateAppointmentModal() {
     // set the theme variant for the date and time pickers
     const themeVariantDateTimePicker = "light";
 
+    const businessBranchName = "primary";
+    const businessBranchCode = "001";
+
     // get the businessHour info
     const { businessHourInfo, refetch: refetchBusinessHourInfo } =
         useGetBusinessHourAPI();
@@ -105,7 +108,6 @@ export default function CreateAppointmentModal() {
     const finishTime =
         (Array.isArray(businessHourInfo) && businessHourInfo[0]?.finishTime) ||
         "7:00 PM";
-
     const appointmentTime = convertTo12HourFormat(time.toTimeString());
 
     const handleCreateAppointment = async () => {
@@ -129,6 +131,8 @@ export default function CreateAppointmentModal() {
         const newAppointmentData = {
             appointmentId: uuid.v4() as string,
             businessId: businessId,
+            businessBranchName: businessBranchName,
+            businessBranchCode: businessBranchCode,
             customerId: "1",
             serviceId: "1",
             dateString: date.toDateString(),

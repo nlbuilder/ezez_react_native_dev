@@ -42,6 +42,9 @@ const AddStaffInfo = () => {
     const defaultPassword = "123455";
     const role = "staff";
 
+    const businessBranchName = "primary";
+    const businessBranchCode = "001";
+
     // def a function to handle createBusinessStaff
     const handleCreateStaffInfo = async () => {
         const businessStaffInfoBrief = {
@@ -51,6 +54,9 @@ const AddStaffInfo = () => {
             email: email,
             password: defaultPassword,
             role: role,
+
+            businessBranchName: businessBranchName,
+            businessBranchCode: businessBranchCode,
         };
 
         const { isValid, message } = validateStaffInfo(
