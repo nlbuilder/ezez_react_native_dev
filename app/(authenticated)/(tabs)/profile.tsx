@@ -99,7 +99,7 @@ const Profile = () => {
                                 Colors[colorScheme ?? "light"].tabIconSelected,
                             borderWidth: 1.5,
                             borderRadius: 100,
-                            resizeMode: "center",
+                            resizeMode: "contain",
                         }}
                     />
                 </View>

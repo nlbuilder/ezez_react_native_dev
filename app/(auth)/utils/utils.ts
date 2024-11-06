@@ -13,6 +13,7 @@ import {
 } from "firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { auth } from "@/firebase/firebaseConfig";
+import { Alert } from "react-native";
 
 // Handle Auth State Changes
 export function onAuthStateChanged(callback: NextOrObserver<User>) {
@@ -67,6 +68,10 @@ export async function signInWithEmailPassword(email: string, password: string) {
 
         return user;
     } catch (error) {
+        Alert.alert(
+            "No user found in our database! Please check your email and password."
+        );
+
         console.error(
             "Error when executing signInWithEmailPassword(): ",
             error

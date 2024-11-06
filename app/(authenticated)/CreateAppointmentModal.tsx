@@ -108,12 +108,15 @@ export default function CreateAppointmentModal() {
 
     const appointmentTime = convertTo12HourFormat(time.toTimeString());
 
+    const timeNow = convertTo12HourFormat(new Date().toTimeString());
+
     const handleCreateAppointment = async () => {
         const { isValid, message } = validateAppointmentDetails(
             date.toDateString(),
             appointmentTime,
             startTime,
             finishTime,
+            timeNow,
             phoneNumber,
             customerName,
             numberOfPeople,

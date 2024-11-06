@@ -113,6 +113,7 @@ const SignInForm = () => {
                         }}
                         value={email}
                         onChangeText={(value) => setEmail(value)}
+                        keyboardType="email-address"
                     />
                 </View>
 
@@ -251,7 +252,7 @@ const SignInForm = () => {
                     </Text>
                     <Pressable
                         onPress={() => {
-                            router.push("/(auth)/screens/SignUp");
+                            router.push("/(auth)/screens/Signup");
                         }}
                     >
                         <Text

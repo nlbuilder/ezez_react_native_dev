@@ -27,6 +27,11 @@ const TermsAndConditions = () => {
             headerTitle: "Terms and Conditions",
             headerBackTitle: "Back",
             presentation: "card",
+
+            headerTitleStyle: {
+                borderColor: Colors[colorScheme ?? "light"].separator,
+                borderWidth: 1,
+            },
         });
     }, [navigation]);
 

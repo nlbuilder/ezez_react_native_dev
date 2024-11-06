@@ -48,6 +48,10 @@ const StaffInfo = () => {
             headerBackTitle: "Back",
             headerTitle: "List of Staffs",
             presentation: "card",
+            headerTitleStyle: {
+                borderColor: Colors[colorScheme ?? "light"].separator,
+                borderWidth: 1,
+            },
 
             headerRight: () => (
                 // add staff button

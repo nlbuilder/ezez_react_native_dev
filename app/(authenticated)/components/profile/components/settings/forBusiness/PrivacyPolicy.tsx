@@ -27,6 +27,11 @@ const PrivacyPOlicy = () => {
             headerTitle: "Privacy Policy",
             headerBackTitle: "Back",
             presentation: "card",
+
+            headerTitleStyle: {
+                borderColor: Colors[colorScheme ?? "light"].separator,
+                borderWidth: 1,
+            },
         });
     }, [navigation]);
 

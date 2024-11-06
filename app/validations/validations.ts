@@ -126,7 +126,8 @@ export const validateEmailFormat = (
 function isTimeWithinRange(
     timeString: string,
     startTime: string,
-    endTime: string
+    endTime: string,
+    timeNow: string
 ): boolean {
     // Convert times to Date objects on the same day for comparison
     const [today] = new Date().toISOString().split("T"); // Get today's date in "YYYY-MM-DD" format
@@ -134,9 +135,14 @@ function isTimeWithinRange(
     const timeStart = new Date(`${today} ${startTime}`);
     const timeFinish = new Date(`${today} ${endTime}`);
     const appointmentTime = new Date(`${today} ${timeString}`);
+    const timeNowIs = new Date(`${today} ${timeNow}`);
 
     // Compare times
-    return appointmentTime >= timeStart && appointmentTime <= timeFinish;
+    return (
+        appointmentTime >= timeStart &&
+        appointmentTime <= timeFinish &&
+        timeNowIs <= timeFinish
+    );
 }
 
 // def a function to validate appointment creation
@@ -145,6 +151,7 @@ export const validateAppointmentDetails = (
     timeString: string,
     startTime: string,
     finishTime: string,
+    timeNow: string,
     phoneNumber: string,
     numberOfPeople: string,
     note: string,
@@ -162,7 +169,12 @@ export const validateAppointmentDetails = (
         };
     }
 
-    const result = isTimeWithinRange(timeString, startTime, finishTime);
+    const result = isTimeWithinRange(
+        timeString,
+        startTime,
+        finishTime,
+        timeNow
+    );
 
     if (!result) {
         return {
