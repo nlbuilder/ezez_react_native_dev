@@ -80,6 +80,8 @@ const AppointmentCard = ({
                         {
                             backgroundColor:
                                 Colors[colorScheme ?? "light"].background,
+                            borderColor:
+                                Colors[colorScheme ?? "light"].separator,
                         },
                     ]}
                 >
@@ -220,6 +222,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     appointmentCard: {
+        borderWidth: 1.5,
         borderRadius: hp("2.5%"),
         // paddingBottom: hp("2%"),
         // move the card down a bit, to separate the top card from the Date Picker
@@ -233,9 +236,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
 
-        borderRadius: hp("2.5%"),
+        borderRadius: hp("1.5%"),
         height: hp("5.5%"),
-        borderWidth: 1,
+        borderBottomWidth: 1,
         margin: 2.5,
     },
     title: {

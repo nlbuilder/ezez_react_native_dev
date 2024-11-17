@@ -1,10 +1,3 @@
-import { Alert } from "react-native";
-import { useGetBusinessHourAPI } from "../(authenticated)/components/profile/apis/getBusinessHourAPI";
-import {
-    convertToLocalTime,
-    getTimeZoneName,
-} from "../(authenticated)/utils/utils";
-
 // def a function to validate sign in form
 export const validateSignInForm = (
     email: string,
@@ -123,31 +116,74 @@ export const validateEmailFormat = (
     return { isValid: true, message: "Reset form is valid." };
 };
 
+// function isTimeWithinRange(
+//     timeString: string,
+//     startTime: string,
+//     endTime: string,
+//     timeNow: string
+// ): boolean {
+//     // Convert times to Date objects on the same day for comparison
+//     const [today] = new Date().toISOString().split("T"); // Get today's date in "YYYY-MM-DD" format
+
+//     const timeStart = new Date(`${today} ${startTime}`);
+//     const timeFinish = new Date(`${today} ${endTime}`);
+//     const appointmentTime = new Date(`${today} ${timeString}`);
+//     const timeNowIs = new Date(`${today} ${timeNow}`);
+
+//     console.log("timeString", timeString);
+
+//     console.log(timeStart);
+//     console.log(timeFinish);
+//     console.log(appointmentTime);
+//     console.log(timeNowIs);
+
+//     // Compare times
+//     return appointmentTime >= timeStart && appointmentTime <= timeFinish;
+// }
+
 function isTimeWithinRange(
     timeString: string,
     startTime: string,
     endTime: string,
     timeNow: string
 ): boolean {
+    // Helper function to convert "h:mm AM/PM" to "HH:mm"
+    const convertTo24HourFormat = (time: string): string => {
+        const [timePart, modifier] = time.split(" ");
+        let [hours, minutes] = timePart.split(":").map(Number);
+
+        if (modifier === "PM" && hours < 12) {
+            hours += 12;
+        } else if (modifier === "AM" && hours === 12) {
+            hours = 0;
+        }
+
+        return `${hours.toString().padStart(2, "0")}:${minutes
+            .toString()
+            .padStart(2, "0")}`;
+    };
+
     // Convert times to Date objects on the same day for comparison
     const [today] = new Date().toISOString().split("T"); // Get today's date in "YYYY-MM-DD" format
 
-    const timeStart = new Date(`${today} ${startTime}`);
-    const timeFinish = new Date(`${today} ${endTime}`);
-    const appointmentTime = new Date(`${today} ${timeString}`);
-    const timeNowIs = new Date(`${today} ${timeNow}`);
+    const timeStart = new Date(`${today} ${convertTo24HourFormat(startTime)}`);
+    const timeFinish = new Date(`${today} ${convertTo24HourFormat(endTime)}`);
+    const appointmentTime = new Date(
+        `${today} ${convertTo24HourFormat(timeString)}`
+    );
+    const timeNowIs = new Date(`${today} ${convertTo24HourFormat(timeNow)}`);
 
     // Compare times
     return (
         appointmentTime >= timeStart &&
         appointmentTime <= timeFinish &&
-        timeNowIs <= timeFinish
+        appointmentTime >= timeNowIs
     );
 }
 
 // def a function to validate appointment creation
 export const validateAppointmentDetails = (
-    dateString: string,
+    appointmentDate: Date,
     timeString: string,
     startTime: string,
     finishTime: string,
@@ -158,10 +194,12 @@ export const validateAppointmentDetails = (
     chosenService: string
 ): { isValid: boolean; message: string } => {
     // check if the date is in the past
-    const todayString = new Date().toDateString();
-    const appointmentDateString = dateString;
+    const today = new Date();
 
-    if (appointmentDateString < todayString) {
+    appointmentDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    if (appointmentDate < today) {
         return {
             isValid: false,
             message:
@@ -180,7 +218,7 @@ export const validateAppointmentDetails = (
         return {
             isValid: false,
             message:
-                "Invalid Time. Time must be within the business hours. Please check your input.",
+                "Invalid Time. Time must be within the business hours and must not be in the past. Please check your input.",
         };
     }
 

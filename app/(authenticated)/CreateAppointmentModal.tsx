@@ -112,7 +112,7 @@ export default function CreateAppointmentModal() {
 
     const handleCreateAppointment = async () => {
         const { isValid, message } = validateAppointmentDetails(
-            date.toDateString(),
+            date,
             appointmentTime,
             startTime,
             finishTime,
