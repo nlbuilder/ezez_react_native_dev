@@ -3,6 +3,11 @@
 # dependencies
 node_modules/
 ios/
+android/
+
+
+# note file
+*.txt
 
 # Expo
 .expo/
@@ -31,6 +36,8 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env
+.env.d.ts
 
 # typescript
 *.tsbuildinfo
@@ -40,3 +47,8 @@ yarn-error.*
 
 expo-env.d.ts
 # @end expo-cli
+
+.gitignore
+
+firebase/*
+firebase/
