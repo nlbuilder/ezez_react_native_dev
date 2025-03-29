@@ -141,14 +141,66 @@ export const validateEmailFormat = (
 //     return appointmentTime >= timeStart && appointmentTime <= timeFinish;
 // }
 
+// function isTimeWithinRange(
+//     timeString: string,
+//     startTime: string,
+//     endTime: string,
+//     timeNow: string
+// ): boolean {
+//     // Helper function to convert "h:mm AM/PM" to "HH:mm"
+//     const convertTo24HourFormat = (time: string): string => {
+//         const [timePart, modifier] = time.split(" ");
+//         let [hours, minutes] = timePart.split(":").map(Number);
+
+//         if (modifier === "PM" && hours < 12) {
+//             hours += 12;
+//         } else if (modifier === "AM" && hours === 12) {
+//             hours = 0;
+//         }
+
+//         return `${hours.toString().padStart(2, "0")}:${minutes
+//             .toString()
+//             .padStart(2, "0")}`;
+//     };
+
+//     // Convert times to Date objects on the same day for comparison
+//     const [today] = new Date().toISOString().split("T"); // Get today's date in "YYYY-MM-DD" format
+
+//     const timeStart = new Date(`${today} ${convertTo24HourFormat(startTime)}`);
+//     const timeFinish = new Date(`${today} ${convertTo24HourFormat(endTime)}`);
+//     const appointmentTime = new Date(
+//         `${today} ${convertTo24HourFormat(timeString)}`
+//     );
+//     const timeNowIs = new Date(`${today} ${convertTo24HourFormat(timeNow)}`);
+
+//     console.log("timeStart: ", timeStart);
+//     console.log("timeFinish: ", timeFinish);
+//     console.log("appointmentTime: ", appointmentTime);
+//     console.log("timeNowIs: ", timeNowIs);
+
+//     console.log("startTime: ", startTime);
+//     console.log("endTime: ", endTime);
+//     console.log("timeString: ", timeString);
+//     console.log("timeNow: ", timeNow);
+
+//     // Compare times
+//     return (
+//         appointmentTime >= timeStart &&
+//         appointmentTime <= timeFinish &&
+//         appointmentTime >= timeNowIs
+//     );
+// }
+
+// I definitely need to have a look at this function again
+// the issue is that the time comparison is not working as expected
 function isTimeWithinRange(
     timeString: string,
     startTime: string,
     endTime: string,
     timeNow: string
 ): boolean {
-    // Helper function to convert "h:mm AM/PM" to "HH:mm"
-    const convertTo24HourFormat = (time: string): string => {
+    // Helper function to convert "h:mm AM/PM" to minutes since midnight
+    const convertToMinutes = (time: string): number => {
         const [timePart, modifier] = time.split(" ");
         let [hours, minutes] = timePart.split(":").map(Number);
 
@@ -158,26 +210,26 @@ function isTimeWithinRange(
             hours = 0;
         }
 
-        return `${hours.toString().padStart(2, "0")}:${minutes
-            .toString()
-            .padStart(2, "0")}`;
+        return hours * 60 + minutes;
     };
 
-    // Convert times to Date objects on the same day for comparison
-    const [today] = new Date().toISOString().split("T"); // Get today's date in "YYYY-MM-DD" format
+    // Convert times to minutes since midnight
+    const startMinutes = convertToMinutes(startTime);
+    const endMinutes = convertToMinutes(endTime);
+    const appointmentMinutes = convertToMinutes(timeString);
+    const nowMinutes = convertToMinutes(timeNow);
 
-    const timeStart = new Date(`${today} ${convertTo24HourFormat(startTime)}`);
-    const timeFinish = new Date(`${today} ${convertTo24HourFormat(endTime)}`);
-    const appointmentTime = new Date(
-        `${today} ${convertTo24HourFormat(timeString)}`
-    );
-    const timeNowIs = new Date(`${today} ${convertTo24HourFormat(timeNow)}`);
+    // Log for debugging
+    console.log("startMinutes: ", startMinutes);
+    console.log("endMinutes: ", endMinutes);
+    console.log("appointmentMinutes: ", appointmentMinutes);
+    console.log("nowMinutes: ", nowMinutes);
 
-    // Compare times
+    // Check if the time is within the range
     return (
-        appointmentTime >= timeStart &&
-        appointmentTime <= timeFinish &&
-        appointmentTime >= timeNowIs
+        appointmentMinutes >= startMinutes &&
+        appointmentMinutes <= endMinutes &&
+        appointmentMinutes >= nowMinutes
     );
 }
 
@@ -247,13 +299,6 @@ export const validateAppointmentDetails = (
             isValid: false,
             message:
                 "Invalid Note. Note must be under 100 characters. Please check your input.",
-        };
-    }
-
-    if (!chosenService) {
-        return {
-            isValid: false,
-            message: "Invalid Service. Please check your input.",
         };
     }
 

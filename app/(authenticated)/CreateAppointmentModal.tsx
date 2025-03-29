@@ -111,23 +111,23 @@ export default function CreateAppointmentModal() {
     const timeNow = convertTo12HourFormat(new Date().toTimeString());
 
     const handleCreateAppointment = async () => {
-        const { isValid, message } = validateAppointmentDetails(
-            date,
-            appointmentTime,
-            startTime,
-            finishTime,
-            timeNow,
-            phoneNumber,
-            customerName,
-            numberOfPeople,
-            note
-            // chosenService
-        );
+        // const { isValid, message } = validateAppointmentDetails(
+        //     date,
+        //     appointmentTime,
+        //     startTime,
+        //     finishTime,
+        //     timeNow,
+        //     phoneNumber,
+        //     customerName,
+        //     numberOfPeople,
+        //     note
+        //     // chosenService
+        // );
 
-        if (!isValid) {
-            Alert.alert("Invalid input", message);
-            return;
-        }
+        // if (!isValid) {
+        //     Alert.alert("Invalid input", message);
+        //     return;
+        // }
 
         const newAppointmentData = {
             appointmentId: uuid.v4() as string,
