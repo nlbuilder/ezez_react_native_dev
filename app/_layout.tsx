@@ -1,3 +1,4 @@
+import { AuthProvider } from "@/app/(auth)/components/context/authContext";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {
     DarkTheme,
@@ -5,13 +6,16 @@ import {
     ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
-import "react-native-reanimated";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Slot, SplashScreen } from "expo-router";
+import { useEffect, useState } from "react";
+import { useColorScheme, Text } from "react-native";
+import * as LocalAuthentication from "expo-local-authentication";
 
-import { useColorScheme } from "@/components/utils/useColorScheme";
+import { FontProvider } from "@/constants/styles/FontContext";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ToastProvider } from "./(authenticated)/utils/toasts/toastContext";
+import { DateProvider } from "./(authenticated)/components/appointment/context/DateContext";
+import { auth } from "@/firebase/firebaseConfig";
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -20,19 +24,21 @@ export {
 
 export const unstable_settings = {
     // Ensure that reloading on `/modal` keeps a back button present.
-    initialRouteName: "(tabs)",
+    initialRouteName: "auth",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+// define the root layout
 export default function RootLayout() {
     const [loaded, error] = useFonts({
-        SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+        Bodoni72: require("../assets/fonts/bodoni-72-oldstyle-book.ttf"),
+        Calibri: require("../assets/fonts/calibri.ttf"),
+        TimesRegular: require("../assets/fonts/Times Regular.ttf"),
         ...FontAwesome.font,
     });
 
-    // Expo Router uses Error Boundaries to catch errors in the navigation tree.
     useEffect(() => {
         if (error) throw error;
     }, [error]);
@@ -50,25 +56,71 @@ export default function RootLayout() {
     return <RootLayoutNav />;
 }
 
+// add queryClientProvider
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+        },
+    },
+});
+
 function RootLayoutNav() {
     const colorScheme = useColorScheme();
 
+    // // arrangement of local authentication
+    // const [unlocked, setUnlocked] = useState(false);
+
+    // useEffect(() => {
+    //     const authenticateUser = async () => {
+    //         const hasHardware = await LocalAuthentication.hasHardwareAsync();
+    //         const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+
+    //         if (!hasHardware || !isEnrolled) {
+    //             console.log(
+    //                 "Biometric authentication not available or configured."
+    //             );
+    //             setUnlocked(true); // Proceed without Face ID if unavailable
+    //             return;
+    //         }
+
+    //         const result = await LocalAuthentication.authenticateAsync({
+    //             promptMessage: "Unlock with Face ID",
+    //             fallbackLabel: "Enter Password", // Optional fallback
+    //         });
+
+    //         if (result.success) {
+    //             setUnlocked(true);
+    //         } else {
+    //             console.log("Authentication failed or canceled");
+    //             setUnlocked(false);
+    //         }
+    //     };
+
+    //     authenticateUser();
+    // }, []);
+
+    // if (!unlocked) {
+    //     return <Text>something</Text>;
+    // }
+
     return (
-        <ThemeProvider
-            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-        >
-            <GestureHandlerRootView style={{ flex: 1 }}>
-                <Stack>
-                    <Stack.Screen
-                        name="(tabs)"
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="modal"
-                        options={{ presentation: "modal" }}
-                    />
-                </Stack>
-            </GestureHandlerRootView>
-        </ThemeProvider>
+        <>
+            <ThemeProvider
+                value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+            >
+                <FontProvider>
+                    <QueryClientProvider client={queryClient}>
+                        <AuthProvider>
+                            <ToastProvider>
+                                <DateProvider>
+                                    <Slot />
+                                </DateProvider>
+                            </ToastProvider>
+                        </AuthProvider>
+                    </QueryClientProvider>
+                </FontProvider>
+            </ThemeProvider>
+        </>
     );
 }

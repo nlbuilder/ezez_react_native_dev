@@ -1,0 +1,24 @@
+[
+    {
+        "option": "option0",
+        "details": [
+            { "label": "Service0", "value": "Service0" },
+            { "label": "Service1", "value": "Service1" },
+            { "label": "Service2", "value": "Service2" },
+            { "label": "Service3", "value": "Service3" },
+            { "label": "Service4", "value": "Service4" },
+            { "label": "Service5", "value": "Service5" }
+        ]
+    },
+    {
+        "option": "option1",
+        "details": [
+            { "label": "Service6", "value": "Service6" },
+            { "label": "Service7", "value": "Service7" },
+            { "label": "Service8", "value": "Service8" },
+            { "label": "Service9", "value": "Service9" },
+            { "label": "Service10", "value": "Service10" },
+            { "label": "Service11", "value": "Service11" }
+        ]
+    }
+]
